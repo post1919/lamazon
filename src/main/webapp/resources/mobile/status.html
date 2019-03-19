@@ -1,0 +1,268 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ko" xml:lang="ko">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>캐스팅앤</title>
+<style type="text/css">
+html, body {
+	margin: 0;
+	padding: 10px;
+}
+html {
+	overflow-y: scroll;
+}
+body {
+	color: #666;
+	background-color: #fff;
+	font: 12px/1.5 Dotum, '돋움', Verdana, sans-serif;
+}
+a {
+	color: #27e;
+	text-decoration: none;
+}
+a:focus, a:hover, a:active {
+	text-decoration: underline;
+}
+.header {
+	padding: .5em;
+}
+.header h1 {
+	display: inline;
+	margin-right: 1em;
+	color: #000;
+	font-size: 2em;
+	-moz-border-radius: 9px;
+	-webkit-border-radius: 9px;
+	border-radius: 9px;
+	border: 1px solid #d2d2d2;
+	padding: 4px;
+	background: #eee;
+}
+.radius {
+	-moz-border-radius: 9px;
+	-webkit-border-radius: 9px;
+	border-radius: 9px;
+	border: 1px solid #d2d2d2;
+	padding: 4px;
+	background: #eee;
+}
+.header ul {
+	display: inline;
+	font-size: 1.5em;
+	list-style: none;
+}
+.header ul li {
+	display: inline;
+}
+.group-title {
+	margin-top: 1em;
+	color: #000;
+	font-weight: bold;
+	font-size: 1.5em;
+}
+table {
+	width: 100%;
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+table caption {
+	display: none;
+}
+table th {
+	color: #333;
+	background-color: #eee;
+}
+table th, table td {
+	padding: 0 .5em;
+	border: 1px solid #ddd;
+	text-align: left;
+}
+table th, table td.stat, table td.date {
+	text-align: center;
+}
+table td.red {
+	color: red;
+}
+table td.rev {
+	text-align: center;
+	color: #000;
+}
+table tr.even, table tr td.multi {
+	background-color: #fafafa;
+}
+table tr.add td {
+	background-color: #fcc;
+}
+table tr.modify td {
+	background-color: #ccf;
+}
+table tr.hover td {
+	background-color: #eee;
+}
+table tr.none td {
+	color: #000;
+	background-color: #fc8989;
+}
+table tr.up td {
+	background-color: #ffe9f5;
+}
+table tr.selected {
+	background-color: #efe;
+}
+table tr.selected td.stat {
+	color: red;
+}
+.section {
+	margin: 2em 0;
+}
+body.js .section {
+	margin: 0;
+}
+.section .title {
+	margin: 0;
+	padding: 0;
+	color: #000;
+	font-weight: bold;
+	font-size: 100%;
+}
+body.js .section .title {
+	padding: .5em;
+	border: 1px solid #ccc;
+	background-color: #ddd;
+	cursor: pointer;
+}
+body.js .section + .section .title {
+	border-top: 0;
+}
+body.js .section .title .page-count {
+	color: #666;
+	font-weight: normal;
+}
+body.js .section .content {
+	display: none;
+}
+#sb-body {
+	border: none !important;
+}
+body, td, th {
+	font-family: Dotum, "돋움", Verdana, sans-serif;
+}
+</style>
+</head>
+<body>
+<div class="header">
+	<h1>캐스팅앤 mobile</h1>
+</div>
+<div class="section">
+	<div class="content">
+		<table>
+			<colgroup>
+			<col style="width:13%;"/>
+			<col style="width:13%;"/>
+			<col style="width:13%;"/>
+			<col style="width:%;"/>
+			<col style="width:13%;"/>
+			<col style="width:13%;"/>
+			<col style="width:%;"/>
+			</colgroup>
+			<thead>
+				<tr>
+					<th scope="col">1depth</th>
+					<th scope="col">2depth</th>
+					<th scope="col">3depth</th>
+					<th scope="col">비고</th>
+					<th scope="col">path</th>
+					<th scope="col">file</th>
+					<th scope="col">상태</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>메인화면</td>
+					<td>89p</td>
+					<td>&nbsp;</td>
+					<td>&nbsp;</td>
+					<td>/main</td>
+					<td><a href="main/main.jsp" target="_blank">main.jsp</a></td>
+					<td class="red">신규</td>
+				</tr>
+				<tr>
+					<td>입찰리스트</td>
+					<td>90p</td>
+					<td>&nbsp;</td>
+					<td>&nbsp;</td>
+					<td>/pages</td>
+					<td><a href="pages/90p.jsp" target="_blank">90p.jsp</a></td>
+					<td class="red">신규</td>
+				</tr>
+				<tr>
+					<td>입찰리스트 상세</td>
+					<td>91p</td>
+					<td>&nbsp;</td>
+					<td>&nbsp;</td>
+					<td>/pages</td>
+					<td><a href="pages/91p.jsp" target="_blank">91p.jsp</a></td>
+					<td class="red">신규</td>
+				</tr>
+				<tr>
+					<td>입찰리스트 상세 (참여하기)</td>
+					<td>92~93p</td>
+					<td>&nbsp;</td>
+					<td>&nbsp;</td>
+					<td>/pages</td>
+					<td><a href="pages/92p.jsp" target="_blank">92p.jsp</a></td>
+					<td class="red">신규</td>
+				</tr>
+				<tr>
+					<td>입찰리스트 상세 (관심리스트추가)</td>
+					<td>94p</td>
+					<td>&nbsp;</td>
+					<td>&nbsp;</td>
+					<td>/pages</td>
+					<td><a href="pages/94p.jsp" target="_blank">94p.jsp</a></td>
+					<td class="red">신규</td>
+				</tr>
+				<tr>
+					<td>관심 리스트</td>
+					<td>95p</td>
+					<td>&nbsp;</td>
+					<td>&nbsp;</td>
+					<td>/pages</td>
+					<td><a href="pages/95p.jsp" target="_blank">95p.jsp</a></td>
+					<td class="red">신규</td>
+				</tr>
+				<tr>
+					<td>참여리스트</td>
+					<td>97p</td>
+					<td>&nbsp;</td>
+					<td>&nbsp;</td>
+					<td>/pages</td>
+					<td><a href="pages/96p.jsp" target="_blank">96p.jsp</a></td>
+					<td class="red">신규</td>
+				</tr>
+				<tr>
+					<td>참여리스트 (발주요청확인)</td>
+					<td>97p</td>
+					<td>&nbsp;</td>
+					<td>&nbsp;</td>
+					<td>/pages</td>
+					<td><a href="pages/97p.jsp" target="_blank">97p.jsp</a></td>
+					<td class="red">신규</td>
+				</tr>
+				<tr>
+					<td>참여리스트 (검수요청진행)</td>
+					<td>98p</td>
+					<td>&nbsp;</td>
+					<td>&nbsp;</td>
+					<td>/pages</td>
+					<td><a href="pages/98p.jsp" target="_blank">98p.jsp</a></td>
+					<td class="red">신규</td>
+				</tr>
+				
+			</tbody>
+		</table>
+	</div>
+</div>
+</body>
+</html>

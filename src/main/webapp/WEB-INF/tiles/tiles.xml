@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+
+<!DOCTYPE tiles-definitions PUBLIC
+       "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN"
+       "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+       
+<tiles-definitions>
+	
+	<!-- 공통 -->
+	<definition name=".common" template="/WEB-INF/views/tiles/admin_layout.jsp">
+		<put-attribute name="admin_header" value="/WEB-INF/views/tiles/admin_header.jsp" />
+		<put-attribute name="admin_left"   value="/WEB-INF/views/tiles/admin_left.jsp"   />
+		<put-attribute name="body"         value="" />
+		<put-attribute name="admin_footer" value="/WEB-INF/views/tiles/admin_footer.jsp" />
+		<put-attribute name="admin_right"  value="/WEB-INF/views/tiles/admin_right.jsp"  />
+	</definition>
+	
+	<!-- 어드민 공통 -->
+	<definition name=".admin" template="/WEB-INF/views/tiles/admin_layout.jsp">
+		<put-attribute name="admin_header" value="/WEB-INF/views/tiles/admin_header.jsp" />
+		<put-attribute name="admin_left"   value="/WEB-INF/views/tiles/admin_left.jsp"   />
+		<put-attribute name="body"         value="" />
+		<put-attribute name="admin_footer" value="/WEB-INF/views/tiles/admin_footer.jsp" />
+		<put-attribute name="admin_right"  value="/WEB-INF/views/tiles/admin_right.jsp"  />
+	</definition>
+
+	<!-- 팝업 공통 -->
+	<definition name=".popup" template="/WEB-INF/views/tiles/popup.jsp">
+		<put-attribute name="body"         value="" />
+	</definition>
+	
+	<!-- 템플릿 공통 -->
+	<definition name="template/*/*" extends=".common">
+		<put-attribute name="body" value=".templatebody/{1}/{2}" />
+	</definition>
+	
+	<definition name=".templatebody/*/*" extends=".template_{1}">
+		<put-attribute name="content" value="/WEB-INF/views/template/{1}/{1}_{2}.jsp" />
+	</definition>
+	
+	<definition name=".template_*"
+		template="/WEB-INF/views/template/{1}/{1}_template.jsp"></definition>
+	
+	<!-- 어드민 템플릿 공통 -->
+	<definition name="admin/template/*/*" extends=".admin">
+		<put-attribute name="body" value=".admin_templatebody/{1}/{2}" />
+	</definition>
+	
+	<definition name=".admin_templatebody/*/*" extends=".admin_template_{1}">
+		<put-attribute name="content" value="/WEB-INF/views/admin/template/{1}/{1}_{2}.jsp" />
+	</definition>
+	
+	<definition name=".admin_template_*"
+		template="/WEB-INF/views/admin/template/{1}/{1}_template.jsp"></definition>
+	
+	<!-- 로그인 -->
+	<definition name="login/*" extends=".popup">
+		<put-attribute name="body" value="/WEB-INF/views/login/{1}.jsp" />
+	</definition>
+	
+	<!-- 어드민공통 -->
+	<definition name="admin/*" extends=".admin">
+		<put-attribute name="body" value="/WEB-INF/views/admin/{1}.jsp" />
+	</definition>
+	
+	<definition name="admin/*/*" extends=".admin">
+		<put-attribute name="body" value="/WEB-INF/views/admin/{1}/{2}.jsp" />
+	</definition>
+	
+	<definition name="admin/*/*/*" extends=".admin">
+		<put-attribute name="body" value="/WEB-INF/views/admin/{1}/{2}/{3}.jsp" />
+	</definition>
+	
+	<definition name="manage/promotion/*" extends=".admin">
+		<put-attribute name="body" value=".manage_promotion_{1}_body" />
+	</definition>
+	
+	<definition name="manage/*/*" extends=".admin">
+		<put-attribute name="body" value="/WEB-INF/views/manage/{1}/{2}.jsp" />
+	</definition>
+	
+	<!-- 예외처리 -->
+	<definition name="exception/*" extends=".admin">
+		<put-attribute name="body" value="/WEB-INF/views/exception/{1}.jsp" />
+	</definition>
+	
+	<!-- 팝업 -->
+	<definition name="popup/*/*" extends=".popup">
+		<put-attribute name="body" value="/WEB-INF/views/{1}/{2}.jsp" />
+	</definition>
+	
+	<definition name="popup/*/*/*" extends=".popup">
+		<put-attribute name="body" value="/WEB-INF/views/{1}/{2}/{3}.jsp" />
+	</definition>
+	
+	<definition name="popup/*/*/*/*" extends=".popup">
+		<put-attribute name="body" value="/WEB-INF/views/{1}/{2}/{3}/{4}.jsp" />
+	</definition>
+	
+	<!-- 공통 -->
+	<definition name="*" extends=".common">
+		<put-attribute name="body" value="/WEB-INF/views/{1}.jsp" />
+	</definition>
+	
+	<definition name="*/*" extends=".common">
+		<put-attribute name="body" value="/WEB-INF/views/{1}/{2}.jsp" />
+	</definition>
+	
+	<definition name="*/*/*" extends=".common">
+		<put-attribute name="body" value="/WEB-INF/views/{1}/{2}/{3}.jsp" />
+	</definition>
+	
+</tiles-definitions>

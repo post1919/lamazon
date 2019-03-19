@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="com.lamazon.mapper.ExcelMapper">
+<!-- 
+	<resultMap type="AdminMenu" id="adminMenuMap">
+		<id column="AD_PK" property=""AD_PK"" />
+		<result column="c_name" property="c_name" />
+	</resultMap>
+-->
+
+	<select id="manage_partner_updatelist" parameterType="HashMap" resultType="HashMap">
+		SELECT C_PK, R_U_PK FROM COMPANY WHERE C_ID = BINARY(#{cId})
+	</select>
+	
+	<insert id="insert_lms_reservation" parameterType="HashMap">
+		INSERT INTO castingn_sms.LMS_RESERVATION
+		(
+			LR_HP, LR_TITLE, LR_CONTENT, LR_DATE, LR_INCODE, LR_INDATE
+		) VALUES (
+			#{LR_HP}, #{LR_TITLE}, #{LR_CONTENT}, #{LR_DATE}, #{U_PK}, SYSDATE()
+		)
+	</insert>
+	
+</mapper>

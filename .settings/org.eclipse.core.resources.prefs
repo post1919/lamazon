@@ -1,0 +1,12 @@
+eclipse.preferences.version=1
+encoding//src/main/java=UTF-8
+encoding//src/main/resources=UTF-8
+encoding//src/main/resources/lamazon.properties=UTF-8
+encoding//src/main/resources/lamazon_db.properties=UTF-8
+encoding//src/main/resources/lamazon_message_en.properties=UTF-8
+encoding//src/main/resources/lamazon_message_ko.properties=UTF-8
+encoding//src/main/resources/lamazon_mybatis_config.xml=UTF-8
+encoding//src/main/webapp/WEB-INF/tiles/tiles.xml=UTF-8
+encoding//src/test/java=UTF-8
+encoding//src/test/resources=UTF-8
+encoding/<project>=UTF-8

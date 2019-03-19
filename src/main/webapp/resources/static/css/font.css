@@ -1,0 +1,58 @@
+/*
+* Noto Sans KR (korean) http://www.google.com/fonts/earlyaccess
+ */
+ 
+ @import url(https://fonts.googleapis.com/earlyaccess/notosanskr.css);
+ 
+ @font-face {
+  font-family: 'Noto Sans KR';
+  font-style: normal;
+  font-weight: 100;
+ /*  src: url(../font/NotoSansKR-Thin.woff2) format('woff2'),
+       url(../font/NotoSansKR-Thin.woff) format('woff'),
+       url(../font/NotoSansKR-Thin.otf) format('opentype'); */
+}
+@font-face {
+  font-family: 'Noto Sans KR';
+  font-style: normal;
+  font-weight: 300;
+  /* src: url(../font/NotoSansKR-Light.woff2) format('woff2'),
+       url(../font/NotoSansKR-Light.woff) format('woff'),
+       url(../font/NotoSansKR-Light.otf) format('opentype'); */
+}
+@font-face {
+   font-family: 'Noto Sans KR';
+   font-style: normal;
+   font-weight: 400;
+   /* src: url(../font/NotoSansKR-Regular.woff2) format('woff2'),
+        url(../font/NotoSansKR-Regular.woff) format('woff'),
+        url(../font/NotoSansKR-Regular.otf) format('opentype'); */
+ }
+@font-face {
+   font-family: 'Noto Sans KR';
+   font-style: normal;
+   font-weight: 500;
+   /* src: url(../font/NotoSansKR-Medium.woff2) format('woff2'),
+        url(../font/NotoSansKR-Medium.woff) format('woff'),
+        url(../font/NotoSansKR-Medium.otf) format('opentype'); */
+ }
+ @font-face {
+  font-family: 'Noto Sans KR';
+  font-style: normal;
+  font-weight: 700;
+  /* src: url(../font/NotoSansKR-Bold.woff2) format('woff2'),
+  url(../font/NotoSansKR-Bold.woff) format('woff'),
+  url(../font/NotoSansKR-Bold.otf) format('opentype'); */
+}
+@font-face {
+  font-family: '210-Omni-Gothic040';
+  font-style: normal;
+  font-weight: 100;
+   src: url(/static/font/210-Omni-Gothic040.ttf) format('truetype');
+}
+@font-face {
+  font-family: '210-Omni-Gothic040-OTF';
+  font-style: normal;
+  font-weight: 100;
+   src: url(/static/font/210-Omni-Gothic040-OTF.otf) format('opentype');
+}

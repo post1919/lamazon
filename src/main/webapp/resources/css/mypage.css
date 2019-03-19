@@ -1,0 +1,117 @@
+	.mypage_h{font-size:40px;color:#fff;font-weight:bold;line-height:143px;text-align:center;}
+.mypage_title{display:inline-block;font-size:20px;color:#333;font-weight:bold;}
+.background_f7{background:#f7f7f7;}
+.mypage_content input[type=text], .mypage_content input[type=password]{padding:9px;border:1px solid #ddd;}
+.mypage_content select{padding:7px;border:1px solid #ddd;}
+.mypage_content{width:1000px;margin:50px auto;}
+.mypage_content .mypage_menu{width:185px;float:left;}
+.mypage_content .mypage_base{width:775px;float:right;}
+.mypage_content .menu_top{height:100px;line-height:100px;padding-left:10px;font-size:25px;color:#222;border-top:2px solid #333;border-bottom:1px solid #999;}
+.mypage_content .menu_sub{height:50px;line-height:50px;padding-left:10px;border-bottom:1px solid #ddd;font-size:14px;font-weight:bold;}
+/*------mypage_inform------*/
+.mypage_content .mypage_base .mypage_inform{background:url("../images/mypage/mypage_bar.png") no-repeat;padding-top:60px;margin-top:10px;}
+.mypage_content .mypage_base .mypage_inform p{width:70px;margin:0 auto;}
+.mypage_content .mypage_base h4{font-size:30px;color:#333;}
+.mypage_content .mypage_base .img_wrap{width:145px;height:200px;float:left;}
+.mypage_content .mypage_base .img_wrap .img_person{height:160px;background:url("../images/mypage/mypage_person.png") no-repeat;}
+.mypage_content .mypage_base .img_wrap .img_company{height:160px;background:url("../images/mypage/mypage_company.png") no-repeat;}
+.mypage_content .mypage_base .img_change{display:inline-block;width:70px;height:30px;border:1px solid #ddd;text-align:center;line-height:30px;font-size:12px;color:#666;margin-top:10px;}
+.mypage_content .mypage_base .txt_wrap{float:right;width:615px;margin-left:10px;}
+.mypage_content .mypage_base .txt_wrap h5, .mypage_content .mypage_base .contact_inform h5{font-size:20px;color:#333;height:1px;}
+.mypage_content .mypage_base .txt_wrap span a{float:right;display:inline-block;width:90px;height:30px;text-align:center;line-height:30px;font-size:12px;color:#666;border:1px solid #ddd;border-radius:1px;margin-bottom:10px; }
+.mypage_content .mypage_base .txt_wrap table{width:615px;border-top:2px solid #818793;}
+.mypage_content .mypage_base .txt_wrap table th{text-align:left;height:50px;padding:0 20px;border-bottom:1px solid #ddd;}
+.mypage_content .mypage_base .txt_wrap table td{font-size:13px;color:#333;border-bottom:1px solid #ddd;padding:9px;}
+.mypage_content .mypage_base .txt_wrap table input[type=text], .mypage_content .mypage_base .txt_wrap table input[type=password]{width:210px;}
+.mypage_content .mypage_base .txt_wrap table select{width:112px;}
+.mypage_content .mypage_base .txt_wrap table .customer{width:210px;}
+.mypage_content .mypage_base .txt_wrap table .year{width:100px;}
+.mypage_content .mypage_base .txt_wrap table .date{width:80px;}
+.mypage_content .mypage_base .contact_inform{width:817px;clear:both;}
+.mypage_content .mypage_base .contact_inform li{float:left;}
+.mypage_content .mypage_base .contact_inform table{border-top:2px solid #818793;margin-top:50px;}
+.mypage_content .mypage_base .contact_inform table th{text-align:left;padding:0 20px;border-bottom:1px solid #ddd;}
+.mypage_content .mypage_base .contact_inform table td{font-size:12px;color:#333;border-bottom:1px solid #ddd;padding:9px;}
+.mypage_content .mypage_base .contact_inform table .text_red{font-size:12px;color:#e56868;}
+.mypage_content .mypage_base .contact_inform table .text_red_1{color:#e72f2f;clear:both;display:block;}
+.mypage_content .mypage_base .contact_inform table .mail_text{width:110px;padding:9px;}
+.mypage_content .mypage_base .contact_inform table .mail_select{}
+.mypage_content .mypage_base .contact_inform table .number_text{width:120px;}
+.mypage_content .mypage_base .contact_inform table .number_select{width:100px;padding:0 10px;}
+.mypage_content .mypage_base .contact_inform table .area_select{width:150px;padding:9px;}
+.mypage_content .mypage_base .contact_inform table .address_text{width:100px;}
+.mypage_content .mypage_base .contact_inform table .address_text_1{width:640px;}
+.mypage_content .mypage_base .contact_inform table .btn_address_search{display:inline-block;width:73px;height:33px;line-height:33px;text-align:center;font-size:12px;color:#fff ;background-color:#666;margin-left:10px;}
+.mypage_content .mypage_base .contact_inform table .btn_gray{display:inline-block;width:70px;height:33px;line-height:33px;text-align:center;font-size:12px;color:#fff ;background-color:#666;margin-left:10px;}
+.mypage_content .mypage_base .contact_inform table .add{line-height:42px;}
+.mypage_content .mypage_base .contact_inform .btn_success a{display:inline-block;width:175px;height:50px;line-height:50px;text-align:center;font-size:16px;color:#fff ;background-color:#01bbd6;margin-top:30px;}
+.mypage_content .mypage_base .contact_inform .btn_success{width:175px;margin:0 auto;margin-bottom:200px;}
+/*------mypage_company------*/
+.mypage_content .mypage_base .company_img_wrap{width:275px;height:310px;float:right;}
+.mypage_content .mypage_base .company_img_wrap .img_person{height:160px;background:url("../images/mypage/mypage_person.png") no-repeat;}
+.mypage_content .mypage_base .company_img_change{display:inline-block;width:70px;height:30px;border:1px solid #ddd;text-align:center;line-height:30px;font-size:12px;color:#666;margin-top:10px;}
+.mypage_content .mypage_base .company_txt_wrap{float:left;width:470px;margin-left:10px;}
+.mypage_content .mypage_base .company_txt_wrap h5{font-size:20px;color:#333;height:1px;}
+.mypage_content .mypage_base .company_txt_wrap span a{float:right;display:inline-block;width:90px;height:30px;text-align:center;line-height:30px;font-size:12px;color:#666;border:1px solid #ddd;border-radius:1px;margin-bottom:10px; }
+.mypage_content .mypage_base .company_txt_wrap table{width:470px;border-top:2px solid #818793;}
+.mypage_content .mypage_base .company_txt_wrap table th{text-align:left;height:50px;padding:0 10px;border-bottom:1px solid #ddd;}
+.mypage_content .mypage_base .company_txt_wrap table td{font-size:13px;color:#333;border-bottom:1px solid #ddd;}
+.mypage_content .mypage_base .company_txt_wrap table input[type=text]{width:208px;}
+.mypage_content .mypage_base .company_txt_wrap table .position_1{width:212px;}
+.mypage_content .mypage_base .company_txt_wrap table .year{width:102px;padding:0 10px;}
+.mypage_content .mypage_base .company_txt_wrap .btn_success a{display:inline-block;width:175px;height:50px;line-height:50px;text-align:center;font-size:16px;color:#fff ;background-color:#01bbd6;margin-top:30px;}
+.mypage_content .mypage_base .company_txt_wrap .btn_success{width:175px;margin:0 auto;margin-bottom:60px;}
+.mypage_content .mypage_base .company_img_wrap{margin-top:0px;position:relative;}
+.mypage_content .mypage_base .company_img_wrap .company_bg01{position:absolute;top:0;right:0;bottom:0;left:0;}
+.mypage_content .mypage_base .company_img_wrap .company_bg02{position:absolute;top:0;right:0;bottom:0;left:0;}
+.mypage_content .mypage_base .company_confirm{clear:both;margin-bottom:200px;}
+.mypage_content .mypage_base .company_confirm h4{font-size:20px;}
+.mypage_content .mypage_base .company_confirm .confirm_txt{height:180px;border-top:1px solid #818793;padding:40px 20px;background:url("../images/mypage/mypage_arrow.png") no-repeat;background-position:250px 205px;}
+.mypage_content .mypage_base .company_confirm .confirm_txt span{font-size:13px;color:#666;}
+.mypage_content .mypage_base .company_confirm .confirm_txt ul{height:143px;}
+.mypage_content .mypage_base .company_confirm .confirm_txt ul li{float:left;text-indent:-9999px;margin:80px 50px 0 50px;}
+.mypage_content .mypage_base .company_confirm .confirm_txt ul li a{display:block;width:143px;height:143px;background:url("../images/mypage/mypage_confirm.png") no-repeat;}
+.mypage_content .mypage_base .company_confirm .confirm_txt_1{width:775px;margin-top:50px;}
+.mypage_content .mypage_base .company_confirm .confirm_txt_1 ul{width:775px;margin:10px 80px;}
+.mypage_content .mypage_base .company_confirm .confirm_txt_1 ul li{float:left;margin-right:140px;font-size:12px;color:#666;;height:30px;line-height:30px;}
+.mypage_content .mypage_base .company_confirm .confirm_txt_1 ul li .btn_confirm_send{display:inline-block;width:115px;height:30px;line-height:30px;text-align:center;border:1px solid #ddd;}
+#confirm01 a{background-position:0px 0px;}
+#confirm01 a:active{background-position:0px -143px;}
+#confirm02 a{background-position:-143px 0px;}
+#confirm02 a:active{background-position:-143px -143px;}
+#confirm03 a{background-position:-286px 0px;}
+#confirm03 a:active{background-position:-286px -143px;}
+/*------mypage_bill------*/
+.mypage_content .bill{width:775px;float:right;}
+.mypage_content .bill .bill_inform{background:url("../images/mypage/mypage_bar.png") no-repeat;padding-top:60px;margin-top:10px;}
+.mypage_content .bill .bill_inform p{width:70px;margin:0 auto;}
+.mypage_content .bill h4{font-size:30px;color:#333;}
+.mypage_content .bill .bill_content .bill_btn a{display:inline-block;width:88px;height:28px;line-height:28px;text-align:center;font-size:12px;color:#666;border:1px solid #ddd;border-radius:2px;float:right;}
+.mypage_content .bill .bill_content table{border-top:2px solid #818793;margin-top:10px;}
+.mypage_content .bill .bill_content table input[type=text]{width:210px;}
+.mypage_content .bill .bill_content table select{width:210px;}
+.mypage_content .bill .bill_content .width_100{width:100px;}
+.mypage_content .bill .bill_content .width_120{width:120px;}
+.mypage_content .bill .bill_content table th, .mypage_content .bill .bill_content table td{padding:10px;border-bottom:1px solid #ddd;text-align:left;}
+.mypage_content .bill .bill_content table td ul li{float:left;margin-right:10px;}
+.mypage_content .bill .bill_content .bill_btn_wrap{width:175px;height:50px;margin:0 auto; margin-bottom:200px;}
+.mypage_content .bill .bill_content .bill_btn02{display:inline-block;width:175px;height:50px;line-height:50px;text-align:center;font-size:16px;color:#fff;background:#01bbd6;}
+/*------mypage_manager------*/
+.mypage_manager{width:775px;float:right;height:500px;}
+.mypage_manager h4{font-size:30px;color:#333;}
+.mypage_manager .manager{background:url("../images/mypage/mypage_bar.png") no-repeat;padding-top:20px;margin-top:10px;}
+.mypage_manager .manager span{font-size:16px;}
+.mypage_manager .manager table{width:775px;border-top:2px solid #818793;border-bottom:2px solid #818793;margin-top:20px;text-align:center;}
+.mypage_manager .manager table th{background:#f7f7f7;}
+.mypage_manager .manager table th, .mypage_manager .manager table td{border-bottom:1px solid #ddd;border-left:1px solid #ddd;padding:9px 10px;}
+.mypage_manager .manager table th:first-child, .mypage_manager .manager table td:first-child{border-left:none;}
+.mypage_manager .manager .btn_manager{display:inline-block;width:90px;height:30px;line-height:30px;text-align:center;background:#666;color:#fff;float:right;margin-top:10px;}
+.mypage_manager .manager table tr td .mail{color:#2490f4;}
+.mypage_manager .manager table tr td .mail:hover{text-decoration:underline;}
+.mypage_manager .manager table tr td .btn_all a{display:inline-block;width:35px;height:18px;line-height:18px;font:µ¸¿ò, 'Dotum', Arial, Helvetica, sans-serif;font-size:11px;color:#777;border:1px solid #ddd;}
+.introduce_wrap{width:775px;float:right;height:500px;background:url("../images/mypage/mypage_bar.png") no-repeat;margin-top:10px;}
+.introduce_wrap h4{font-size:30px;color:#333;}
+.introduce_wrap .introduce_c{text-align:left;margin-top:60px;padding-left:110px;background:url("../images/mypage/introduce_bg.png") no-repeat 30px top;}
+.introduce_wrap .introduce_c{font-size:16px;color:#333;}
+.introduce_wrap > p{text-align:center;margin-top:50px;}
+.introduce_wrap > p > a{display:inline-block;width:230px;height:50px;line-height:50px;text-align:center;font-size:16px;color:#fff;background:#01bbd6;}

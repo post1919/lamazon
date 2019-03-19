@@ -1,0 +1,336 @@
+@charset "utf-8";
+ 
+.shoppingtory .inner {width:100%; max-width: 1000px; margin: 0 auto; font-family: 'Nanum Gothic','nGothic','맑은 고딕','Malgun Gothic',Dotum, gulim}
+.tory_top_area {padding:50px 0px 40px 0px;}
+.tory_top_area .tory_logo {float: left;}
+.tory_top_area .user_area {width: 748px; height:36px; border: 1px solid #cccccc; float: right; font-size: 26px; color: #2b2d36; font-weight: bold; position: relative; letter-spacing: -1px; padding: 12px 0px 12px 20px; line-height:34px;}
+.tory_top_area .user_area .blue {color: #56bdd7 !important; padding-right:17px; background: url(/shoppingtori/img/shoppingtory/point.gif) no-repeat right center;}
+.tory_top_area .user_area .red {color: #ea474d;}
+.tory_top_area .user_area .btn {position: absolute; right:13px; top:13px; background: url(/shoppingtori/img/shoppingtory/q_mark.gif) no-repeat 7px center; border: 1px solid #cccccc}
+.tory_top_area .user_area .btn a {display: block; line-height:30px; font-size:14px; color:#555a6d; padding-left: 33px; background: url(/shoppingtori/img/shoppingtory/arrow.gif) no-repeat 95% center; padding-right: 20px;}
+
+.tory_product {padding:30px 0px 45px 0px;}
+.shoppingtory .tory_tit {font-size: 20px; color: #2b2d36; font-weight: bold; letter-spacing:-1px; padding: 0px 0px 15px 18px; background: url(/shoppingtori/img/shoppingtory/point2.gif) no-repeat left 10px; line-height: 140%;}
+
+.tory_product .tory_ban {overflow: hidden;}
+.tory_product .tory_ban > li {float: left; width:33.33%; box-sizing: border-box; }
+.tory_product .tory_ban > li > div {display: inline-block; text-align: left; position: relative;}
+.tory_product .tory_ban > li .num {display: block; width:36px; height: 36px; text-align: center; line-height: 34px; background: #ea474d; position: absolute; left: 0px; top: 0px; color: #fff; font-weight: bold; font-weight:bold; z-index: 99;}
+.tory_product .tory_ban > li .img {display: block;}
+.tory_product .tory_ban > li .txt {padding:18px 15px 15px 15px; display: block; line-height: 22px; font-size:14px; max-width:274px; background: #fff; border: 1px solid #d7d7d7; letter-spacing: -1px;}
+.tory_product .tory_ban > li .txt strong {display: block; font-size:20px; color: #2b2d36; padding-bottom:10px; font-weight: bold; font-family: 'Nanum Gothic','nGothic','맑은 고딕','Malgun Gothic',Dotum, gulim;}
+.tory_product .tory_ban > li .go_view {display:inline-block; background: #d7d7d7; text-align: center; line-height:21px; height: 22px; color: #2b2d36; font-size: 12px; margin-top:10px; padding: 0px 10px;}
+.tory_product .tory_ban > li:hover > div {background: #2b2d36;}
+.tory_product .tory_ban > li:hover .txt {background: #2b2d36; border: 1px solid #2b2d36; color: #fff;}
+.tory_product .tory_ban > li:hover .txt strong {color: #fff;}
+.tory_product .tory_ban > li:hover .go_view {background: #ea474d; color: #fff;}
+.tory_product .tory_ban > li.ban02 {text-align: center;}
+.tory_product .tory_ban > li.ban03 {text-align: right;}
+.tory_product .tory_ban02 {overflow: hidden; padding: 20px 0px 10px 0px;}
+.tory_product .tory_ban02 > li {float: left; min-height: 246px; font-size:17px; font-weight: 500; line-height:28px; width:49.5%; box-sizing: border-box; overflow: hidden; position: relative;}
+.tory_product .tory_ban02 > li h3 {font-size: 25px; color: #2b2d36; line-height: 140%; padding:30px 0px 20px 0px; font-weight: bold;}
+.tory_product .tory_ban02 > li .go_btn {padding-top:15px;}
+.tory_product .tory_ban02 > li.ban01 {background: url(/shoppingtori/img/shoppingtory/section01_bg02.png) no-repeat center center; text-align: center; color: #2b2d36;  }
+.tory_product .tory_ban02 > li.ban01 .go_btn a {display: inline-block; padding: 0px 10px; background: #ea474d; line-height:29px; height: 30px; color: #fff; font-size: 15px; }
+.tory_product .tory_ban02 > li.ban01 .go_btn a span {display:block; padding-right:15px; background: url(/shoppingtori/img/shoppingtory/arrow_bottom.png) no-repeat right center;}
+
+.tory_product .tory_ban02 > li.ban02 {width: 49.5%; float: right; background: url(/shoppingtori/img/shoppingtory/section02_bg02.gif) no-repeat left center;}
+.tory_product .tory_ban02 > li.ban02 .txtW {width:44%; background:#f4ad49; position: absolute; right: 0px; top: 0px; height: 100%; color: #fff; box-sizing: border-box; padding:0px 5% 0px 5%;}
+.tory_product .tory_ban02 > li.ban02 .txtW h3 {color: #fff;}
+.tory_product .tory_ban02 > li.ban02 .go_btn a {display: inline-block; border: 1px solid #fff; padding: 0px 10px; line-height:27px; height:28px; color: #fff; font-size: 15px; min-width: 120px; text-align: center;}
+.tory_product .tory_ban02 > li.ban02 .go_btn a span {display:inline-block; padding-right:15px; background: url(/shoppingtori/img/shoppingtory/arrow2.gif) no-repeat right center;}
+
+.tory_banner {background: url(/shoppingtori/img/shoppingtory/section03_bg01.gif) no-repeat center top; min-height:240px;}
+.tory_banner .inner {text-align: right;}
+.tory_banner .txtW {display: inline-block; max-width: 458px; text-align: center;}
+.tory_banner .txtW h3 {color: #fff; font-size:25px; color: #fff; line-height: 140%; padding:30px 0px 20px 0px; font-weight: bold;}
+.tory_banner .txtW .txt {color: #fff; font-size:25px; color: #fff; line-height: 140%; font-size: 18px; font-weight: 500; letter-spacing: -0.5px;}
+.tory_banner .txtW .go_btn {padding-top:25px;}
+.tory_banner .txtW .go_btn a {display: inline-block; border: 1px solid #fff; padding: 0px 10px; line-height:27px; height:28px; color: #fff; font-size: 15px; min-width: 120px; text-align: center;}
+
+
+.tory_product .tory_ban03 {overflow: hidden;}
+.tory_product .tory_ban03 > li {float: left; width:33.33%; box-sizing: border-box;  letter-spacing: -1px;}
+.tory_product .tory_ban03 > li .block {text-align: left; max-width: 307px; padding-top:145px; }
+.tory_product .tory_ban03 > li .block .txtW {background: #51bf87; position: relative; min-height: 28px; line-height: 26px; padding: 18px 18px; color: #fff;}
+.tory_product .tory_ban03 > li > .block h3 {font-size: 18px; font-weight: bold; display: inline-block;}
+.tory_product .tory_ban03 > li > .block .go_btn {position: absolute; right: 18px; top: 18px;}
+.tory_product .tory_ban03 > li > .block .go_btn a {display: block; border: 1px solid #fff; padding: 0px 5px; line-height:25px; height:26px; color: #fff; font-size: 15px; text-align: center;}
+.tory_product .tory_ban03 > li.ban01 .block {background: url(/shoppingtori/img/shoppingtory/section04_bg01.gif) no-repeat center center}
+.tory_product .tory_ban03 > li.ban02 .block {background: url(/shoppingtori/img/shoppingtory/section04_bg02.gif) no-repeat center center}
+.tory_product .tory_ban03 > li.ban03 .block {background: url(/shoppingtori/img/shoppingtory/section04_bg03.gif) no-repeat center center}
+.tory_product .tory_ban03 > li.ban02 .block .txtW {background: #56bdd7}
+.tory_product .tory_ban03 > li.ban03 .block .txtW {background: #2b2d36}
+.mobile_navi {display: none; position: absolute; right: 10px; top: 10px; z-index: 9999;}
+.mobile_gnb {position: absolute; left: 0px; top:96px; width: 100%; background: #000; z-index: 9999; display: none;}
+.mobile_gnb > ul > li > a {display: block; font-size: 14px; color: #ffffff; padding: 15px 0px; text-align: center; border-bottom: 1px solid rgba(255,255,255, .065);}
+.m_logo {display: none;}
+.imgW img {max-width:100%;}
+
+
+/* sub page */
+.shoppingtory strong {font-weight: bold; font-family: 'Nanum Gothic','nGothic','맑은 고딕','Malgun Gothic',Dotum, gulim ;}
+.tory_sub_top {color: #fff; height:379px; overflow: hidden; position: relative; text-align: center;}
+.tory_sub_top .img {position: absolute; left: 50%; top: 0px; margin-left:-1100px;}
+.tory_sub_top .txt_wrap { position: relative; z-index: 9; letter-spacing: -1px;}
+.tory_sub_top .txt1 {font-size: 52px; font-weight: bold; line-height: 140%; padding-top:4%;}
+.tory_sub_top .txt2 {font-size:34px; color: #8de3f9; line-height: 140%;}
+.tory_sub_top .txt3 {font-size:34px; color: #fff; line-height: 140%;}
+.tory_sub_top .txt3 strong {color: #8de3f9;}
+.tory_sub_top .line {text-align: center; padding:1%; position: relative;}
+.tory_sub_top .line span {display: block; width:2px; height:74px; background: #fff; margin: 0 auto;}
+
+.tory_sub_banner {background: #e8e8e8;}
+.tory_sub_banner .inner {height: 289px;  position: relative;}
+.tory_sub_banner .img {width:33%; max-width:300px; position: absolute; left:5%; bottom:0px;}
+.tory_sub_banner .img img {max-width:100%; vertical-align: bottom}
+.tory_sub_banner .txt {padding-left:42%; display: table; height: 100%; letter-spacing: -1px;}
+.tory_sub_banner .txt p {display: table-cell; vertical-align: middle; font-size:28px; line-height: 160%; color: #333333;}
+
+
+.shoppingtory .num_tit {font-size:25px; color: #2b2d36; font-weight: bold; letter-spacing: -2px; padding: 0px 0px 15px 56px; position: relative; line-height:36px; margin-top: 10px;}
+.shoppingtory .num_tit .num {display: block; width:36px; height: 36px; line-height: 36px; text-align: center; color: #fff; font-size: 20px; background: #ea474d; position: absolute; left: 0px; top: 0px; box-shadow: 0px 1px 13px 1px #ccc;}
+
+.tory_sub_ban01 {font-size: 0px; text-align: center; padding:10px 0px 30px 0px;}
+.tory_sub_ban01 li {display: inline-block; width: 33.33%; text-align: center; box-sizing: border-box; padding: 0px 3%;}
+.tory_sub_ban01 li img {max-width: 100%;}
+
+.shoppingtory .sub_txt {font-size: 25px; color: #2b2d36; line-height: 140%; letter-spacing: -1px;}
+.shoppingtory .db_table {display:table}
+.shoppingtory .db_table .td_cell {display:table-cell; vertical-align: middle;}
+
+.tory_product .ex_area {overflow: hidden; padding-top: 10px; border-bottom: 1px solid #dddddd; padding-bottom: 40px;}
+.tory_product .ex_area img {max-width: 100%;}
+.tory_product .ex_area .img {float: left; width: 50%; padding-right: 30px;}
+.tory_product .ex_area .sub_txt { padding-top:5%;}
+.tory_product .ex_area.right {border: none; padding-bottom: 0px;}
+.tory_product .ex_area.right .img {float: right; width: 50%; padding-right:0px; padding-left: 30px;}
+.tory_product .ex_area.right .sub_txt {text-align: right; padding-right: 50%; padding-top:7%;}
+
+.m_block_txt {padding-bottom:10px; display: none;}
+.m_block_txt ol {background:#56bdd7; padding: 10px;}
+.m_block_txt ol li {color: #fff; font-size:16px; line-height:20px; padding:5px 10px 5px 20px; text-indent:-17px; }
+
+.balloon_txt {position: relative; padding-left:240px; margin-top: 15px; min-height: 75px; letter-spacing: -1px;}
+.balloon_txt dt {width:197px; height: 75px; text-align: center; background: url(/shoppingtori/img/shoppingtory/balloon.gif) no-repeat left top; font-size:25px; color: #fff; line-height: 75px; position: absolute; left:10px; top: 0px; font-weight: 500; letter-spacing: -2px; padding-right: 5px; font-family: 'Nanum Gothic','nGothic','맑은 고딕','Malgun Gothic',Dotum, gulim;}
+.balloon_txt dd {letter-spacing: -1px;}
+
+.tory_sub_ban06 {font-size: 0px; text-align: center; padding:10px 0px 30px 0px;}
+.tory_sub_ban06 li {display: inline-block; width:25%; text-align: center; box-sizing: border-box; padding: 0px 3%;}
+.tory_sub_ban06 li img {max-width: 100%;}
+
+.tory_sub_ban07 {font-size: 0px; text-align: center; padding:30px 0px 30px 0px;}
+.tory_sub_ban07 li {display: inline-block; width:20%; text-align: center; box-sizing: border-box; padding:5px}
+.tory_sub_ban07 li img {max-width: 100%;}
+.tory_product .red {color: #ea474d !important}
+
+.inquiry_wrap .sub_txt {text-align: center; color: #56bdd7; font-weight: 600; font-size: 33px; line-height: 140%; letter-spacing: -2px; padding:20px 0px 5px 0px;}
+.inquiry_wrap .sub_txt_s {text-align: center; font-size: 25px; color: #2b2d36; line-height: 140%;}
+
+.inquiry_input {padding:30px 0px 10px 0px; overflow: hidden;}
+.inquiry_input > li {width: 50%; box-sizing: border-box; padding:5px 10px; float: left;}
+.inquiry_input > li > div {border: 1px solid #c5c5c5; padding: 5px 0px;}
+.inquiry_input > li > div .input {border: none; height:47px; line-height:47px; font-family: 'Nanum Gothic','nGothic','맑은 고딕','Malgun Gothic',Dotum, gulim; padding-left:60px; font-size:17px; outline: none;}
+.inquiry_input > li > div .textarea {border: none; height:100px; line-height:20px; font-family: 'Nanum Gothic','nGothic','맑은 고딕','Malgun Gothic',Dotum, gulim; padding-left:60px; font-size:17px; padding-top: 10px; outline: none; }
+
+.inquiry_input > li > div input::-webkit-input-placeholder { color:#c6c6c6 }
+.inquiry_input > li > div input::-moz-placeholder { color:#c6c6c6 }
+.inquiry_input > li > div input::-ms-input-placeholder { color:#c6c6c6 }
+.inquiry_input > li > div textarea::-ms-input-placeholder { color:#c6c6c6 }
+.inquiry_input > li > div textarea::-moz-placeholder { color:#c6c6c6 }
+.inquiry_input > li > div textarea::-webkit-input-placeholder { color:#c6c6c6 }
+
+
+
+.inquiry_input > li.ico05 {width:100%; clear: both;}
+
+.inquiry_input > li.ico01 .input {background: url(/shoppingtori/img/shoppingtory/input_ico01.gif) no-repeat 10px 8px;}
+.inquiry_input > li.ico02 .input {background: url(/shoppingtori/img/shoppingtory/input_ico02.gif) no-repeat 10px 8px;}
+.inquiry_input > li.ico03 .input {background: url(/shoppingtori/img/shoppingtory/input_ico03.gif) no-repeat 10px 8px;}
+.inquiry_input > li.ico04 .input {background: url(/shoppingtori/img/shoppingtory/input_ico04.gif) no-repeat 10px 8px;}
+.inquiry_input > li.ico05 .textarea {background: url(/shoppingtori/img/shoppingtory/input_ico05.gif) no-repeat 10px 8px;}
+.inquiry_input > li > div.on {border: 1px solid #56bdd7}
+.inquiry_input > li.ico01 .on .input {background: url(/shoppingtori/img/shoppingtory/input_ico01_on.gif) no-repeat 10px 8px;}
+.inquiry_input > li.ico02 .on .input {background: url(/shoppingtori/img/shoppingtory/input_ico02_on.gif) no-repeat 10px 8px;}
+.inquiry_input > li.ico03 .on .input {background: url(/shoppingtori/img/shoppingtory/input_ico03_on.gif) no-repeat 10px 8px;}
+.inquiry_input > li.ico04 .on .input {background: url(/shoppingtori/img/shoppingtory/input_ico04_on.gif) no-repeat 10px 8px;}
+.inquiry_input > li.ico05 .on .textarea {background: url(/shoppingtori/img/shoppingtory/input_ico05_on.gif) no-repeat 10px 8px;}
+.yak_check {font-size: 15px; color: #2b2d36}
+
+.inquiry_btn {text-align: center; padding: 30px 0px;}
+.inquiry_btn a {display: inline-block; padding:15px 30px; background: #e63b42; font-size:21px; color: #fff; text-align: center; font-weight:600; line-height: 30px; border-radius:15px; letter-spacing: -2px; }
+.inquiry_btn a span {display:block; padding-right:30px; background: url(/shoppingtori/img/shoppingtory/arrow.png) no-repeat right center; }
+
+
+
+
+
+
+/** 960px 이하 */
+@media screen and (max-width:959px) {
+	.tory_top_area {padding:20px 20px 30px 20px;}
+	.tory_top_area .inner {padding:0px !important;}
+	.tory_top_area .user_area .btn {position: absolute; right: 0px; top: -50px; }
+	.tory_top_area .user_area .btn a {font-size: 15px;}
+	.tory_top_area .user_area .h_txt {display: none;}
+	.tory_top_area .user_area {float: none; width: 100%; padding: 12px; box-sizing: border-box; text-align: center; min-height: 36px; height: auto; margin-top: 10px;}
+	.tory_top_area .tory_logo {float: none;}
+	
+	
+	
+	
+	
+	.shoppingtory .inner {padding-left:50px; padding-right: 50px; box-sizing: border-box;}
+	.tory_product .tory_ban > li {float: none; width: 100%; text-align: left !important; padding-top: 37px;}
+	.tory_product .tory_ban > li:first-child {padding-top:0px;}
+	.tory_product .tory_ban > li > div {display:block; position: relative; padding-left: 306px; min-height:213px; border: 1px solid #d7d7d7; background: #fff;}
+	.tory_product .tory_ban > li .img {position: absolute; left:-1px; top:-1px;}
+	.tory_product .tory_ban > li .txt {padding:7% 15px 15px 10%; line-height: 22px; font-size:18px; max-width:100%; border:none;}
+
+	.tory_product .tory_ban > li .txt strong {font-size:25px; padding-bottom: 5%; }
+	.tory_product .tory_ban > li .go_view {margin-top:6%;}
+	
+	.tory_product .tory_ban02 > li {float:none; width:100%; position: relative;}
+	.tory_product .tory_ban02 > li.ban02 {float:none; width:100%; margin-top: 45px;}
+	.tory_product .tory_ban02 > li.ban02 .txtW {width: 50%;}
+	.tory_banner {background-position:30% top !important }
+	.tory_banner .inner {text-align: center;}
+	
+	.tory_product .tory_ban03 > li {float: none; width:100%; margin-top: 32px; position: relative;}
+	.tory_product .tory_ban03 > li:first-child {margin-top:0px;}
+	.tory_product .tory_ban03 > li .block {text-align: center; max-width:100%; min-height:145px; padding-left: 50%; padding-top: 0px;}
+	.tory_product .tory_ban03 > li.ban01 .block {background-position: left 30%;}
+	.tory_product .tory_ban03 > li .block .txtW {position: absolute; right: 0px; top: 0px; width: 50%; min-height:28px; line-height: 26px; height: 100%; box-sizing: border-box;}
+	.tory_product .tory_ban03 > li > .block h3 {display: block; font-size:25px; line-height: 140%; padding-top: 10px;}
+	.tory_product .tory_ban03 > li > .block .go_btn { position: relative; right: auto; top: auto; padding-top:15px; text-align: center;}
+	.tory_product .tory_ban03 > li > .block .go_btn a {display: inline-block; }
+	.tory_product .tory_ban03 > li.ban02 .block {background-position: right 50%;}
+	.tory_product .tory_ban03 > li.ban02 .block .txtW {right: auto; left: 0px;}
+	.tory_product .tory_ban03 > li.ban03 .block {background-position: left 50%;}
+	.tory_sub_ban07 li {width:25%; }
+	
+	
+	
+}
+/* 768 이하 */
+@media screen and (max-width:767px) {
+	#user_disable {display:block;  top:50px;}
+	.mobile_navi {display: block;}
+	#ulGNB {display: none;}
+	.new_bluemn  {display: none;}
+	.new_top_menu {top:57px; right:45px;}
+	.new_top_menu li {line-height:36px; color: #fff;}
+	.new_top_menu li a {color: #fff;}
+	.new_bluebtn a {margin-top:4px;}
+	.tory_top_area {padding:20px;}
+	.shoppingtory .inner {padding:0px 20px;}
+	#footerW .footer > div.foot_con04 {float: none; width: 100% !important; box-sizing: border-box; clear: both; float: none; padding:10px 10px; border-top: 1px solid #474848;}
+	#footerW .footer > div.foot_con04 .f_tit {padding:10px 0px; border: none;}
+	#footerW .footer > div.foot_con04 ul {padding:0px; margin-left:-10px;}
+	#footerW .footer > div.foot_con04 ul > li {display: inline-block; padding-left: 10px;}
+	#footerW .footer > div.foot_con04 ul > li span {padding:0px;}
+	.f_sns {top: auto; left:auto; right: 10px; bottom:-40px}
+	.f_sns li {margin-left: 0px !important;}
+	
+	#footerW .footer .f_tit {border-bottom: 1px solid #474848; height:30px; padding: 0px 5%;}
+	#footerW .footer > div {width:33.33% !important; box-sizing: border-box;}
+	#footerW .footer > div > ul {padding:10px 5%;}
+	#footerW .copyright {text-align: left; padding-left: 10px;}
+	.shoppingtory .sub_txt {font-size:20px;}
+	.shoppingtory .sub_txt_s {font-size: 15px;}
+	.tory_sub_banner .img {width: 30%;}
+	.tory_sub_banner .inner {height:240px;}
+	.tory_sub_banner .txt p {font-size:22px;  line-height: 160%;}
+	.tory_sub_top .txt1 {font-size:42px; padding-top: 4%;}
+	.tory_sub_top .txt2 {font-size:24px;}
+	.tory_sub_top .line span {height:54px;}
+	.tory_sub_top .txt3 {font-size:24px;}
+	.tory_sub_top {height:279px;}
+	.tory_sub_top .img {
+    position: absolute;
+    left: 50%;
+    top: 0px;
+    margin-left: -1100px;
+}
+
+}
+
+/*600px이하*/
+@media screen and (max-width:600px) {
+	.tory_logo {height:32px;}
+	.tory_logo img {max-height:100%;}
+	.tory_top_area .user_area {padding:5px; font-size:20px;}
+	.tory_top_area .user_area .btn {top: -42px;}
+	.tory_product {padding:20px 0px 35px 0px;}
+	.tory_product .tory_ban > li > div {padding-left:200px; min-height:139px;}
+	.tory_product .tory_ban > li .img {width:200px}	
+	.tory_product .tory_ban > li .img img {max-width: 100%;}	
+	.tory_product .tory_ban > li .txt {line-height:140%; font-size:14px;}
+	.tory_product .tory_ban > li .txt strong {font-size: 20px;}
+	.tory_product .tory_ban > li {padding-top:25px;}
+	.tory_product .tory_ban02 > li.ban02 {margin-top:25px;}
+	.tory_product .tory_ban03 > li {margin-top:25px;}
+	.tory_banner .txtW h3 {font-size:20px;}
+	.shoppingtory .tory_tit {font-size:16px; }
+	.tory_product .tory_ban02 > li h3 {font-size:20px;}
+	.tory_product .tory_ban02 > li {font-size:14px;}
+	.tory_top_area .user_area {padding:5px; font-size: 14px;}
+	.tory_product .tory_ban02 > li.ban02 .txtW {width:47%; padding: 0px 3%; line-height: 130%;}
+	.tory_banner .txtW .txt {font-size:14px;}
+	.tory_product .tory_ban03 > li > .block h3 {font-size: 20px;}
+	
+	.tory_product .ex_area .img {float: none !important; width:100% !important; box-sizing: border-box; padding:0px 5% !important; text-align: center;}
+	.tory_product .ex_area .sub_txt {text-align: center;}
+	.tory_product .ex_area.right .sub_txt {text-align:center; padding-right:0%; padding-top:0%;}
+	.tory_sub_banner .inner {height:200px;}
+	.tory_sub_banner .txt p {font-size:18px;}
+	.tory_sub_ban06 li {width:50%; text-align: center; box-sizing: border-box; padding:10px 3%;}
+	.tory_sub_ban07 li {width:33.33%; }
+	.tory_sub_top .txt1 {font-size:32px; }
+	.tory_sub_top .txt2 {font-size:18px;}
+	.tory_sub_top .line span {height:34px; width: 1px;}
+	.tory_sub_top .txt3 {font-size:18px;}
+	.tory_sub_top {height:200px;}
+	.tory_sub_top .img {top: -75px; margin-left: -1100px;}
+	.m_block_txt {display: block;}
+	.balloon_txt {padding-left:0px; min-height: auto;}
+	.balloon_txt dt {width: auto; height: auto; text-align:left; background:none; font-size: 21px; color: #56bdd7; line-height:45px; position: relative; left: auto;}
+	.inquiry_input > li {width:100%; padding:5px 0px; float: none;}
+
+
+}
+
+
+/* 500px 이하 */
+@media screen and (max-width:497px) {
+	.doing_row .box {width:100%;}
+
+}
+/* 480px 이하 */
+@media screen and (max-width:479px) {
+	.shoppingtory .inner {padding: 0px 10px;}
+	.tory_banner .txtW .txt br {display: none;}
+   .tory_product .tory_ban > li > div {padding-left:160px; min-height:110px;}
+	.tory_product .tory_ban > li .img {width:160px}	
+	.tory_product .tory_ban > li .img img {max-width: 100%;}	
+	.tory_product .tory_ban > li .txt {line-height:140%; font-size:11px; padding:8px;}
+	.tory_product .tory_ban > li .txt strong {font-size:14px;}
+	.tory_product .tory_ban03 > li > .block h3 {font-size:17px;}
+	.new_logo {margin-left: -40px;}
+	.m_logo {display:inline-block;}
+	.w_logo {display: none;}
+	.shoppingtory .sub_txt {font-size:15px;}
+	.shoppingtory .num_tit {font-size: 20px; padding: 0px 0px 15px 36px; line-height:26px;}
+	.shoppingtory .num_tit .num {width:26px; height:26px; line-height:26px; font-size:17px;}
+	.tory_sub_banner .inner {height:150px;}
+	.tory_sub_banner .img {width:130px;}
+	.tory_sub_banner .txt p {font-size:14px;}
+	.tory_sub_banner .txt p br {display: none;}
+	.tory_sub_banner .txt {padding-left:150px;}
+	.tory_sub_ban07 li {width:50%; }
+	.sub_txt .br {display: none;}
+	.tory_sub_top .txt1 {font-size:27px; padding-top:9%;}
+	.shoppingtory .sub_txt_s {font-size:14px;}
+	.yak_check {font-size:14px; color: #2b2d36;}
+	.m_block_txt ol li {font-size:15px; padding:3px 10px 3px 20px;}
+}

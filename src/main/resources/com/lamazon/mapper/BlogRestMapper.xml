@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="com.lamazon.mapper.BlogRestMapper">
+<!-- 
+	<resultMap type="AdminMenu" id="adminMenuMap">
+		<id column="AD_PK" property=""AD_PK"" />
+		<result column="c_name" property="c_name" />
+	</resultMap>
+-->
+
+	<select id="admin_emailsubscribe_list_count" parameterType="HashMap" resultType="int">
+		SELECT COUNT(*) AS CNT
+	  FROM BLOG_SUBSCRIBE BS
+	       LEFT JOIN USER_INFO UI
+	       ON BS.R_U_PK = UI.U_PK
+	       
+	       LEFT JOIN JOB_INFO BLOG
+	       ON BS.R_JI_PK = BLOG.JI_PK
+	       
+	 WHERE 1=1
+	 	<if test="ji_pk != null">AND R_JI_PK = #{ji_pk}</if>
+	 	<if test="ji_title != null">AND JI_TITLE like CONCAT('%', #{ji_title}, '%')</if>
+	 	<if test="bs_email != null">AND BS_EMAIL like CONCAT('%', #{bs_email}, '%')</if>
+	 	<if test="fromdate != null">AND DATE_FORMAT(BS.INDATE,'%Y-%m-%d') &gt;= ${fromdate}</if>
+	 	<if test="todate != null">AND DATE_FORMAT(BS.INDATE,'%Y-%m-%d') &lt;= ${todate}</if>
+	       
+	ORDER BY BS_PK
+	</select>
+	
+	<select id="admin_emailsubscribe_list" parameterType="HashMap" resultType="HashMap">
+		SELECT BS.*
+	     , UI.U_ID
+	     , BLOG.JI_TITLE
+	  FROM BLOG_SUBSCRIBE BS
+	       LEFT JOIN USER_INFO UI
+	       ON BS.R_U_PK = UI.U_PK
+	       
+	       LEFT JOIN JOB_INFO BLOG
+	       ON BS.R_JI_PK = BLOG.JI_PK
+	 WHERE 1=1
+	   AND BS_PK >= 63
+	       <if test="ji_pk != null">AND R_JI_PK = #{ji_pk}</if>
+	 	<if test="ji_title != null">AND JI_TITLE like CONCAT('%', #{ji_title}, '%')</if>
+	 	<if test="bs_email != null">AND BS_EMAIL like CONCAT('%', #{bs_email}, '%')</if>
+	 	<if test="fromdate != null">AND DATE_FORMAT(BS.INDATE,'%Y-%m-%d') &gt;= ${fromdate}</if>
+	 	<if test="todate != null">AND DATE_FORMAT(BS.INDATE,'%Y-%m-%d') &lt;= ${todate}</if>
+	    
+	    	<if test="ORDERING != null">${ORDERING}</if>
+	    	<if test="PAGING != null">LIMIT ${PAGING}</if>
+	</select>
+	
+	<update id="admin_menu_sorting_update" parameterType="HashMap">
+		UPDATE ADMIN_MENU 
+		SET AM_NAME     = #{AM_NAME}
+		  , AM_PARENT   = #{AM_PARENT}
+		  , AM_DEPTH    = #{AM_DEPTH}
+		  , AM_ORDERING = #{AM_ORDERING}
+		  , AM_MOCODE   = #{U_PK}
+		  , AM_MODATE   = NOW()
+      WHERE AM_PK = #{AM_PK}
+	</update>
+	
+	<update id="admin_menu_update" parameterType="HashMap">
+		UPDATE ADMIN_MENU 
+			SET AM_CODE      = #{AM_CODE}
+			  , AM_FULL_NAME = #{AM_FULL_NAME}
+			  , AM_AUTH      = #{AM_AUTH}
+			  , AM_AUTH2     = #{AM_AUTH2}
+			  , AM_IS_MAIN   = #{AM_IS_MAIN}
+			  , AM_MEMO      = #{AM_MEMO}
+			  , AM_URI       = #{AM_URI}
+			  , AM_ICON      = #{AM_ICON}
+			  , AM_STATUS    = #{AM_STATUS}
+			  , AM_MOCODE    = #{AM_MOCODE}
+			  , AM_MODATE    = NOW()
+	      WHERE AM_PK = #{AM_PK}
+	</update>
+	
+	<update id="admin_menu_name_update" parameterType="HashMap">
+		UPDATE ADMIN_MENU 
+			SET AM_NAME      = #{AM_NAME}
+			  , AM_MOCODE    = #{AM_MOCODE}
+			  , AM_MODATE    = NOW()
+	      WHERE AM_PK = #{AM_PK}
+	</update>
+	
+	<update id="admin_menu_delete" parameterType="HashMap">
+		UPDATE ADMIN_MENU 
+			SET AM_DELFLAG   = #{AM_DELFLAG}
+			  , AM_MOCODE    = #{AM_MOCODE}
+			  , AM_MODATE    = NOW()
+	      WHERE AM_PK = #{AM_PK}
+	</update>
+	
+	<update id="rfp_info_update" parameterType="HashMap">
+		 UPDATE RFP_INFO 
+			SET RI_CODE      = #{RI_CODE    }
+			  , RI_NAME      = #{RI_NAME    }
+			  , RI_CATEGORY  = #{RI_CATEGORY}
+			  , RI_TYPE      = #{RI_TYPE    }
+			  , RI_AUTH      = #{RI_AUTH    }
+			  , RI_AUTH2     = #{RI_AUTH2   }
+			  , RI_IS_MAIN   = #{RI_IS_MAIN }
+			  , RI_PRICE     = #{RI_PRICE   }
+			  , RI_MEMO      = #{RI_MEMO    }
+			  , RI_STEP      = #{RI_STEP    }
+			  , RI_STEPNAME  = #{RI_STEPNAME}
+			  , RI_STATUS    = #{RI_STATUS  }
+			  , RI_ORDERING  = #{RI_ORDERING}
+			  , RI_MOCODE    = #{RI_MOCODE  }
+			  , RI_MODATE    = NOW()
+	      WHERE RI_PK = #{RI_PK}
+	</update>
+	
+	<insert id="rfp_info_insert" parameterType="HashMap">
+		 INSERT INTO RFP_INFO (RI_PK,RI_CODE,RI_NAME,RI_CATEGORY,RI_TYPE,RI_AUTH,RI_AUTH2,RI_IS_MAIN,RI_PRICE,RI_MEMO,RI_STEP,RI_STEPNAME,RI_STATUS,RI_ORDERING,RI_INCODE, RI_INDATE ) VALUES
+		  (0,#{RI_CODE},#{RI_NAME},#{RI_CATEGORY},#{RI_TYPE},#{RI_AUTH},#{RI_AUTH2},#{RI_IS_MAIN},#{RI_PRICE},#{RI_MEMO},#{RI_STEP},#{RI_STEPNAME},#{RI_STATUS},#{RI_ORDERING},#{UPK},NOW())
+	</insert>
+	
+	<update id="rfp_info_name_update" parameterType="HashMap">
+		UPDATE RFP_INFO 
+			SET RI_NAME      = #{RI_NAME}
+			  , RI_CATEGORY  = #{RI_CATEGORY}
+			  , RI_MOCODE    = #{RI_MOCODE}
+			  , RI_MODATE    = NOW()
+	      WHERE RI_PK = #{RI_PK}
+	</update>
+	
+	<update id="rfp_info_delete" parameterType="HashMap">
+		 UPDATE RFP_INFO 
+			SET RI_DELFLAG   = #{RI_DELFLAG}
+			  , RI_MOCODE    = #{RI_MOCODE}
+			  , RI_MODATE    = NOW()
+	      WHERE RI_PK    = #{RI_PK}
+	</update>
+	
+	<update id="rfp_info_sorting_update" parameterType="HashMap">
+	      UPDATE RFP_INFO 
+			SET RI_NAME     = #{RI_NAME    }
+			  , RI_CATEGORY = #{RI_CATEGORY}
+			  , RI_PARENT   = #{RI_PARENT  }
+			  , RI_DEPTH    = #{RI_DEPTH   }
+			  , RI_ORDERING = #{RI_ORDERING}
+			  , RI_MOCODE   = #{RI_MOCODE  }
+			  , RI_MODATE   = NOW()
+	      WHERE RI_PK = #{RI_PK}
+	</update>
+	
+</mapper>

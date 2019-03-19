@@ -1,0 +1,53 @@
+@charset "utf-8";
+/* CSS Document */
+
+@import url("common.css");
+@import url("button.css");
+
+#wrapper{width:98%;margin:20px auto 50px;overflow:hidden;min-height:500px}
+#wrapper h2{background:url(/image/common/tit_h2.png) no-repeat 0 5px ;padding-left:15px;font-size:14px;margin-bottom:20px;}
+#wrapper h3{color:#747474;font-size:14px;margin:25px 0 10px}
+
+.tabArea{background:#fff;border-bottom:0px solid #adadad;height:24px;position:relative;z-index:1}
+.tab{width:98%;margin:0 auto;border-bottom:0px solid #adadad;height:24px;position:relative;z-index:1}
+.tab li{float:left;width:120px;margin-left:-1px}
+.tab li:first-child{margin-left:0;position:relative;z-index:1}
+
+.tab li a{display:block;font-size:13px;height:auto;line-height:23px;vertical-align:middle;text-align:center;border:1px solid #adadad;border-radius:5px 5px 0 0;background:#f5f5f5;color:#999999;}
+.tab li a:hover,.tab a:focus,.tab .on{background:url(/image/common/tab_on.png) no-repeat 18px 8px;border-bottom:1px solid #fff;z-index:100}
+
+.tab_box{border:1px solid #adadad;padding:10px;border-radius:3px;position:relative;}
+.tab_box div{margin:5px 0}
+.tab_box div label{background:url(/image/common/dot_gray.png) no-repeat 0 7px;padding-left:8px;font-size:12px;margin:0 5px 0 20px}
+.tab_box div label:first-child{margin-left:10px}
+.tab_box .input{border:1px solid #adadad;height:20px}
+.tab_box input.date{background:url(/image/common/ic_calendar.png) no-repeat right 0;}
+.tab_box select{border:1px solid #adadad;height:25px}
+.tab_box input,.tab_box label,.tab_box select{vertical-align:middle}
+.tab_box .tb_btnArea{position:absolute;top:20px;right:20px}
+
+#wrapper .data_table table{border-collapse:collapse;width:100%;border:1px solid #cccccc;border-top:2px solid #032874}
+#wrapper .data_table th{border:1px solid #cccccc;background:#f7fafc;padding:12px 0 12px 30px;font-weight:bold;text-align:left}
+#wrapper .data_table td{border:1px solid #cccccc;padding:12px 0 12px 20px;}
+#wrapper .data_table .required{color:#ff0000;margin-left:-10px}
+#wrapper .data_table td label{border:1px solid #e0e0e0;border-right:none;padding:4px 8px 3px 10px;margin-right:-4px;background:#f7fafc;margin-left:10px}
+#wrapper .data_table td label:first-child{margin-left:0}
+
+#wrapper .data_table td input,#wrapper .data_table td label,#wrapper .data_table td img{vertical-align:middle}
+
+
+#pop_wrapper{width:90%;margin:0 auto;margin:40px;}
+
+#pop_wrapper #pop_box{border:1px solid #adadad;border-radius:5px 5px 0 0;padding:25px}
+#pop_wrapper #pop_box:after{ content:""; display:block; clear:both;}
+#pop_wrapper #pop_box .fLeft{ float:left;}
+#pop_wrapper #pop_box .fRight{ float:right;}
+
+#pop_wrapper #pop_box label{background:url(/image/common/dot_arr.png) no-repeat 0 5px ;padding-left:15px;font-size:14px}
+#pop_wrapper .components{min-height:400px;overflow:scroll;overflow-x: hidden;border:1px solid #adadad;border-top:2px solid #032874}
+#pop_alert {width:100%; text-align:center;padding:50px 0 20px}
+
+#popup_wrapper{width:90%;margin:0 auto; margin-top:15px;}
+#popup_wrapper .pop_list table{border-collapse:collapse;border:1px solid #adadad;border-radius:5px; paddin:10px;}
+#popup_wrapper .pop_list th{border:1px solid #adadad;font-weight:bold;padding:12px 0 12px 0;margin:0 auto;background:#f7fafc;}
+#popup_wrapper .pop_list td{border:1px solid #adadad;padding:3px 0 3px 8px;}

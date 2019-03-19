@@ -1,0 +1,106 @@
+
+
+
+
+
+ 
+
+
+<!doctype html>
+<html lang="ko">
+	<head>
+		<title>캐스팅엔-파트너 상담 내용 추가</title>
+		<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+		<meta charset="utf-8">
+		<meta name="viewport" content="user-scalable=no,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,width=device-width">
+		<link type="text/css" rel="stylesheet" charset="utf-8" href="../css/mobile/question/question.css" />
+		<link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" />
+		<script type="text/javascript" src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.7.1.min.js"></script>
+		<script type="text/javascript" src="https://ajax.aspnetcdn.com/ajax/jquery.ui/1.8.16/jquery-ui.min.js"></script>
+		
+		
+		<!--원형단계바-->
+		 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+		 <script src="https://rawgit.com/kottenator/jquery-circle-progress/1.2.1/dist/circle-progress.js"></script>
+
+		
+		<!-- 
+		
+		<script type="text/javascript" src="/common/js/jquery-1.7.min.js"></script>
+      	<script src="/js/grid/grid-jquery-ui.min.js"></script>
+		 -->
+		
+		<script src="https://www.castingn.com/js/common.js"></script>
+		<script src="https://www.castingn.com/js/common_js.jsp"></script>
+		
+		
+	</head>
+	
+	<body>
+		<div id ="qwrapw">
+
+			<div class ="qclose"><a href="javascript:window.close();"><img src="../images/q_close.png" alt="닫기"></a></div>
+	<div id="qstep">
+		<div class="circle" data-value="0.5" data-size="80" data-thickness="25"
+		      data-animation-start-value="1.5"
+				data-fill="{
+        &quot;color&quot;: &quot;rgba(0, 0, 0, .3)&quot;,
+        &quot;image&quot;: &quot;../images/step_bg.png&quot;
+      }"
+      data-reverse="true"
+    >
+     
+    </div>
+	<script>
+		(function($) {
+        $('.circle').circleProgress({
+        value: 0.5
+        });
+        })(jQuery);
+		
+   </script>
+     <script type="text/javascript">
+       $(function(){$("#t").hide();
+			$("[name=selector]").change(function(){
+                if( $(this).val() == "y" ){
+					$("#t").hide();
+					$("#btnNext").html("다음").parent().css("background-color", "#8aa0c4");
+                } else {
+                    $("#t").show();
+					$("#btnNext").html("등록하기").parent().css("background-color", "#ed1c24");
+                }
+			});
+       }); //$(function(){})   
+    </script>
+</div>
+			
+			
+			<div class ="qtxt">해당 업무에 대한 수행이 가능 하신가요?  <span>(필수)</span></div>
+	
+			<table class="qradio">
+			<tr>
+			<td><input type="radio" id="1-option" name="selector" value="y" checked="checked"><label for="1-option">가능함</label> <div class="check"></div></td>
+			<td><input type="radio" id="2-option" name="selector"  value="n"><label for="2-option">불가능함</label> <div class="check"></div></td>
+			</tr>
+			</table>
+			<div class ="qinput">
+			<!--선택값이 기타일때 노출-->
+			<textarea id="t" class="hiddenbox" placeholder="업무 내용을 입력해주세요."></textarea>
+
+
+			</div>
+			
+			
+			<div id="qbtn">
+			<ul>
+			<li> <div class="qprev_btn"><a href="partner_q02.html">이전</a></div></li>
+			<li><div class="qnext_btn2"><a id="btnNext" href="partner_q05.html">다음</a></div></li>
+			
+			</ul>
+			
+			</div>
+		
+		</div>
+	
+	</body>
+</html>

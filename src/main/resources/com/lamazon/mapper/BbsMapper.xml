@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="com.lamazon.mapper.BbsMapper">
+<!-- 
+	<resultMap type="AdminMenu" id="adminMenuMap">
+		<id column="AD_PK" property=""AD_PK"" />
+		<result column="c_name" property="c_name" />
+	</resultMap>
+-->
+
+	<select id="bbs_cnt" parameterType="HashMap" resultType="int">
+		SELECT COUNT(*) AS CNT
+		FROM BBS B
+		     JOIN USER_INFO UI
+		     ON B.R_U_PK = UI.U_PK
+		WHERE B.B_STATUS = 1
+		    <if test="B_PK != null">AND B_PK=#{B_PK}</if>
+		    <if test="U_PK      != null and U_PK      != ''">AND U_PK=#{U_PK}</if>
+	   		<if test="NAME      != null and NAME      != ''">AND U_NAME LIKE CONCAT('%', #{NAME}, '%')</if>
+			<if test="MOBILE    != null and MOBILE    != ''">AND U_MOBILE LIKE CONCAT('%',#{MOBILE},'%')</if>
+			<if test="USERID    != null and USERID    != ''">AND U_ID LIKE CONCAT('%',#{USERID},'%')</if>
+			<if test="FROMDATE  != null and FROMDATE  != ''">AND DATE_FORMAT(B_INDATE,'%Y-%m-%d') &gt;= #{FROMDATE}</if>
+			<if test="TODATE    != null and TODATE    != ''">AND DATE_FORMAT(B_INDATE,'%Y-%m-%d') &lt;= #{TODATE}</if>
+			<if test="B_TITLE   != null and B_TITLE   != ''">AND B_TITLE LIKE CONCAT('%',#{B_TITLE},'%')</if>
+			<if test="U_COMPANY != null and U_COMPANY != ''">AND U_COMPANY LIKE CONCAT('%',#{U_COMPANY},'%')</if>
+	</select>
+
+	<select id="bbs_list" parameterType="HashMap" resultType="HashMap">
+		SELECT (SELECT COUNT(*) FROM BBS_REPLY WHERE R_B_PK = B_PK AND BR_STATUS=1) AS REPLY_CNT
+		     , B.*
+		    , UI.*
+		FROM BBS B
+		     JOIN USER_INFO UI
+		     ON B.R_U_PK = UI.U_PK
+		WHERE B.B_STATUS = 1
+		    <if test="B_PK != null">AND B_PK=#{B_PK}</if>
+		    <if test="U_PK      != null and U_PK      != ''">AND U_PK=#{U_PK}</if>
+	   		<if test="NAME      != null and NAME      != ''">AND U_NAME LIKE CONCAT('%', #{NAME}, '%')</if>
+			<if test="MOBILE    != null and MOBILE    != ''">AND U_MOBILE LIKE CONCAT('%',#{MOBILE},'%')</if>
+			<if test="USERID    != null and USERID    != ''">AND U_ID LIKE CONCAT('%',#{USERID},'%')</if>
+			<if test="FROMDATE  != null and FROMDATE  != ''">AND DATE_FORMAT(B_INDATE,'%Y-%m-%d') &gt;= #{FROMDATE}</if>
+			<if test="TODATE    != null and TODATE    != ''">AND DATE_FORMAT(B_INDATE,'%Y-%m-%d') &lt;= #{TODATE}</if>
+			<if test="B_TITLE   != null and B_TITLE   != ''">AND B_TITLE LIKE CONCAT('%',#{B_TITLE},'%')</if>
+			<if test="U_COMPANY != null and U_COMPANY != ''">AND U_COMPANY LIKE CONCAT('%',#{U_COMPANY},'%')</if>
+		    <if test="ORDERING  != null">${ORDERING}</if>
+		    <if test="PAGING    != null">LIMIT ${PAGING}</if>
+	</select>
+
+	<insert id="bbs_insert" parameterType="HashMap" useGeneratedKeys="true" keyProperty="B_PK" keyColumn="B_PK">
+		INSERT INTO BBS
+		(
+			R_U_PK, B_TITLE, B_CONTENT
+			 <if test="B_FILE != null and B_FILE != ''">, B_FILE</if>
+			 <if test="B_FILE_RENAME != null and B_FILE_RENAME != ''">, B_FILE_RENAME</if>
+			 , B_INCODE, B_INDATE
+		) VALUES (
+			#{R_U_PK}, #{B_TITLE}, #{B_CONTENT}
+			<if test="B_FILE != null and B_FILE != ''">, #{B_FILE}</if>
+			<if test="B_FILE_RENAME != null and B_FILE_RENAME != ''">, #{B_FILE_RENAME}</if>
+			, #{B_INCODE}, NOW()
+		)
+	</insert>
+	
+	<update id="bbs_update" parameterType="HashMap">
+		UPDATE BBS 
+		SET B_TITLE   = #{B_TITLE}
+		, B_CONTENT = #{B_CONTENT}
+		
+		<if test="B_FILE != null and B_FILE != ''">, B_FILE    = #{B_FILE}</if>
+		<if test="B_FILE_RENAME != null and B_FILE_RENAME != ''">, B_FILE_RENAME = #{B_FILE_RENAME}</if>
+		
+		, B_MOCODE  = #{B_MOCODE}
+		, B_MODATE  = NOW()
+		WHERE B_PK  = #{B_PK}
+	</update>
+	
+	<select id="bbs" parameterType="HashMap" resultType="HashMap">
+			SELECT B.*
+		    , UI.*
+		FROM BBS B
+		     JOIN USER_INFO UI
+		     ON B.R_U_PK = UI.U_PK
+		WHERE B.B_STATUS = 1
+      AND B_PK = #{B_PK}
+	</select>
+	
+	<select id="bbs_reply" parameterType="HashMap" resultType="HashMap">
+		SELECT BR.*
+		    , UI.*
+		FROM BBS_REPLY BR
+		     JOIN USER_INFO UI
+		     ON BR.BR_INCODE = UI.U_PK
+         
+	   WHERE BR.BR_STATUS = 1
+         AND R_B_PK = #{B_PK}
+	</select>
+	
+	<insert id="bbs_reply_insert" parameterType="HashMap" useGeneratedKeys="true" keyProperty="B_PK" keyColumn="B_PK">
+		INSERT INTO BBS_REPLY
+		(
+			R_B_PK, R_U_PK, BR_CONTENT, BR_FILE
+			, BR_FILE_RENAME, BR_INCODE, BR_INDATE
+		) VALUES (
+			#{B_PK}, #{U_PK}, #{BR_CONTENT}, #{BR_FILE}
+			, #{BR_FILE_RENAME}, #{BR_INCODE}, NOW()
+		)
+	</insert>
+	
+	<update id="bbs_reply_update" parameterType="HashMap">
+		UPDATE BBS_REPLY 
+		SET BR_CONTENT = #{BR_CONTENT}
+		, BR_FILE = #{BR_FILE}
+		, BR_FILE_RENAME = #{BR_FILE_RENAME}
+		, BR_MOCODE = #{BR_MOCODE}
+		, BR_MODATE = NOW()
+		WHERE BR_PK = #{BR_PK}
+	</update>
+	
+</mapper>

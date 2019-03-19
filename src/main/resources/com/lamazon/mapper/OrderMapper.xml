@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="com.lamazon.mapper.OrderMapper">
+<!-- 
+	<resultMap type="AdminMenu" id="adminMenuMap">
+		<id column="AD_PK" property=""AD_PK"" />
+		<result column="c_name" property="c_name" />
+	</resultMap>
+-->
+
+	<select id="order_master_cnt" parameterType="HashMap" resultType="int">
+		SELECT COUNT(*) AS CNT
+		  FROM ORDER_MASTER OM
+		       INNER JOIN USER_INFO UI
+	           ON OM.R_U_PK = UI.U_PK
+		 WHERE 1=1
+		       <if test="U_PK          != null and U_PK         != ''">AND U_PK=#{U_PK}</if>
+		   		<if test="NAME         != null and NAME         != ''">AND U_NAME LIKE CONCAT('%', #{NAME}, '%')</if>
+				<if test="MOBILE       != null and MOBILE       != ''">AND U_MOBILE LIKE CONCAT('%',#{MOBILE},'%')</if>
+				<if test="USERID       != null and USERID       != ''">AND U_ID LIKE CONCAT('%',#{USERID},'%')</if>
+				<if test="FROMDATE     != null and FROMDATE     != ''">AND DATE_FORMAT(O_INDATE,'%Y-%m-%d') &gt;= #{FROMDATE}</if>
+				<if test="TODATE       != null and TODATE       != ''">AND DATE_FORMAT(O_INDATE,'%Y-%m-%d') &lt;= #{TODATE}</if>
+				<if test="U_COMPANY    != null and U_COMPANY    != ''">AND U_COMPANY LIKE CONCAT('%',#{U_COMPANY},'%')</if>
+				<if test="O_NUMBER    != null and O_NUMBER      != ''">AND O_NUMBER LIKE CONCAT('%',#{O_NUMBER},'%')</if>
+				
+	</select>
+
+	<select id="order_master" parameterType="HashMap" resultType="HashMap">
+		SELECT FN_GET_CM_NAME('O_MARKET_GUBUN', O_MARKET_GUBUN) AS O_MARKET_GUBUN_NM
+		     , FN_GET_CM_NAME('O_STATUS', O_STATUS) AS O_STATUS_NM 
+		     , OM.*
+	         , UI.*
+		  FROM ORDER_MASTER OM
+	           INNER JOIN USER_INFO UI
+	           ON OM.R_U_PK = UI.U_PK
+	     WHERE 1=1
+	           <if test="U_PK          != null and U_PK         != ''">AND U_PK=#{U_PK}</if>
+				<if test="NAME         != null and NAME         != ''">AND U_NAME LIKE CONCAT('%', #{NAME}, '%')</if>
+				<if test="MOBILE       != null and MOBILE       != ''">AND U_MOBILE LIKE CONCAT('%',#{MOBILE},'%')</if>
+				<if test="USERID       != null and USERID       != ''">AND U_ID LIKE CONCAT('%',#{USERID},'%')</if>
+				<if test="FROMDATE     != null and FROMDATE     != ''">AND DATE_FORMAT(O_INDATE,'%Y-%m-%d') &gt;= #{FROMDATE}</if>
+				<if test="TODATE       != null and TODATE       != ''">AND DATE_FORMAT(O_INDATE,'%Y-%m-%d') &lt;= #{TODATE}</if>
+				<if test="U_COMPANY    != null and U_COMPANY    != ''">AND U_COMPANY LIKE CONCAT('%',#{U_COMPANY},'%')</if>
+				<if test="O_NUMBER    != null and O_NUMBER      != ''">AND O_NUMBER LIKE CONCAT('%',#{O_NUMBER},'%')</if>
+				<if test="ORDERING     != null">${ORDERING}</if>
+				<if test="PAGING       != null">LIMIT ${PAGING}</if>
+	</select>
+	
+	<select id="getOrderMaster" parameterType="HashMap" resultType="HashMap">
+		SELECT O_PK, R_U_PK, O_NUMBER, O_TITLE
+		     , O_MARKET_GUBUN
+		     , FN_GET_CM_NAME('O_MARKET_GUBUN', O_MARKET_GUBUN) AS O_MARKET_GUBUN_NM
+		     , O_STATUS
+		     , FN_GET_CM_NAME('O_STATUS', O_STATUS) AS O_STATUS_NM
+		     , O_INCODE, O_INDATE, O_MOCODE, O_MODATE 
+		  FROM ORDER_MASTER
+		 WHERE 1=1
+		   <if test="O_PK != null">AND O_PK=#{O_PK}</if>
+	</select>
+
+	<insert id="order_insert" parameterType="HashMap" useGeneratedKeys="true" keyProperty="O_PK" keyColumn="O_PK">
+		INSERT INTO ORDER_MASTER
+		(
+		    R_U_PK,   O_NUMBER, O_TITLE,        O_MARKET_GUBUN, O_STATUS
+		  , O_INCODE, O_INDATE, O_POINT_BEFORE, O_POINT,        O_POINT_AFTER
+		) VALUES (
+		    #{R_U_PK},   #{O_NUMBER}, #{O_TITLE},        #{O_MARKET_GUBUN}, #{O_STATUS}
+		  , #{O_INCODE}, NOW(),       #{O_POINT_BEFORE}, #{O_POINT},        #{O_POINT_AFTER}
+		)
+	</insert>
+	
+	<update id="order_update" parameterType="HashMap">
+		UPDATE ORDER_MASTER 
+		SET O_TITLE  = #{O_TITLE}
+		, O_MARKET_GUBUN = #{O_MARKET_GUBUN}
+		<if test="O_STATUS != null">, O_STATUS = #{O_STATUS}</if>
+		, O_MOCODE = #{O_MOCODE}
+		, O_MODATE = NOW()
+		WHERE O_PK = #{O_PK}
+	</update>
+	
+	<insert id="order_detail_insert" parameterType="HashMap" useGeneratedKeys="true" keyProperty="OD_PK" keyColumn="OD_PK">
+		INSERT INTO ORDER_DETAIL
+		(
+			R_O_PK, OD_NAME, OD_COUNT, OD_COLOR
+			, OD_SIZE, OD_BRAND, OD_INVOICE, OD_FILE, OD_FILE_RENAME
+			, OD_MEMO, OD_INCODE, OD_INDATE
+		) VALUES (
+			#{R_O_PK}, #{OD_NAME}, #{OD_COUNT}, #{OD_COLOR}
+			, #{OD_SIZE}, #{OD_BRAND}, #{OD_INVOICE}, #{OD_FILE}, #{OD_FILE_RENAME}
+			, #{OD_MEMO}, #{OD_INCODE}, NOW()
+		)
+	</insert>
+	
+	<update id="order_detail_update" parameterType="HashMap">
+		UPDATE ORDER_DETAIL 
+		SET R_O_PK       = #{R_O_PK}
+		, OD_NAME        = #{OD_NAME}
+		, OD_COUNT       = #{OD_COUNT}
+		, OD_COLOR       = #{OD_COLOR}
+		, OD_SIZE        = #{OD_SIZE}
+		, OD_BRAND       = #{OD_BRAND}
+		, OD_INVOICE     = #{OD_INVOICE}
+		<if test="OD_FILE != null">       , OD_FILE        = #{OD_FILE}</if>
+		<if test="OD_FILE_RENAME != null">, OD_FILE_RENAME = #{OD_FILE_RENAME}</if>
+		, OD_MEMO        = #{OD_MEMO}
+		, OD_MOCODE      = #{OD_MOCODE}
+		, OD_MODATE      = NOW() 
+		WHERE OD_PK      = #{OD_PK}
+	</update>
+	
+	<select id="getOrderDetail" parameterType="HashMap" resultType="HashMap">
+		SELECT OD.*
+		FROM ORDER_DETAIL OD
+		WHERE R_O_PK = #{O_PK}
+	</select>
+	
+	<update id="user_info_u_point_update" parameterType="HashMap">
+		UPDATE USER_INFO SET U_POINT=#{U_POINT} WHERE U_PK=#{U_PK}
+	</update>
+	
+	<update id="order_master_o_status_update" parameterType="HashMap">
+		UPDATE ORDER_MASTER SET O_STATUS=#{O_STATUS} WHERE O_PK=#{O_PK}
+	</update>
+	
+	<update id="order_master_o_status_update2" parameterType="HashMap">
+		UPDATE ORDER_MASTER SET O_STATUS=#{O_STATUS} WHERE O_PK IN ${O_PK}
+	</update>
+</mapper>

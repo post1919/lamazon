@@ -1,0 +1,63 @@
+@charset "utf-8";
+/* CSS Document */
+
+/* Button Common */
+.button,
+.button *{ position:relative; margin:0; padding:0; display:inline-block; text-decoration:none !important; border:0; font-size:13px; white-space:nowrap; background:url(/image/common/button.png) no-repeat; vertical-align:top; overflow:visible; color:#000;font-weight:bold}
+.button {margin-right:4px;}
+.button *{left:4px; cursor:pointer; _cursor:hand;}
+
+/* Button kind */
+.button, .button *{ height:24px; line-height:23px;}
+.button { background-position:left 0;}
+.button *{ padding:0 20px 0 16px; font-size:12px; background-position:right 0;}
+
+.button.green, .button.green *{ height:24px; line-height:23px;color:#fff}
+.button.green { background-position:left -34px;}
+.button.green *{ padding:0 20px 0 16px; font-size:12px; background-position:right -34px;}
+
+.button.blue, .button.blue *{ height:24px; line-height:23px;color:#fff}
+.button.blue { background-position:left -70px;}
+.button.blue *{ padding:0 20px 0 16px; font-size:12px; background-position:right -70px;}
+
+.button.black, .button.black *{ height:24px; line-height:24px;color:#fff}
+.button.black { background-position:left -101px;}
+.button.black *{ padding:0 20px 0 16px; font-size:12px; background-position:right -101px;}
+
+.button.black, .button.black *{ height:24px; line-height:24px;color:#fff}
+.button.black { background-position:left -101px;}
+.button.black *{ padding:0 20px 0 16px; font-size:12px; background-position:right -101px;}
+
+.button.L_black, .button.L_black *{ height:35px; line-height:30px;color:#fff}
+.button.L_black { background-position:left -136px;}
+.button.L_black *{ padding:0 30px 0 26px; font-size:14px; background-position:right -136px;}
+
+.button.L_white, .button.L_white *{ height:32px; line-height:30px;}
+.button.L_white { background-position:left -184px;}
+.button.L_white *{ padding:0 30px 0 26px; font-size:14px; background-position:right -184px;}
+
+
+.button.L_gray, .button.L_gray *{ height:32px; line-height:32px;}
+.button.L_gray { background-position:left -317px;}
+.button.L_gray *{ padding:0 30px 0 26px; font-size:14px; background-position:right -317px;}
+
+.button.L_sky, .button.L_sky *{ height:32px; line-height:32px;}
+.button.L_sky { background-position:left -366px;}
+.button.L_sky *{ padding:0 30px 0 26px; font-size:14px; background-position:right -366px;}
+
+
+/* Button Icon */
+.button.icon *{ padding-left:25px;}
+.button.icon span{ width:25px; margin-right:-25px; padding:0 !important;}
+
+
+.button .check{ background-position:3px -243px;}
+.button.green .excel{ background-position:3px -274px}
+.button.blue .print{ background-position:3px -414px}
+
+
+/* Button Area */
+.btnArea{ margin:2em 0; text-align:center; }
+.btnArea:after{ content:""; display:block; clear:both;}
+.btnArea .fLeft{ float:left;}
+.btnArea .fRight{ float:right;}

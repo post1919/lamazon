@@ -1,0 +1,56 @@
+@charset "euc-kr";
+
+.trAdd               { background-color:yellow;text-align:center;text-weight:bold; }
+.thSame              { background-color:#eee;text-align:center;text-weight:bold; }
+th                   { background-color:#b1cbf6;color:#ffffff;padding:15px;line-height:0.1em;font-size:13px;text-align:center;font-weight:bold;border-radius:3px; }
+td                   { text-align:center;background-color:rgba(252, 239, 161, 1);line-height:1.2em;border-radius:3px; }
+input[type=text]     { padding:2px;width:185px;height:15px;font-size:0.79em; }
+input[type=checkbox] { padding:2px;width:15px;height:15px;font-size:0.79em; }
+select               { line-height:20px;height:20px;width:70px;font-size:0.79em; }
+img                  { display:block;margin-left:91px; margin-right:0px; margin-top:-20px; }
+.popup_body          { padding:10px; }
+
+.btnNormal {float:right; margin-right:2px; background:#02b7d2; text-align:center; font-size:12px; font-family:nGothicB; border-radius:5px; box-shadow:0px 1px 1px #cccccc; -moz-box-shadow: 0px 1px 1px #cccccc; -webkit-box-shadow: 0px 1px 1px #cccccc;}
+.btnNormal span {padding:0px 20px; line-height:29px;}
+.btnNormal span.ico_view {background:url(/img/common/ico_view.png) no-repeat 20px center; padding-left:50px;}
+.btnNormal.orange {background:#eb6d0f;}
+.btnNormal.green {background:#1D6E45;}
+.btnNormal.black {background:#333333; border:1px solid #000;}
+.btnNormal.purple {background:#84308e;}
+.btnNormal.blues {background:#3E66BB;}
+.btnNormal.red {background:#d93533;}
+.btnNormal.cancel {background:#fff; border:1px solid #000;}
+.btnNormal.cancel span {color:#333333; height:36px;}
+.btnNormal.black span {color:#fff; height:36px;}
+.btnNormal.gray {color:#fff; background:#666666;}
+.btnNormal.dark {color:#fff; background:#454545;}
+.btnNormal.blue {background:#0083cc;}
+.btnNormal em.icoArrow {background:url(/img/common/arrow.png) no-repeat left center; vertical-align:top; *vertical-align:middle; margin:0 0px 0 10px; width:6px; height:40px;}
+.btnNormal em.icoList {background:url(/img/common/ico_list.png) no-repeat left center; vertical-align:top; *vertical-align:middle; margin:0 10px 0 0px; width:29px; height:40px;}
+
+.btnNormal span, .btnCtrl span, .btnDate span, .btnGeneral span, .btnStrong span, .btnSubmit span, .btnEm span, .btnSearch span {
+    cursor:pointer;
+    vertical-align:top;
+}
+
+.btnNormal, .btnNormal span, .btnBBig, .btnBBig span, .btnTiny, .btnTiny span,  .btnBig, .btnBig span, .btnCtrl, .btnCtrl span, .btnDate, .btnDate span, .btnGeneral, .btnGeneral span, .btnStrong, .btnStrong span, .btnNormalB, .btnNormalB span, .btnNormalS, .btnNormalS span, .btnSubmit, .btnSubmit span, .btnEm, .btnEm span, .btnSearch, .btnSearch span, .btnSmall, .btnSmall span {
+    display:inline-block;
+    position:relative;
+    text-decoration:none;
+    vertical-align:middle;
+    white-space:nowrap;
+	color:#fff;
+	zoom:1;
+	*display:inline;
+	border-radius:5px;
+}
+
+.subtitle {
+	background: rgb(2, 165, 175); padding: 3px 10px 3px 10px; border-radius: 10px; top: 217px; color: white; position: absolute; font-size:0.9em;
+}
+
+.noticeTitle { padding: 3px 10px 3px 10px; border-radius: 10px; color: white; position: absolute; left:130px;top:221px;font-size:0.7em;background-color:#af0202; }
+
+.mastertitle {
+	background: rgb(2, 165, 175); padding: 3px 10px 3px 10px; border-radius: 10px; color: white; font-size:0.9em;
+}

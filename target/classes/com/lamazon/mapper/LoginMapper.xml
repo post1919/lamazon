@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="com.lamazon.mapper.LoginMapper">
+<!-- 
+	<resultMap type="AdminMenu" id="adminMenuMap">
+		<id column="AD_PK" property=""AD_PK"" />
+		<result column="c_name" property="c_name" />
+	</resultMap>
+-->
+	<select id="user_info_login" parameterType="HashMap" resultType="HashMap">
+		<![CDATA[
+		SELECT * FROM USER_INFO WHERE U_STATUS = 1 AND U_ID = #{user_id} AND U_PASSWD = #{user_passwd}
+   		]]>
+	</select>
+	
+	
+	<update id="user_info_login_logindate" parameterType="HashMap">
+		UPDATE USER_INFO SET U_LOGINDATE=NOW() where U_STATUS = 1 and U_ID = #{user_id} and U_PASSWD = #{user_passwd}
+	</update>
+	
+	<select id="user_info_login_admin" parameterType="HashMap" resultType="HashMap">
+		<![CDATA[
+		select * from USER_INFO where U_STATUS = 1 and U_ID = #{user_id}
+   		]]>
+	</select>
+	
+	<select id="user_info_login_office" parameterType="HashMap" resultType="HashMap">
+		<![CDATA[
+		select * from USER_INFO where U_STATUS = 1 and U_FROM='officeplus.com' and U_FROM_ID = #{user_id} and U_FROM_JOIN_DATE = #{join_date}
+   		]]>
+	</select>
+	
+	<update id="user_info_login_office_logindate" parameterType="HashMap">
+		UPDATE USER_INFO SET U_LOGINDATE=NOW() where U_STATUS = 1 and U_FROM='officeplus.com' and U_FROM_ID = #{user_id} and U_FROM_JOIN_DATE = #{join_date}
+	</update>
+	
+	<select id="user_info_login_mk" parameterType="HashMap" resultType="HashMap">
+		<![CDATA[
+		select * from USER_INFO where U_STATUS = 1 and U_FROM='mk.co.kr' and U_FROM_ID = #{user_id} AND U_FROM_JOIN_DATE = #{sId}
+   		]]>
+	</select>
+	
+	<update id="user_info_login_mk_logindate" parameterType="HashMap">
+		UPDATE USER_INFO SET U_LOGINDATE=NOW() where U_STATUS = 1 and U_FROM='mk.co.kr' and U_FROM_ID = #{user_id} AND U_FROM_JOIN_DATE = #{sId}
+	</update>
+	
+	<select id="user_info_login_sns" parameterType="HashMap" resultType="HashMap">
+		<![CDATA[
+		select * from USER_INFO where U_STATUS = 1 and U_SNS_TYPE = #{sns_type} and U_SNS_ID = #{sns_id}
+   		]]>
+	</select>
+	
+	<update id="user_info_login_sns_logindate" parameterType="HashMap">
+		UPDATE USER_INFO SET U_LOGINDATE=NOW() where U_STATUS = 1 and U_SNS_TYPE = #{sns_type} and U_SNS_ID = #{sns_id}
+	</update>
+	
+	<select id="user_project_status_count_info" parameterType="Integer" resultType="HashMap">
+	<![CDATA[
+		SELECT SUM(CASE WHEN PR_STATUS_TXT = '미진행'   THEN CNT ELSE 0 END) AS FAIL
+	         , SUM(CASE WHEN PR_STATUS_TXT = '모집중'   THEN CNT ELSE 0 END) AS ING
+	         , SUM(CASE WHEN PR_STATUS_TXT = '계약완료' THEN CNT ELSE 0 END) AS CONTRACT
+	         , SUM(CASE WHEN PR_STATUS_TXT = '진행완료' THEN CNT ELSE 0 END) AS DONE
+	         , SUM(CASE WHEN PR_STATUS_TXT = '합계'     THEN CNT ELSE 0 END) AS ALLCNT
+	      FROM ( 
+	           SELECT IFNULL(PR_STATUS_TXT, '합계') PR_STATUS_TXT, COUNT(1) CNT 
+	             FROM ( SELECT CASE WHEN PR_STATUS = 2  THEN  '모집중'
+	    						    WHEN PR_STATUS = 3  THEN  '미진행'
+	    						    WHEN PR_STATUS= 1 AND PR_APPLY_END_DATE > curdate() THEN '미진행'
+	    						    WHEN PR_STATUS = 11 AND PR_APPLY_END_DATE < curdate() THEN  '미진행' 
+	    						    WHEN PR_STATUS = 11 AND PR_APPLY_END_DATE >= curdate() THEN  '모집중'
+	    						    WHEN PR_STATUS = 11 AND PR_APPLY_NUM > 0 AND PR_MEETING_NUM =0 THEN  '모집중' 
+	    						    WHEN PR_STATUS = 11 AND PR_APPLY_NUM > 0 AND PR_MEETING_NUM > 0 AND PR_CONTRACT_PARTNER=0 THEN  '모집중'
+	    						    WHEN PR_STATUS = 11 AND PR_CONTRACT_PARTNER > 0 THEN  '모집중'
+	    						    WHEN PR_STATUS = 11 AND PR_APPLY_NUM = 0 THEN  '모집중'
+	    							WHEN PR_STATUS = 16 AND PR_APPLY_NUM = 0 THEN  '모집중'
+	      							WHEN PR_STATUS = 17 AND PR_APPLY_NUM = 0 THEN  '모집중'
+	    						    WHEN PR_STATUS = 21	THEN  '모집중'
+	    						    WHEN PR_STATUS = 31	THEN  '모집중'
+	    						    WHEN PR_STATUS = 41	THEN  '계약완료'
+	    						    WHEN PR_STATUS = 45	THEN  '계약완료'
+	    						    WHEN PR_STATUS = 51	THEN  '진행완료'
+	    						    WHEN PR_STATUS = 52	THEN  '진행완료'
+	    						    WHEN PR_STATUS = 53	THEN  '미진행'
+	    						    ELSE  '-'
+	    						END AS PR_STATUS_TXT, 1
+	    					FROM PROJECT
+	    			  	   WHERE R_U_PK = #{uPk}
+	                         AND PR_STATUS NOT IN (0) 
+	                ) A
+	         GROUP BY PR_STATUS_TXT
+	             WITH ROLLUP
+	         ) A
+   	]]>
+	</select>
+	
+	<select id="user_info_check_id" parameterType="String" resultType="String">
+	select U_STATUS from USER_INFO where U_ID = #{U_ID}
+	</select>
+	
+	<insert id="user_info_insert" parameterType="HashMap" useGeneratedKeys="true" keyProperty="U_PK" keyColumn="U_PK">
+		INSERT INTO USER_INFO
+		(
+			U_TYPE, U_ID, U_NAME, U_PASSWD, U_EMAIL
+			, U_MOBILE, U_PHONE, U_ZIPCODE
+			, U_ADDRESS, U_COMPANY, U_REGISTRATION_NUMBER, U_FOUNDER, U_UPTAE
+			, U_UPJONG, U_REGISTER_DATE, U_STATUS, U_PICTURE, U_PICTURE_RENAME
+		) VALUES (
+			#{U_TYPE}, #{U_ID}, #{U_NAME}, #{U_PASSWD}, #{U_EMAIL}
+			, #{U_MOBILE}, #{U_PHONE}, #{U_ZIPCODE}
+			, #{U_ADDRESS}, #{U_COMPANY}, #{U_REGISTRATION_NUMBER}, #{U_FOUNDER}, #{U_UPTAE}
+			, #{U_UPJONG}, NOW(), 1, #{U_PICTURE}, #{U_PICTURE_RENAME}
+		)
+	</insert>
+	
+	<insert id="user_info_update" parameterType="HashMap">
+		UPDATE USER_INFO 
+		SET 
+		  U_NAME    = #{U_NAME}
+		, U_EMAIL   = #{U_EMAIL}
+		, U_MOBILE  = #{U_MOBILE}
+		, U_PHONE   = #{U_PHONE}
+		, U_ZIPCODE = #{U_ZIPCODE}
+		, U_ADDRESS = #{U_ADDRESS}
+		, U_COMPANY = #{U_COMPANY}
+		, U_REGISTRATION_NUMBER = #{U_REGISTRATION_NUMBER}
+		, U_FOUNDER = #{U_FOUNDER}
+		, U_UPTAE   = #{U_UPTAE}
+		, U_UPJONG  = #{U_UPJONG}		
+		, U_MOCODE  = #{U_MOCODE}
+		, U_MODATE  = NOW()
+		<if test="U_TYPE != null and flag != 'detail'">, U_ID   = #{U_ID}</if>
+		<if test="U_TYPE != null">, U_TYPE = #{U_TYPE}</if>
+		<if test="U_PASSWD != null">, U_PASSWD  = #{U_PASSWD}</if>
+		<if test="U_POINT != null">, U_POINT   = #{U_POINT}</if>
+		<if test="U_PICTURE != null">, U_PICTURE = #{U_PICTURE}</if>
+		<if test="U_PICTURE_RENAME != null">, U_PICTURE_RENAME = #{U_PICTURE_RENAME}</if>
+		WHERE U_PK  = #{U_PK}
+
+	</insert>
+	
+</mapper>

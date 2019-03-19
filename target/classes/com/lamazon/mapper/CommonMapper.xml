@@ -1,0 +1,1058 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="com.lamazon.mapper.CommonMapper">
+<!-- 
+	<resultMap type="AdminMenu" id="adminMenuMap">
+		<id column="AD_PK" property=""AD_PK"" />
+		<result column="c_name" property="c_name" />
+	</resultMap>
+-->
+
+<!-- 
+	<insert id="getNewPk" parameterType="HashMap" useGeneratedKeys="true" keyProperty="PK" keyColumn="PK">
+		<![CDATA[
+		${GENERATE_INSERT}
+		]]>
+		<selectKey keyProperty="PK" resultType="int" order="AFTER">
+        SELECT LAST_INSERT_ID() AS PK
+		</selectKey>
+	</insert>
+-->
+ 
+	<insert id="getNewPk" parameterType="HashMap" useGeneratedKeys="true" keyProperty="PK" keyColumn="PK">
+		<![CDATA[
+		${GENERATE_INSERT}
+		]]>
+		<!-- <selectKey keyProperty="PK" resultType="int" order="AFTER">
+        SELECT LAST_INSERT_ID() AS PK
+		</selectKey> -->
+	</insert>
+
+	<select id="category_all" parameterType="HashMap" resultType="HashMap">
+		 SELECT PK, CODE, NAME, FULL_NAME, COUNT, PR_COUNT, FATHER, ICON, CONTENT, COMMISSION
+		     , CategoryNameLvl(CODE, 2) AS CATE2_NM
+             , CategoryNameLvl(CODE, 3) AS CATE3_NM
+             , PAYMENT_GROUP
+		  FROM CATEGORY 
+		 WHERE STATUS=1
+			
+		<if test="CODE != null">
+			AND CODE IN (#{CODE})
+		</if>
+		
+		<if test="PK != null">
+			AND CODE IN (#{PK})
+		</if>
+	</select>
+
+	<select id="adminMenuListByParent" parameterType="HashMap" resultType="AdminMenu">
+		
+		 SELECT AM_PK,     AM_CODE,   AM_NAME,  AM_FULL_NAME, AM_AUTH
+		      , AM_AUTH2,  AM_PARENT, AM_DEPTH, AM_IS_MAIN,   AM_ORDERING
+		      , AM_MEMO,   AM_URI,    AM_ICON,  AM_STATUS,    AM_INCODE
+		      , AM_INDATE, AM_MOCODE, AM_MODATE 
+		   FROM ADMIN_MENU
+		  WHERE 1=1
+		    AND AM_DELFLAG = 1
+			AND AM_PARENT  = #{AM_PK}
+			
+			<if test="AM_STATUS != null">
+				AND AM_STATUS = #{AM_STATUS}
+			</if>
+			
+	   ORDER BY AM_ORDERING ASC
+		
+	</select>
+	
+	<select id="getAdminMenuFullname" parameterType="String" resultType="AdminMenu">
+		<![CDATA[
+		 SELECT AM_PK, AM_CODE, AM_NAME, AM_FULL_NAME, AM_AUTH, AM_AUTH2
+			  , AM_PARENT, AM_DEPTH, AM_IS_MAIN, AM_ORDERING, AM_MEMO
+			  , AM_URI, AM_ICON, AM_STATUS, AM_INCODE, AM_INDATE
+			  , AM_MOCODE, AM_MODATE 
+		   FROM ADMIN_MENU
+		  WHERE 1=1
+		    AND AM_DELFLAG = 1
+			AND AM_URI = #{requestURI}
+			AND AM_STATUS = 1
+		]]>
+	</select>
+	
+	<select id="category_list_by_father" parameterType="HashMap" resultType="HashMap">
+		SELECT PK, CODE, NAME, FULL_NAME, COUNT, PR_COUNT, FATHER, ICON, CONTENT, SEARCHING_YN 
+		  FROM CATEGORY 
+		 WHERE STATUS = 1 
+		   AND father = #{father}
+		   <if test="IS_MAIN != null">
+				AND IS_MAIN=1
+		   </if>
+		
+	   <choose>
+			<when test="ORDER_OPTION == 'random'">
+	      	ORDER BY RAND()
+	    	</when>
+	    	<otherwise>
+	      	ORDER BY ORDERING ASC
+	    	</otherwise>
+	  	</choose>
+	</select>
+	
+	<select id="common_code_all" resultType="HashMap">
+		<![CDATA[
+	    SELECT *
+	      FROM CODE_MST
+	     WHERE CM_USEYN = 'Y'
+	  ORDER BY CM_SORT ASC
+	   ]]>
+	</select>
+	
+	<select id="category_without_all" resultType="HashMap">
+		<![CDATA[
+	    select PK, CODE, NAME, FULL_NAME, COUNT, PR_COUNT, FATHER, ICON, CONTENT from CATEGORY where STATUS=1 AND CODE NOT LIKE 'Z%'
+	   ]]>
+	</select>
+	
+	<select id="category_for_office" resultType="HashMap">
+		<![CDATA[
+	    SELECT PK, CODE, NAME, FULL_NAME, COUNT, PR_COUNT, FATHER, ICON, CONTENT 
+	    FROM CATEGORY 
+	    WHERE STATUS=1 
+	    AND FOR_OFFICE=1
+	   ]]>
+	</select>
+	
+	<select id="user_id_lock_select" parameterType="String" resultType="HashMap">
+		<![CDATA[
+		    SELECT * 
+		      FROM USER_ID_LOCK 
+		     WHERE USER_ID = #{id} 
+		       AND DATE_ADD(ACCESS_TIME,INTERVAL 60 minute) > NOW() 
+	      ORDER BY ACCESS_TIME DESC
+	   ]]>
+	</select>
+	
+	<insert id="user_id_lock_insert" parameterType="HashMap">
+		insert into USER_ID_LOCK 
+		(
+			user_id,ip,session_id,access_time
+		) values (
+			#{id}, #{ip}, #{session_id}, NOW()
+		)
+	</insert>
+	
+	<select id="user_id_dup_select" parameterType="String" resultType="int">
+		<![CDATA[
+		    select count(1) cnt from USER_INFO where U_ID=#{id}
+	   ]]>
+	</select>
+	
+	<select id="category_by_pk" parameterType="int" resultType="HashMap">
+		<![CDATA[
+		    SELECT * FROM CATEGORY WHERE PK = #{pk}
+	   ]]>
+	</select>
+	
+	<select id="upjong_by_pk" parameterType="int" resultType="HashMap">
+		<![CDATA[
+		    select * from UPJONG_CODE where PK = #{pk}
+	   ]]>
+	</select>
+	
+	<select id="rfp_by_pk" parameterType="HashMap" resultType="HashMap">
+		<![CDATA[
+		    select *,CategoryNameLvl(${catecode},'3') CATENAME from RFP_TITLE where RT_PK = #{pk}
+	   ]]>
+	</select>
+	
+	<select id="rfp_title_by_catecode" parameterType="String" resultType="HashMap">
+		<![CDATA[
+		    select * from RFP_TITLE where RT_CATEGORY = #{catecode}
+	   ]]>
+	</select>
+	
+	<select id="rfp_content_by_pk" parameterType="int" resultType="HashMap">
+		<![CDATA[
+		    select * from RFP_CONTENT where RC_PK = #{pk}
+	   ]]>
+	</select>
+	
+	<select id="upjong_list_by_father" parameterType="int" resultType="HashMap">
+		SELECT PK, CODE, NAME, FULL_NAME, COUNT, PR_COUNT, FATHER, ICON, CONTENT 
+		FROM UPJONG_CODE 
+		WHERE STATUS=1 
+		AND FATHER=#{father}
+		
+	   <if test="IS_MAIN != null">
+			AND IS_MAIN=1
+	   </if>
+
+	   <choose>
+			<when test="ORDER_OPTION == 'random'">
+	      	ORDER BY RAND()
+	    	</when>
+	    	<otherwise>
+	      	ORDER BY ORDERING ASC
+	    	</otherwise>
+	  	</choose>
+	</select>
+	
+	<select id="upjong_list_by_3th" parameterType="int" resultType="HashMap">
+		SELECT PK, CODE, NAME, FULL_NAME, COUNT, PR_COUNT, FATHER, ICON, CONTENT 
+		FROM UPJONG_CODE 
+		WHERE STATUS=1 
+		AND FATHER >= #{father}
+		
+	</select>
+	
+	<select id="common_code_list" parameterType="HashMap" resultType="HashMap">
+		
+	    SELECT *
+	      FROM CODE_MST
+	     WHERE CM_CODE_GROUP = #{code}
+	       AND CM_USEYN = 'Y'
+	       
+	       <if test="CM_CODE != null">
+	       AND CM_CODE = #{CM_CODE}
+	       </if>
+	       
+	       <if test="CM_CODES != null">
+	       AND CM_CODE IN #{CM_CODES}
+	       </if>
+	       
+	  ORDER BY CM_SORT ASC
+	   
+	</select>
+	
+	<select id="category_filter_list_by_catecode" parameterType="HashMap" resultType="HashMap">
+		SELECT RT_PK, RT_CATEGORY, RT_TYPE, RT_TITLE, RT_COMMON, RT_TITLE_PARTNER,RT_SCH_YN, RT_TITLE_FILTER
+		  FROM RFP_TITLE 
+		 WHERE 0=0
+		   AND RT_CATEGORY = #{catecode}
+		   AND RT_COMMON = '3000'
+	      AND RT_USEYN = 'Y'
+	      AND RT_SCH_YN = 'Y'
+		 ORDER BY ORDERING ASC
+	</select>
+	
+	<select id="category_filter_list_by_rtpk" parameterType="int" resultType="HashMap">
+		SELECT RC_PK,RC_TYPE,RC_CONTENT,ORDERING,R_RT_PK, RC_USEYN, RC_CONTENT_DP 
+		   FROM RFP_CONTENT 
+		  WHERE R_RT_PK = #{rt_pk}
+		    AND RC_USEYN='Y'
+		  ORDER BY ORDERING ASC
+	</select>
+	
+	<select id="common_code_list_group" parameterType="HashMap" resultType="HashMap">
+		SELECT *
+      FROM CODE_MST
+     WHERE CM_USEYN = 'Y'
+       AND CM_CODE_GROUP = #{father}
+       AND CM_CODE LIKE CONCAT(#{up_code},'%')
+  ORDER BY CM_SORT ASC
+	</select>
+	
+	<select id="project_count_by_upk" parameterType="int" resultType="int">
+		SELECT COUNT(PR_PK) cnt FROM PROJECT WHERE R_U_PK=#{uPk} AND PR_STATUS>1 AND PR_STATUS!=53
+	</select>
+	
+	<select id="project_count_contract_num_by_upk" parameterType="int" resultType="int">
+		SELECT COUNT(PR_PK) cnt FROM PROJECT WHERE R_U_PK=#{uPk} AND PR_STATUS>40 AND PR_STATUS!=53
+	</select>
+	
+	<select id="project_count_ing_num_by_upk" parameterType="int" resultType="int">
+		SELECT COUNT(PR_PK) cnt FROM PROJECT WHERE R_U_PK=#{uPk} AND PR_STATUS=41
+	</select>
+	
+	<select id="project_count_done_num_by_upk" parameterType="int" resultType="int">
+		SELECT COUNT(PR_PK) cnt FROM PROJECT WHERE R_U_PK=#{uPk} AND (PR_STATUS=51 OR PR_STATUS=52)
+	</select>
+	
+	<select id="project_sum_price_by_upk" parameterType="int" resultType="int">
+		SELECT IFNULL(sum(PR_CONTRACT_PRICE),0) AS CNT FROM PROJECT WHERE R_U_PK=#{uPk} AND PR_STATUS>40 AND PR_STATUS!=53
+	</select>
+	
+	<update id="user_info_update_project_num" parameterType="HashMap">
+		update USER_INFO 
+		set U_PROJ_NUM=#{num}
+		,U_PROJ_CONTRACT_NUM=#{num_contract}
+		,U_PORJ_ING_NUM=#{num_ing}
+		,U_PORJ_DONE_NUM=#{num_done}
+		,U_PROJ_TOTAL_PRICE=#{price} 
+		where U_PK=#{uPk} 
+	</update>
+	
+	<select id="project_apply_count_by_cpk" parameterType="int" resultType="int">
+		SELECT COUNT(PA_PK) cnt FROM PROJECT_APPLY WHERE PA_STATUS=1 AND R_C_PK=#{cPk}
+	</select>
+	
+	<select id="project_contract_by_cpk" parameterType="int" resultType="int">
+		SELECT COUNT(PR_PK) cnt FROM PROJECT WHERE PR_CONTRACT_PARTNER=#{cPk} AND PR_STATUS>40 AND PR_STATUS!=53
+	</select>
+	
+	<select id="project_sum_price_by_cpk" parameterType="int" resultType="int">
+		SELECT 	IFNULL(sum(PR_CONTRACT_PRICE),0) cnt FROM PROJECT WHERE PR_CONTRACT_PARTNER=#{cPk} AND PR_STATUS>40 AND PR_STATUS!=53
+	</select>
+	
+	<update id="project_contract_update_partner" parameterType="HashMap">
+		UPDATE COMPANY 
+		SET C_APPLY_NUM=#{num}
+		, C_CONTRACT_NUM=#{num_contract}
+		, C_CONTRACT_PRICE=#{price}
+		where C_PK=#{cPk}
+	</update>
+	
+	<select id="project_count_by_category" parameterType="String" resultType="int">
+   <![CDATA[
+	SELECT COUNT(PR_PK) AS cnt FROM PROJECT WHERE PR_STATUS>1 AND PR_CATEGORY LIKE CONCAT(#{categoryCode},'%')
+	   ]]>
+	</select>
+	
+	<update id="project_update_category_num" parameterType="String">
+   <![CDATA[
+	UPDATE CATEGORY set PR_COUNT=#{count} where CODE = #{categoryCode}
+	   ]]>
+	</update>
+	
+	<select id="partner_pk_by_cid" parameterType="String" resultType="int">
+   <![CDATA[
+	SELECT C_PK FROM COMPANY WHERE C_ID = BINARY(#{cid})
+	   ]]>
+	</select>
+	
+	<select id="category_count_partner_num_by_code" parameterType="String" resultType="int">
+   <![CDATA[
+	select count(C_PK) cnt from COMPANY where C_CATEGORY like CONCAT(#{code},'%') AND C_STATUS=1
+	   ]]>
+	</select>
+	
+	<update id="category_count_partner_num_update" parameterType="HashMap">
+   <![CDATA[
+	update CATEGORY set count=#{count} where code=#{code}
+	   ]]>
+	</update>
+	
+	<select id="getProjectDuplChk" parameterType="int" resultType="int">
+   <![CDATA[
+	SELECT COUNT(*) AS CNT FROM PROJECT WHERE TIMESTAMPDIFF(SECOND, PR_REGISTER_DATE, NOW()) < 30 AND R_U_PK=#{uPk}
+	   ]]>
+	</select>
+	
+	<select id="user_info_all" parameterType="int" resultType="Map">
+   <![CDATA[
+	select u.*,  IFNULL(agent.U_PK,0) as AGENT_PK, agent.U_NAME as AGENT_NAME, agent.U_ID as AGENT_U_ID 
+     ,( SELECT CP_NAME FROM COMPANY_PERSON B  WHERE B.R_C_PK = C.C_PK AND CP_RECEIVER = '1' AND CP_STATUS='1' LIMIT 1 ) CP_NAME
+     , C.C_NAME
+  from USER_INFO as u
+  left join USER_INFO as agent on u.AGENT_ID=agent.U_PK
+  LEFT JOIN COMPANY C ON u.U_PK = C.R_U_PK
+ where u.U_PK = #{pk}
+	   ]]>
+	</select>
+	
+	<select id="partner_by_pk" parameterType="int" resultType="HashMap">
+   <![CDATA[
+	select 
+			C_PK, C_PK PK, C_ID, C_NAME, C_NAME CNAME, C_SERVICE_NAME SERVICE_NAME, C_FOUNDER AS FOUNDER, C_SUMMARY AS SUMMARY, 
+			C_DESCRIPTION as DESCRIPTION,C_DESCRIPTION_IS_HTML, C_INFRA AS INFRA,C_BUSINESS as BUSINESS,C_HISTORY as HISTORY,C_HISTORY_IS_HTML,
+			C_SIZE1 as SIZE1,C_SIZE2 as SIZE2,C_SIZE3 as SIZE3,C_SIZE4 as SIZE4,
+			C_ZONE1 AS ZONE1,C_ZONE2 AS ZONE2,C_NUMBER_PERSIONS AS NUMBER_PERSIONS,
+			C_CAPITAL AS CAPITAL,C_SALES AS SALES, C_MIN_PRICE AS MIN_PRICE, C_ADDRESS,
+			C_LOGO as LOGO,C_CATEGORY AS CATEGORY,C_FILENAME1,C_FILENAME2,C_FILENAME3,C_FILENAME4,C_FONDATION_DATE,
+			CASE
+			WHEN LENGTH(C_FONDATION_DATE) = 6
+			THEN substr(C_FONDATION_DATE, 0, 4)
+			ELSE '-'
+			END AS FONDATION_DATE_YEAR,
+			CASE
+			WHEN LENGTH(C_FONDATION_DATE) = 6
+			THEN substr(C_FONDATION_DATE, 4, 6)
+			ELSE '-'
+			END AS FONDATION_DATE_MONTH,
+			CASE
+			WHEN LENGTH(C_FONDATION_DATE) = 6
+			THEN YEAR(curdate()) -  CONVERT(SUBSTR(C_FONDATION_DATE,1,4), UNSIGNED)
+			ELSE '-'
+			END AS FONDATION_DEPTH,
+			PerCal('PER',C_PT_PRICE ,C_PT_NUMBER ) AS PT_PRICE,
+			PerCal('PER',C_PT_SERVICE ,C_PT_NUMBER ) AS PT_SERVICE,
+			PerCal('PER',C_PT_ACTIVE ,C_PT_NUMBER ) AS PT_ACTIVE,
+			PerCal('PER',C_PT_SPECIAL ,C_PT_NUMBER ) AS PT_SPECIAL,
+			PerCal('PER',C_PT_TIME ,C_PT_NUMBER ) AS PT_TIME,
+			PerCal('PER',C_PT_QUALITY ,C_PT_NUMBER ) AS PT_QUALITY,
+			CASE
+			WHEN C_PT_NUMBER > 0 
+			THEN ROUND(C_PT_TOTAL/C_PT_NUMBER/6,1) 
+			ELSE 0 
+			END AS PT_TOTAL, C_PT_NUMBER, R_U_PK, C_APPLY_NUM, C_CONTRACT_NUM, C_CONTRACT_PRICE
+			,( SELECT CP_EMAIL FROM COMPANY_PERSON B  WHERE B.R_C_PK = A.C_PK AND CP_RECEIVER = '1' AND CP_STATUS='1' LIMIT 1 ) C_EMAIL
+			, UI.U_ID
+			, DATE_FORMAT(A.C_REGISTER_DATE, '%Y-%m-%d') AS C_REGISTER_DATE
+			, CP.CP_NAME
+			from COMPANY A 
+			     JOIN USER_INFO UI 
+			     ON A.R_U_PK = UI.U_PK
+			     
+			     LEFT JOIN COMPANY_PERSON CP
+			     ON A.C_PK = CP.R_C_PK
+			     AND CP.CP_RECEIVER = '1'
+			     AND CP.CP_STATUS = 1
+			     
+			WHERE C_PK = #{pk}
+			  AND C_STATUS = 1
+	   ]]>
+	</select>
+	
+	<select id="partner_by_pk_for_manager" parameterType="int" resultType="int">
+   <![CDATA[
+	select 
+			C_PK PK, C_ID, C_NAME CNAME, C_SERVICE_NAME SERVICE_NAME, C_FOUNDER AS FOUNDER, C_SUMMARY AS SUMMARY, C_DESCRIPTION as DESCRIPTION,C_DESCRIPTION_IS_HTML, C_INFRA AS INFRA,C_BUSINESS as BUSINESS,C_HISTORY as HISTORY,C_HISTORY_IS_HTML,
+			C_SIZE1 as SIZE1,C_SIZE2 as SIZE2,C_SIZE3 as SIZE3,C_SIZE4 as SIZE4,
+			C_ZONE1 AS ZONE1,C_ZONE2 AS ZONE2,C_NUMBER_PERSIONS AS NUMBER_PERSIONS,
+			C_CAPITAL AS CAPITAL,C_SALES AS SALES, C_MIN_PRICE AS MIN_PRICE,
+			C_LOGO as LOGO,C_CATEGORY AS CATEGORY,C_FILENAME1,C_FILENAME2,C_FILENAME3,C_FILENAME4,C_FONDATION_DATE,
+			CASE
+			WHEN LENGTH(C_FONDATION_DATE) = 6
+			THEN substr(C_FONDATION_DATE, 0, 4)
+			ELSE '-'
+			END AS FONDATION_DATE_YEAR,
+			CASE
+			WHEN LENGTH(C_FONDATION_DATE) = 6
+			THEN substr(C_FONDATION_DATE, 4, 6)
+			ELSE '-'
+			END AS FONDATION_DATE_MONTH,
+			CASE
+			WHEN LENGTH(C_FONDATION_DATE) = 6
+			THEN YEAR(curdate()) -  CONVERT(SUBSTR(C_FONDATION_DATE,1,4), UNSIGNED)
+			ELSE '-'
+			END AS FONDATION_DEPTH,
+			PerCal('PER',C_PT_PRICE ,C_PT_NUMBER ) AS PT_PRICE,
+			PerCal('PER',C_PT_SERVICE ,C_PT_NUMBER ) AS PT_SERVICE,
+			PerCal('PER',C_PT_ACTIVE ,C_PT_NUMBER ) AS PT_ACTIVE,
+			PerCal('PER',C_PT_SPECIAL ,C_PT_NUMBER ) AS PT_SPECIAL,
+			PerCal('PER',C_PT_TIME ,C_PT_NUMBER ) AS PT_TIME,
+			PerCal('PER',C_PT_QUALITY ,C_PT_NUMBER ) AS PT_QUALITY,
+			CASE
+			WHEN C_PT_NUMBER > 0 
+			THEN ROUND(C_PT_TOTAL/C_PT_NUMBER/6,1) 
+			ELSE 0 
+			END AS PT_TOTAL, C_PT_NUMBER, R_U_PK, C_APPLY_NUM, C_CONTRACT_NUM, C_CONTRACT_PRICE
+			from COMPANY where C_PK = #{pk}
+	   ]]>
+	</select>
+	
+	<select id="partner_by_cid" parameterType="String" resultType="HashMap">
+   <![CDATA[
+	SELECT CASE WHEN DATE_FORMAT(NOW(),'%Y')  - FONDATION_DATE_YEAR = DATE_FORMAT(NOW(),'%Y') THEN '-'
+             ELSE (DATE_FORMAT(NOW(),'%Y') - FONDATION_DATE_YEAR) + '년'
+        END AS FONDATION_DATE_DIFF
+      , FONDATION_DATE_YEAR
+      , SUB.*
+   FROM (
+        SELECT C_PK AS PK
+             , C_ID
+             , C_NAME CNAME
+             , C_SERVICE_NAME AS SERVICE_NAME
+             , C_FOUNDER AS FOUNDER
+             , C_SUMMARY AS SUMMARY
+             , C_IS_COMMISSION
+             , FLOOR(DATEDIFF(now(), CONCAT(C_FONDATION_DATE,'01'))/365) AS HISTORYYEAR
+             , C_DESCRIPTION AS DESCRIPTION
+             , C_DESCRIPTION_IS_HTML
+             , C_INFRA AS INFRA
+             , C_BUSINESS AS BUSINESS
+             , C_HISTORY AS HISTORY
+             , C_HISTORY_IS_HTML
+             , C_BUSINESS_TYPE AS BUSINESS_TYPE
+             , C_CUSTOMER_TYPE AS CUSTOMER_TYPE
+             , C_SIZE1 AS SIZE1
+             , C_SIZE2 AS SIZE2
+             , C_SIZE3 AS SIZE3
+             , C_SIZE4 AS SIZE4
+             , C_URL
+             , C_PHONE
+             , C_REGISTRATION_NUMBER
+             , C_ZIPCODE
+             , C_ADDRESS
+             , C_INFRA
+             , C_ZONE1 AS ZONE1
+             , C_ZONE2 AS ZONE2
+             , C_NUMBER_PERSIONS AS NUMBER_PERSIONS
+             , C_CAPITAL AS CAPITAL
+             , C_SALES AS SALES
+             , C_MIN_PRICE AS MIN_PRICE
+             , C_LOGO AS LOGO
+             , C_CATEGORY AS CATEGORY
+             , C_FILENAME1
+             , C_FILENAME2
+             , C_FILENAME3
+             , C_FILENAME4
+             , C_FILENAME5
+             , C_FONDATION_DATE
+             , C_EMAIL
+             , C_APPLY_NUM
+             , C_CONTRACT_NUM
+             , C_CONTRACT_PRICE,C_STATUS
+             , IFNULL(SUBSTR(C.C_CATEGORY, 2, 7), NULL) CATECODE1
+             , CategoryName(substr(C_CATEGORY,2,7))  AS CATE1
+             , CategoryName(substr(C_CATEGORY,10,7)) AS CATE2
+             , CategoryName(substr(C_CATEGORY,18,7)) AS CATE3
+             , CASE WHEN LENGTH(C_FONDATION_DATE) = 6
+                    THEN substr(C_FONDATION_DATE, 0, 4)
+                    ELSE '-'
+                END AS FONDATION_DATE_YEAR
+             , CASE WHEN LENGTH(C_FONDATION_DATE) = 6
+                    THEN substr(C_FONDATION_DATE, 4, 6)
+                    ELSE '-'
+                END AS FONDATION_DATE_MONTH
+             , CASE WHEN LENGTH(C_FONDATION_DATE) = 6
+                    THEN YEAR(curdate()) -  CONVERT(SUBSTR(C_FONDATION_DATE,1,4), UNSIGNED)
+                    ELSE '-'
+                END AS FONDATION_DEPTH
+             , PerCal('PER',C_PT_PRICE,   C_PT_NUMBER ) AS PT_PRICE
+             , PerCal('PER',C_PT_SERVICE, C_PT_NUMBER ) AS PT_SERVICE
+             , PerCal('PER',C_PT_ACTIVE,  C_PT_NUMBER ) AS PT_ACTIVE
+             , PerCal('PER',C_PT_SPECIAL, C_PT_NUMBER ) AS PT_SPECIAL
+             , PerCal('PER',C_PT_TIME,    C_PT_NUMBER ) AS PT_TIME
+             , PerCal('PER',C_PT_QUALITY, C_PT_NUMBER ) AS PT_QUALITY
+             , CASE WHEN C_PT_NUMBER > 0 
+                    THEN ROUND(C_PT_TOTAL/C_PT_NUMBER/6,1) 
+                    ELSE 0 
+                END AS PT_TOTAL
+             , R_U_PK
+             , FOR_OFFICE
+             , SHOW_MK
+             , SHOW_OFFICE
+             , IS_CONTRACT 
+             , IS_MEETING
+             , C_IS_EVIDENCE
+             ,(SELECT COUNT(1) FROM PROJECT_APPLY PA WHERE PA.R_C_PK = C.C_PK  ) PA_CNT	-- 의뢰참여 건수
+             , DATEDIFF(now(),C.C_REGISTER_DATE) CNT_WORKING_DATE	-- 가입일로부터 현재까지 일수
+             ,(SELECT COUNT(1) FROM PROJECT_APPLY PA WHERE PA.R_C_PK = C.C_PK 
+             	AND PA.PA_STATUS >= 7 
+             	AND PA.R_PR_PK IN (SELECT PR_PK FROM PROJECT WHERE PR_STATUS NOT IN ('3','53') AND PR_STATUS >= 31)
+             	) CONTRACT_CNT	-- 계약건수
+             , C.C_CNT_VIEW		-- 페이지 조회수
+             , (SELECT COUNT(LC_PK) FROM LIKE_COMPANY WHERE R_C_PK = C.C_PK) AS CNT_LIKE_PARTNER
+             , (SELECT M_GRADE FROM COMPANY_MEMBERSHIP WHERE R_C_PK = C.C_PK 
+               	AND DATE_FORMAT(M_FROMDATE,'%Y-%m-%d') <= CURRENT_DATE()
+         	   	AND DATE_FORMAT(M_TODATE,'%Y-%m-%d') >= CURRENT_DATE() LIMIT 1) AS M_GRADE  -- 멤버십 등급
+         	 , CG.CG_PK, CG.CG_GRADE, CG.CG_PT_SPECIAL, CG.CG_PT_PRICE, CG.CG_PT_ACTIVE, CG.CG_PT_KIND
+         	 , FN_GET_CM_NAME('CG_GRADE', CG.CG_GRADE) AS CG_GRADE_NM
+         	 , FN_GET_CM_MEMO('CG_GRADE', CG.CG_GRADE) AS CG_GRADE_MEMO
+         	 , FN_COMPANY_RESPONSE_RATE('', C.C_PK) AS RES_RATE 
+             , FN_COMPANY_RESPONSE_TIME('', C.C_PK) AS RES_TIME
+             , C.C_REF_TYPE
+             , C.IS_CONTRACT_FILE
+          FROM COMPANY C
+               INNER JOIN USER_INFO U
+		       ON C.R_U_PK = U.U_PK
+		       AND U.U_STATUS > 0
+		       
+		       LEFT JOIN COMPANY_GRADE CG
+               ON C.C_PK = CG.R_C_PK
+		       
+         WHERE C_ID = BINARY(#{id}) 
+           AND C_STATUS > 0
+      ) SUB
+	   ]]>
+	</select>
+	
+	<select id="partner_basicinfo_by_upk" parameterType="int" resultType="HashMap">
+   		<![CDATA[
+			SELECT A.*, ( SELECT CP_NAME FROM COMPANY_PERSON B WHERE B.R_C_PK = A.C_PK AND B.CP_STATUS=1 LIMIT 0,1 )  CP_NAME
+		       , B.*
+		       , YEAR(A.C_REGISTER_DATE) AS C_REGISTER_DATE_YEAR
+		       , MONTH(A.C_REGISTER_DATE) AS C_REGISTER_DATE_MONTH
+		       , DAYOFMONTH(A.C_REGISTER_DATE) AS C_REGISTER_DATE_DAYOFMONTH
+		       , IFNULL(CM.M_GRADE, '4000') AS M_GRADE
+		       , FN_GET_CM_NAME('MEMBERSHIP_GRADE', IFNULL(M_GRADE, '4000')) AS M_GRADE_NM
+		    FROM COMPANY A 
+		         LEFT JOIN COMPANY_MD_EVAL B ON ( A.C_PK = B.R_C_PK )
+		         
+		         LEFT JOIN COMPANY_MEMBERSHIP CM 
+		         ON A.C_PK = CM.R_C_PK
+		         AND DATE_FORMAT(CM.M_FROMDATE,'%Y-%m-%d') <= CURRENT_DATE()
+		         AND DATE_FORMAT(CM.M_TODATE,'%Y-%m-%d')   >= CURRENT_DATE() 
+		   WHERE A.R_U_PK = #{id}
+		         LIMIT 1
+	   ]]>
+	</select>
+	
+	<select id="partner_basicinfo_by_cpk" parameterType="int" resultType="HashMap">
+   		<![CDATA[
+			select * FROM COMPANY where C_PK = #{id}
+	   ]]>
+	</select>
+	
+	<!-- 
+	<select id="partner_basicinfo_by_cpk" parameterType="int" resultType="HashMap">
+   		<![CDATA[
+			SELECT A.*, ( SELECT CP_NAME FROM COMPANY_PERSON B WHERE B.R_C_PK = A.C_PK AND B.CP_STATUS=1 LIMIT 0,1 )  CP_NAME
+		       , B.*
+		       , YEAR(A.C_REGISTER_DATE) AS C_REGISTER_DATE_YEAR
+		       , MONTH(A.C_REGISTER_DATE) AS C_REGISTER_DATE_MONTH
+		       , DAYOFMONTH(A.C_REGISTER_DATE) AS C_REGISTER_DATE_DAYOFMONTH
+		       , IFNULL(CM.M_GRADE, '4000') AS M_GRADE
+		       , FN_GET_CM_NAME('MEMBERSHIP_GRADE', IFNULL(M_GRADE, '4000')) AS M_GRADE_NM
+		    FROM COMPANY A 
+		         LEFT JOIN COMPANY_MD_EVAL B ON ( A.C_PK = B.R_C_PK )
+		         
+		         LEFT JOIN COMPANY_MEMBERSHIP CM 
+		         ON A.C_PK = CM.R_C_PK
+		         AND DATE_FORMAT(CM.M_FROMDATE,'%Y-%m-%d') <= CURRENT_DATE()
+		         AND DATE_FORMAT(CM.M_TODATE,'%Y-%m-%d')   >= CURRENT_DATE() 
+		   WHERE A.R_U_PK = #{id}
+		         LIMIT 1
+	   ]]>
+	</select>
+	 -->
+	 
+	<select id="project_by_pid" parameterType="String" resultType="HashMap">
+   		<![CDATA[
+			SELECT p.*
+			     , DATEDIFF(curdate(),PR_REGISTER_DATE) AS d2
+			     , DATEDIFF(PR_APPLY_END_DATE,curdate()) AS DIFF
+			     , CASE WHEN PR_STATUS IN (11,16,17) AND PR_APPLY_END_DATE >= curdate()
+			            THEN 'Y'
+			            ELSE 'N'
+			        END AS POSSIBLE_APPLY
+			     , projectPeriod('PERIOD',PR_PERIOD,0,0,0,0) AS PR_PERIOD_TXT
+			     , projectPeriod('PRICE',PR_PRICE,0,0,0,0) AS PR_PRICE_TXT
+			     , projectPeriod('TYPE',PR_TYPE,0,0,0,0) AS PR_TYPE_TXT
+			     , projectPeriod('STATUS',PR_STATUS,PR_APPLY_END_DATE,PR_APPLY_NUM,PR_MEETING_NUM,PR_CONTRACT_PARTNER) AS PR_STATUS_TXT
+			     , FN_PROGRESS_STATUS('USER',PR_STATUS,PR_APPLY_END_DATE,PR_APPLY_NUM, '') AS PR_STATUS_NEW
+			     , CategoryNameLvl(PR_CATEGORY,'2') AS CATE_NAME1
+			     , CategoryName(PR_CATEGORY) AS CATE_NAME
+			     , PR_CATEGORY
+			     , PM_PK
+			     , PM_PK
+			     , PM_TITLE
+			     , U_ID
+			     , U_COMPANY
+			     , U_NAME
+			     , U_PHONE
+			     , U_MOBILE
+			     , U_ZONE1
+			     , U_ZONE2
+			     , U_PROJ_NUM
+			     , U_PROJ_CONTRACT_NUM
+			     , U_PORJ_ING_NUM
+			     , U_PORJ_DONE_NUM
+			     , U_PROJ_NUM - (U_PROJ_CONTRACT_NUM + U_PORJ_ING_NUM ) AS CANCEL_NUM
+			     , ROUND((U_PROJ_CONTRACT_NUM/U_PROJ_NUM)*100,0) AS CONTRACTPER 
+			     , ( SELECT COUNT(1) FROM PROJECT_APPLY pa WHERE pa.R_PR_PK = p.PR_PK AND pa.PA_STATUS >= 5 ) AS PA_CNT
+			     , ME.*
+			     , FN_GET_CM_NAME('ABC', IFNULL(ME.P_MD_CUSTGRADE,'')) AS P_MD_CUSTGRADE_NAME
+			     , PMI.*
+			     , UME.U_SITE_URL
+			  FROM PROJECT p  
+			       LEFT JOIN  PROMOTION pm        ON pm.PM_PK=R_PM_PK
+			       INNER JOIN USER_INFO U         ON U.U_PK = p.R_U_PK
+			       LEFT JOIN  USER_MD_EVAL UME    ON ( p.R_U_PK = UME.R_U_PK )
+			       LEFT JOIN  PROJECT_MD_EVAL ME  ON ( p.PR_PK = ME.R_PR_PK )
+			       LEFT JOIN  PROJECT_MD_INFO PMI ON p.PR_PK = PMI.R_PR_PK AND PMI.DEL_YN = 'N'
+			 WHERE PR_STATUS!=0 
+			   AND PR_ID = #{id}
+	   ]]>
+	</select>
+	
+	<select id="project_by_pk" parameterType="int" resultType="HashMap">
+   		<![CDATA[
+			SELECT p.*
+	     , DATEDIFF(curdate(),PR_REGISTER_DATE) AS d2
+	     , DATEDIFF(PR_APPLY_END_DATE,curdate()) AS DIFF
+	     , CASE WHEN PR_STATUS IN(11,16,17) AND PR_APPLY_END_DATE >= curdate()
+		        THEN 'Y' ELSE 'N'
+		         END AS POSSIBLE_APPLY
+		 , projectPeriod('PERIOD',PR_PERIOD,0,0,0,0) AS PR_PERIOD_TXT
+		 , projectPeriod('PRICE',PR_PRICE,0,0,0,0) AS PR_PRICE_TXT
+		 , projectPeriod('TYPE',PR_TYPE,0,0,0,0) AS PR_TYPE_TXT
+		 , projectPeriod('STATUS',PR_STATUS,PR_APPLY_END_DATE,PR_APPLY_NUM,PR_MEETING_NUM,PR_CONTRACT_PARTNER) AS PR_STATUS_TXT
+		 , CategoryName(PR_CATEGORY) CATE_NAME, u.U_ID, u.U_NAME, u.U_EMAIL, PM_PK, PM_TITLE
+		 , CategoryNameLvl(PR_CATEGORY,'2') CATE_NAME1
+		 , DAM.U_NAME     AS PMI_MD_DAM_NM
+		 , DAM.U_POSITION AS PMI_MD_DAM_POSITION
+		 , DAM.U_PHONE    AS PMI_MD_DAM_PHONE
+		 , PMI.*
+		 , u.U_COMPANY
+		 , (SELECT COUNT(*) FROM PROJECT_PARTICIPATE WHERE R_PR_PK = p.PR_PK AND PP_PARTICIPATION=2000) AS PARTICIPATE_CNT
+		 , (SELECT COUNT(*) AS cnt FROM PROJECT_MD_EVAL WHERE P_MD_ALRAM_DISPLAYEXCEPT IS NOT NULL AND P_MD_ALRAM_DISPLAYEXCEPT != '' AND R_PR_PK = #{pk}) AS ALARM_EXCEPT_CHK
+		 , (SELECT P_MD_ALRAM_DISPLAYEXCEPT FROM PROJECT_MD_EVAL WHERE P_MD_ALRAM_DISPLAYEXCEPT IS NOT NULL AND P_MD_ALRAM_DISPLAYEXCEPT != '' AND R_PR_PK = #{pk} ORDER BY INDATE LIMIT 1) AS ALARM_EXCEPT_TXT
+      FROM PROJECT p 
+		   LEFT JOIN USER_INFO u on (p.R_U_PK=u.U_PK) 
+		   LEFT JOIN PROMOTION pm on pm.PM_PK=R_PM_PK
+		   LEFT JOIN PROJECT_MD_INFO PMI ON p.PR_PK = PMI.R_PR_PK AND PMI.DEL_YN = 'N'
+	       LEFT JOIN USER_INFO DAM ON DAM.U_PK = PMI.PMI_MD_DAM
+	 WHERE PR_STATUS!=0 AND PR_PK = #{pk}
+	   ]]>
+	</select>
+	
+	<select id="project_apply_by_pk" parameterType="int" resultType="HashMap">
+   		<![CDATA[
+			SELECT 
+				C_ID, C_LOGO, 
+				C_NAME, C_POINT, C_TYPE, C_ZONE1, C_ZONE2,C_CONTRACT_NUM, 
+				PA_ID,PA_PRICE,PA_PERIOD, U_ID, PA_CONTENT, PA_PK,
+				PerCal('PER',C_PT_PRICE ,C_PT_NUMBER ) AS PT_PRICE,
+				PerCal('PER',C_PT_SERVICE ,C_PT_NUMBER ) AS PT_SERVICE,
+				PerCal('PER',C_PT_ACTIVE ,C_PT_NUMBER ) AS PT_ACTIVE,
+				PerCal('PER',C_PT_SPECIAL ,C_PT_NUMBER ) AS PT_SPECIAL,
+				PerCal('PER',C_PT_TIME ,C_PT_NUMBER ) AS PT_TIME,
+				PerCal('PER',C_PT_QUALITY ,C_PT_NUMBER ) AS PT_QUALITY,
+				pa.*,
+				projectPeriod('PA_MEETING_STATUS',PA_MEETING_STATUS,0,0,0,0) AS PA_MEETING_STATUS_TXT
+				, CP.* 
+				 FROM (SELECT * FROM PROJECT_APPLY WHERE PA_PK = #{pk}) pa LEFT JOIN COMPANY c ON (pa.R_C_PK=c.C_PK)
+				 LEFT JOIN USER_INFO u ON (c.R_U_PK=u.U_PK)
+				 LEFT JOIN COMPANY_PERSON CP ON pa.R_P_PK = CP.CP_PK
+	   ]]>
+	</select>
+	
+	<select id="project_apply_by_id" parameterType="String" resultType="HashMap">
+   		<![CDATA[
+			SELECT 
+				C_ID, C_LOGO, 
+				C_NAME, C_POINT, C_TYPE, C_ZONE1, C_ZONE2,C_CONTRACT_NUM, 
+				PA_ID,PA_PRICE,PA_PERIOD, U_ID, PA_CONTENT, PA_PK,
+				PerCal('PER',C_PT_PRICE ,C_PT_NUMBER ) AS PT_PRICE,
+				PerCal('PER',C_PT_SERVICE ,C_PT_NUMBER ) AS PT_SERVICE,
+				PerCal('PER',C_PT_ACTIVE ,C_PT_NUMBER ) AS PT_ACTIVE,
+				PerCal('PER',C_PT_SPECIAL ,C_PT_NUMBER ) AS PT_SPECIAL,
+				PerCal('PER',C_PT_TIME ,C_PT_NUMBER ) AS PT_TIME,
+				PerCal('PER',C_PT_QUALITY ,C_PT_NUMBER ) AS PT_QUALITY,
+				pa.*,
+				projectPeriod('PA_MEETING_STATUS',PA_MEETING_STATUS,0,0,0,0) AS PA_MEETING_STATUS_TXT
+				, PR.* 
+				 FROM (SELECT * FROM PROJECT_APPLY WHERE PA_ID = #{id}) pa
+				  JOIN COMPANY c ON (pa.R_C_PK=c.C_PK)
+				 JOIN USER_INFO u ON (c.R_U_PK=u.U_PK)
+				 JOIN PROJECT PR ON pa.R_PR_PK = PR.PR_PK AND PR_STATUS > 0
+	   ]]>
+	</select>
+	
+	<select id="project_apply_by_id_with_cpk" parameterType="String" resultType="HashMap">
+   		<![CDATA[
+		SELECT 
+		C_ID, C_LOGO, 
+		C_NAME, C_POINT, C_TYPE, C_ZONE1, C_ZONE2,C_CONTRACT_NUM, 
+		PA_ID,PA_PRICE,PA_PERIOD, U_ID, PA_CONTENT, PA_PK,
+		PerCal('PER',C_PT_PRICE ,C_PT_NUMBER ) AS PT_PRICE,
+		PerCal('PER',C_PT_SERVICE ,C_PT_NUMBER ) AS PT_SERVICE,
+		PerCal('PER',C_PT_ACTIVE ,C_PT_NUMBER ) AS PT_ACTIVE,
+		PerCal('PER',C_PT_SPECIAL ,C_PT_NUMBER ) AS PT_SPECIAL,
+		PerCal('PER',C_PT_TIME ,C_PT_NUMBER ) AS PT_TIME,
+		PerCal('PER',C_PT_QUALITY ,C_PT_NUMBER ) AS PT_QUALITY,
+		pa.*,
+		projectPeriod('PA_MEETING_STATUS',PA_MEETING_STATUS,0,0,0,0) AS PA_MEETING_STATUS_TXT 
+		 FROM (SELECT * FROM PROJECT_APPLY WHERE PA_ID = ? AND R_C_PK = ? ) pa 
+		 JOIN COMPANY c ON (pa.R_C_PK=c.C_PK)
+		 JOIN USER_INFO u ON (c.R_U_PK=u.U_PK)
+	   ]]>
+	</select>
+	
+	<insert id="sejong_lms_insert" parameterType="HashMap">
+	   <![CDATA[
+		INSERT INTO castingn_sms.msg_queue 
+		(msg_type,dstaddr,callback,stat,subject,text,request_time,ext_col1)
+		VALUES
+		( #{msg_type},#{receiver},#{callback},#{stat},#{title}, #{contents},SYSDATE(),#{uId})
+	   ]]>
+	</insert>
+	
+	<insert id="user_notification_insert" parameterType="HashMap">
+	   <![CDATA[
+		insert into USER_NOTIFICATION 
+		(
+			UN_TYPE,UN_MESSAGE,UN_TIME,R_U_PK,SENDER_U_PK,PARTNER_C_PK,PROJECT_PK
+		) values (
+			#{TYPE}, #{MESSAGE}, NOW(), #{U_PK}, #{SENDER_U_PK}, #{PARTNER_C_PK}, #{PROJECT_PK}
+		)
+	   ]]>
+	</insert>
+	
+	<select id="mail_info_detail" parameterType="HashMap" resultType="HashMap">
+			SELECT MI_PK
+	        , MI_GUBUN
+	        , CASE WHEN MI_GUBUN = 'user'    THEN '고객'
+	               WHEN MI_GUBUN = 'partner' THEN '파트너' 
+	               WHEN MI_GUBUN = 'admin'   THEN '관리자' 
+	               END AS MI_GUBUN_NM 
+	        , MI_MEMO, MI_TITLE, MI_CONTENT
+	        , MI_STATUS
+	        , CASE WHEN MI_STATUS = 1 THEN '정상'
+	               ELSE '삭제'
+	               END AS MI_STATUS_NM
+	        , MI_INCODE, MI_INDATE, MI_MOCODE, MI_MODATE  
+	        , (SELECT U_NAME FROM USER_INFO UI WHERE U_PK = MI.MI_INCODE ) AS MI_INCODE_NM
+	        , (SELECT U_NAME FROM USER_INFO UI WHERE U_PK = MI.MI_MODATE ) AS MI_MOCODE_NM
+	        , MI.R_MIT_PK
+	     FROM MAIL_INFO MI
+	    WHERE 1=1
+	      AND MI_DELFLAG = 1
+	      AND MI_PK = #{MI_PK}
+	          
+			<if test="mi_gubun != null">
+			AND MI_GUBUN = #{mi_gubun}
+			</if>
+	        
+	        <if test="mi_title != null">
+			AND MI_TITLE LIKE CONCAT('%', #{mi_title}, '%')
+			</if>
+	</select>
+	
+	<select id="mail_info_template_detail" parameterType="HashMap" resultType="HashMap">
+			SELECT MIT_PK, MIT_MEMO, MIT_CONTENT
+			     , MIT_STATUS
+			     , CASE WHEN MIT_STATUS = 1 THEN '사용'
+			               ELSE '미사용'
+			               END AS MIT_STATUS_NM
+			     , MIT_INCODE, MIT_INDATE, MIT_MOCODE, MIT_MODATE 
+			  FROM castingn.MAIL_INFO_TEMPLATE
+			 WHERE 1=1
+			   AND MIT_DELFLAG = 1
+	           AND MIT_PK = #{MIT_PK}
+	          	<if test="mi_status != null">
+				AND MIT_STATUS = #{mi_status}
+				</if>
+		        
+		        <if test="mi_memo != null">
+				AND MIT_MEMO LIKE CONCAT('%', #{mi_memo}, '%')
+				</if>
+	</select>
+	
+	<insert id="xmail_save_info" parameterType="HashMap">
+		insert into X_MAIL (email, title, content, send_date) values (#{email},#{title},#{content},now())
+	</insert>
+	
+	<select id="user_notification_message_texts" parameterType="HashMap" resultType="HashMap">
+		select * from USER_NOTIFICATION_MESSAGE
+	</select>
+	
+	<select id="partner_statement_by_cpk" parameterType="int" resultType="HashMap">
+	SELECT CS.*
+      FROM COMPANY_STATEMENT CS  
+     WHERE CS.R_C_PK= #{C_PK}
+	</select>
+	
+	<select id="company_check_registration_number" parameterType="String" resultType="String">
+	select C_REGISTRATION_NUMBER from COMPANY where C_REGISTRATION_NUMBER = #{number} AND 1=0
+	</select>
+	
+	<select id="category_list_by_father_new" parameterType="HashMap" resultType="HashMap">
+		SELECT PK, CODE, NAME, FULL_NAME, COUNT, PR_COUNT, FATHER, ICON, CONTENT, SEARCHING_YN 
+		  FROM CATEGORY 
+		 WHERE STATUS=1 and length(father)=#{father} and father != 0 
+		
+		 <if test="IS_MAIN != null">
+	 	 AND IS_MAIN=1
+	 	 </if>
+	 	 <choose>
+	 		<when test="ORDER_OPTION = 'random'">
+	 		ORDER BY rand()
+	 		</when>
+	 		<otherwise>
+	 		ORDER BY ORDERING ASC
+	 		</otherwise>
+	 	 </choose>
+	</select>
+	
+	<select id="category_list_depth2_by_father" parameterType="HashMap" resultType="HashMap">
+	SELECT * FROM CATEGORY WHERE STATUS=1 AND father = ( select father from CATEGORY where code = #{code} ) ORDER BY ORDERING ASC
+	</select>
+	
+	<select id="category_list_depth3_by_father" parameterType="HashMap" resultType="HashMap">
+	SELECT * FROM CATEGORY WHERE STATUS=1 AND father = ( select PK from CATEGORY where code = #{code} ) ORDER BY ORDERING ASC
+	</select>
+	
+	<select id="category_list_depth1" parameterType="HashMap" resultType="HashMap">
+	SELECT * 
+		  FROM CATEGORY 
+		 WHERE STATUS = 1
+		       %CATE0%  
+		       
+		       <if test="CATE0 != null">
+		       AND CODE IN (#{CATE0})
+		       </if>
+		       
+      ORDER BY ORDERING ASC
+	</select>
+	
+	<select id="category_list_depth3" parameterType="HashMap" resultType="HashMap">
+	SELECT * FROM CATEGORY WHERE STATUS=1 AND CODE LIKE #{code} AND LENGTH(CODE)=7 ORDER BY ORDERING ASC
+	</select>
+	
+	<select id="category_list_depth2" parameterType="HashMap" resultType="HashMap">
+	SELECT * FROM CATEGORY WHERE STATUS=1 AND CODE LIKE #{code} AND LENGTH(CODE)=4 ORDER BY ORDERING ASC
+	</select>
+	
+	<select id="category_max_depth" parameterType="HashMap" resultType="String">
+	select max(DEPTH_INDEX) cnt from CATEGORY where father = #{father} 
+	</select>
+	
+	<select id="category_max_pk" parameterType="HashMap" resultType="String">
+	select max(DEPTH_INDEX) cnt from CATEGORY where father = #{father} 
+	</select>
+	
+	<update id="manage_category_update_fullname_all1" parameterType="HashMap">
+		update CATEGORY set FULL_NAME = NAME where FATHER=0 and PK>0
+	</update>
+	
+	<update id="manage_category_update_fullname_all2" parameterType="HashMap">
+		update CATEGORY c1, CATEGORY c2 set c1.FULL_NAME = CONCAT(c2.FULL_NAME,'>',c1.NAME) where c1.father=c2.pk and length(c1.CODE)=4 and c1.PK>0 and c2.PK>0
+	</update>
+	
+	<update id="manage_category_update_fullname_all3" parameterType="HashMap">
+		update CATEGORY c1, CATEGORY c2 set c1.FULL_NAME = CONCAT(c2.FULL_NAME,'>',c1.NAME) where c1.father=c2.pk and length(c1.CODE)=7 and c1.PK>0 and c2.PK>0
+	</update>
+	
+	<select id="manage_partner_outsourcing_detail" parameterType="int" resultType="HashMap">
+	SELECT
+		 CO_PK
+		,CO_MD
+		,CO_NAME
+		,CO_BUSINESS_TYPE
+		,CO_REGISTRATION_NUMBER
+		,CO_FOUNDER
+		,CO_FOUNDER
+		,CO_PHONE
+		,CO_REGISTER_DATE
+		,CO_REAL_EMP_NUM
+		,CO_EMAIL
+		,CO_COMPANY_TYPE
+		,CO_SALES1_DETAIL
+	 	,CO_CATEGORY1
+	 	,CO_CATEGORY2
+		,CO_URL
+		,CO_ADDRESS
+		,CO_TEST_CK
+		,CO_PHONE_CK
+		,CO_CALL_STATUS
+		,CO_CALL_PROGRESS
+		,CO_STATUS
+		,CO_PARTNER_STATUS
+		,CO_SUMMARY
+		,CO_DNAME
+		,CO_DEMAIL
+		,CO_DEPARTMENT
+		,CO_POSITION
+		,CO_DUTY
+		,CO_DPHONE
+		,CO_ZONE1
+		,CO_MIN_PRICE
+		,CO_INFRA
+		,CO_SKILL
+		,CO_SKILL_MEMO
+		,CO_DAMDANG_NAME
+		,CO_INFLOW_PATH
+	FROM COMPANY_OUTSOURCING
+	WHERE CO_PK = #{id}
+	</select>
+	
+	<select id="manage_partner_outsourcing_file_info" parameterType="int" resultType="HashMap">
+	SELECT
+		 B.CO_PK
+		,A.OF_FILENAME1
+		,A.OF_FILENAME2
+		,A.OF_FILENAME3
+		,B.CO_NAME
+	FROM OUTSOURCING_FILE A RIGHT JOIN COMPANY_OUTSOURCING B
+	ON A.R_CO_PK = B.CO_PK
+	WHERE B.CO_PK  = #{pk}
+	</select>
+	
+	<select id="user_info_project_by_pk" parameterType="int" resultType="Map">
+	SELECT c.*,p.* 
+    FROM PROJECT p, USER_INFO c
+   WHERE p.R_U_PK = c.U_PK
+	 AND PR_PK = #{PR_PK}
+	</select>
+	
+	<select id="promotion_by_pk" parameterType="int" resultType="Map">
+	  	select *,  
+		 case 
+		 WHEN R_C_PK=0 or R_C_PK is null
+		 THEN '공통'
+		 ELSE C_NAME
+		 END AS PARTNER_NAME, cat.NAME as CAT_NAME,
+		 case 
+		 WHEN PM_END_DATE &lt; CURDATE()
+		 THEN 'YES'
+		 ELSE 'NO'
+		 END AS IS_END 
+		 from PROMOTION pm left join COMPANY c on pm.R_C_PK=c.C_PK left join USER_INFO u on u.U_PK=pm.R_U_PK left join CATEGORY cat on cat.PK=PM_CATEGORY where PM_STATUS>0 and PM_PK= #{pk}
+	</select>
+	
+	<select id="kakao_msg_mst_info" parameterType="String" resultType="Map">
+	  	SELECT * 
+		  FROM KAKAO_MSG_MST
+		 WHERE TMPL_CODE = #{titleKey}
+	</select>
+	
+	<insert id="kakao_insert" parameterType="HashMap">
+	  	INSERT INTO castingn_sms.msg_queue 
+		(msg_type,dstaddr,callback,stat,subject,text,text2, request_time,k_template_code,k_expiretime,k_button_name,k_button_url,
+		k_next_type,sender_key)
+		VALUES
+		( #{msg_type},#{dstaddr},#{callback},#{stat},#{subject}, 
+		  #{text},#{text2},SYSDATE(),#{k_template_code},#{k_expiretime}, 
+		  #{k_button_name},#{k_button_url},#{k_next_type},#{sender_key})
+	</insert>
+	
+	<select id="company_person_by_paid" parameterType="String" resultType="Map">
+	  	SELECT B.*, C.*, D.C_NAME
+		  FROM PROJECT_APPLY A
+		  LEFT JOIN COMPANY_PERSON B ON ( A.R_C_PK = B.R_C_PK AND B.CP_STATUS = '1' AND B.CP_RECEIVER = '1'  )
+		       JOIN PROJECT C ON ( A.R_PR_PK = C.PR_PK )
+		       JOIN COMPANY D ON ( A.R_C_PK = D.C_PK )
+		 WHERE A.PA_ID = #{pa_id}
+		 ORDER BY CP_RECEIVER DESC
+		 LIMIT 0,1
+	</select>
+	
+	<select id="get_project_allinfo" parameterType="String" resultType="Map">
+		SELECT PR.*
+		     , DAM.U_NAME     AS PMI_MD_DAM_NM
+			 , DAM.U_POSITION AS PMI_MD_DAM_POSITION
+			 , DAM.U_PHONE    AS PMI_MD_DAM_PHONE
+		  FROM PROJECT PR
+		       LEFT JOIN PROJECT_MD_INFO PMI ON PR.PR_PK = PMI.R_PR_PK AND PMI.DEL_YN = 'N'
+			   LEFT JOIN USER_INFO DAM ON DAM.U_PK = PMI.PMI_MD_DAM
+		 WHERE PR_ID = #{prPk}
+	</select>
+	
+	<select id="get_project_allinfo_by_prpk" parameterType="String" resultType="Map">
+		SELECT PR.*
+		     , DAM.U_NAME     AS PMI_MD_DAM_NM
+			 , DAM.U_POSITION AS PMI_MD_DAM_POSITION
+			 , DAM.U_PHONE    AS PMI_MD_DAM_PHONE
+		  FROM PROJECT PR
+		       LEFT JOIN PROJECT_MD_INFO PMI ON PR.PR_PK = PMI.R_PR_PK AND PMI.DEL_YN = 'N'
+			   LEFT JOIN USER_INFO DAM ON DAM.U_PK = PMI.PMI_MD_DAM
+		 WHERE PR.PR_PK = #{prPk}
+	</select>
+	
+	<update id="update_project_pr_status" parameterType="HashMap">
+		UPDATE PROJECT 
+		   SET PR_STATUS      = #{PR_STATUS}
+		     , PR_STATUS_TYPE = #{PR_STATUS_TYPE}
+		     , PR_STATUS_MEMO = #{PR_STATUS_MEMO}
+		     , PR_MOCODE      = #{PR_MOCODE}
+		     , PR_MANAGER     = #{PR_MANAGER}
+		 WHERE PR_PK = #{PR_PK}
+	</update>
+	
+	<update id="update_project_md_info" parameterType="HashMap">
+		UPDATE PROJECT 
+		   SET PR_STATUS = #{PR_STATUS}
+		     , PR_STATUS_MEMO = #{PR_STATUS_MEMO}
+		 WHERE PR_PK = #{PR_PK}
+	</update>
+	
+	<select id="get_user_info_by_u_pk" parameterType="HashMap" resultType="HashMap">
+		SELECT *
+		  FROM USER_INFO
+		 WHERE U_PK = #{U_PK}
+	</select>
+	
+</mapper>

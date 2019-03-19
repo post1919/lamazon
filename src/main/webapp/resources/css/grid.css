@@ -1,0 +1,100 @@
+  .ui-dialog * {
+        font-family:Tahoma;
+        font-size:11px;
+    }
+    .ui-dialog form#crud-form {
+        margin-top:20px;
+    }
+    
+    .ui-dialog form#crud-form table{
+        width:300px;
+    }
+    
+    .ui-dialog form#crud-form input {
+        width:200px;
+        overflow:visible;
+        /*fix for IE*/
+    }
+    .ui-dialog form#crud-form td.label {
+        font-weight:bold;
+        padding-right:5px;
+    }
+    div.pq-grid-toolbar-crud {
+        text-align:center;
+    }
+    
+    .caution {color:red;}
+    
+    #json_grid {margin:0 auto}
+    .container {padding-top:0px}
+    #popup-dialog-crud {width:400px}
+    
+    .ui-dialog-buttonset {text-align:center}
+    .ui-dialog-buttonset button {width:80px;}
+    
+    tr.pq-row-select td { background-color:#333399;color:white }
+    
+    .img {width:160px;height:100px;background:yellow;float:left;margin:5px;background-repeat: no-repeat;background-position: center center;}
+    .namecard {width:300px;height:30px;background:yellow;float:left;margin:5px}
+    .movie_thumb {background-size: auto 100px;}
+    
+    #img_area {padding:10px;display:none}
+    #img_list {padding:10px;border:10px;}
+    
+.mtitle {display:none;margin:0 0 10px 0;font-weight:bold}    
+
+#image_list_all {display:none}
+.image_list {
+	float:left;width:100%;height:100px;margin-top:5px;margin-bottom:20px;
+	border-top-style: solid;
+    border-bottom-style: solid;
+    border-color:grey;
+	border-width: 1px;
+}
+.bar_title {
+	float:left;width:100%;padding:5px;
+	-webkit-box-sizing: border-box;
+     -moz-box-sizing: border-box;
+          box-sizing: border-box;
+}
+
+/* context menu on grid */    
+ul.contextMenu{
+  list-style:none; 
+  margin:0;padding:0;
+  position: absolute;
+  font-size:12px;
+  color: #333;
+  z-index:10000;
+}
+
+ul.contextMenu *{
+    transition:color .4s, background .4s;
+}
+
+ul.contextMenu li{
+  min-width:150px;
+  overflow: hidden;
+  white-space: nowrap;
+  padding: 8px 12px;
+  background-color: #fff;
+  border-bottom:1px solid #ecf0f1;
+	border-left:1px solid #ecf0f1;
+    border-right:1px solid #ecf0f1;
+    cursor:pointer;
+}
+
+ul.contextMenu li:hover{
+  background-color: #ecf0f1;
+}
+
+ul.contextMenu li:first-child{
+	border-top:1px solid #ecf0f1;
+}
+
+ul.contextMenu li:last-child{
+}
+
+ul.contextMenu li:last-child a{width:26%;}
+ul.contextMenu li:last-child:hover a{color:#2c3e50}
+ul.contextMenu li:last-child:hover a:hover{color:#2980b9}  

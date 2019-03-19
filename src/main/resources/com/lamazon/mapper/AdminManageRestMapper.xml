@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.lamazon.mapper.AdminManageRestMapper">
+	<select id="common_code_list_m_count" parameterType="HashMap" resultType="int">
+		SELECT COUNT(*) AS CNT
+		 FROM (
+		      SELECT CMM.*
+			    FROM CODE_MST_M CMM
+	           WHERE 1=1 
+			  ) AA
+		WHERE 0=0 
+		
+	</select>
+	
+	<select id="common_code_list_m" parameterType="HashMap" resultType="HashMap">
+		SELECT CMM.CMM_CODE_GROUP
+	         , CMM_CODE_GROUP_NM
+	         , CMM.CMM_USEYN
+	         , CMM.CMM_INCODE
+	         , CMM.CMM_INDATE
+	         , CMM.CMM_MOCODE
+	         , CMM.CMM_MODATE
+	         , FN_GET_CM_NAME('USEYN', CMM.CMM_USEYN) AS CMM_USEYN_NM
+	      FROM CODE_MST_M CMM
+	     WHERE 1=1 
+	     
+	     <if test="CMM_CODE_GROUP != null">AND CMM_CODE_GROUP like CONCAT('%', #{CMM_CODE_GROUP}, '%')</if>
+	     <if test="CMM_CODE_GROUP_NM != null">AND CMM_CODE_GROUP_NM like CONCAT('%', #{CMM_CODE_GROUP_NM}, '%')</if>
+	     
+      <!-- <if test="ORDERING != null">${ORDERING}</if> -->
+	  ORDER BY CMM_CODE_GROUP ASC 
+	  <if test="PAGING != null">LIMIT ${PAGING}</if> 
+	</select>
+</mapper>

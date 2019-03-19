@@ -1,0 +1,1758 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="com.lamazon.mapper.AdminMapper">
+<!-- 
+	<resultMap type="AdminMenu" id="adminMenuMap">
+		<id column="AD_PK" property=""AD_PK"" />
+		<result column="c_name" property="c_name" />
+	</resultMap>
+-->
+	<select id="manage_user_count" parameterType="HashMap" resultType="int">
+		 SELECT COUNT(U_PK) CNT 
+		   FROM USER_INFO u 
+		  WHERE 1=1
+		    AND U_STATUS = 1
+		<if test="ALL          != null and ALL          != ''">AND U_STATUS=1</if>
+		<if test="WITHDRAW     != null and WITHDRAW     != ''">AND U_STATUS=0</if>
+		<if test="USER_TYPE    != null and USER_TYPE    != ''">AND U_TYPE=#{USER_TYPE}</if>
+		<if test="NAME         != null and NAME         != ''">AND U_NAME LIKE CONCAT('%', #{NAME}, '%')</if>
+		<if test="MOBILE       != null and MOBILE       != ''">AND U_MOBILE LIKE CONCAT('%',#{MOBILE},'%')</if>
+		<if test="EMAIL        != null and EMAIL        != ''">AND U_EMAIL LIKE CONCAT(#{EMAIL},'%')</if>
+		<if test="USERID       != null and USERID       != ''">AND U_ID LIKE CONCAT('%',#{USERID},'%')</if>
+		<if test="FROMDATE     != null and FROMDATE     != ''">AND DATE_FORMAT(U_REGISTER_DATE,'%Y-%m-%d') &gt;= #{FROMDATE}</if>
+		<if test="TODATE       != null and TODATE       != ''">AND DATE_FORMAT(U_REGISTER_DATE,'%Y-%m-%d') &lt;= #{TODATE}</if>
+		<if test="U_COMPANY    != null and U_COMPANY    != ''">AND U_COMPANY LIKE CONCAT('%',#{U_COMPANY},'%')</if>
+	</select>
+
+	<select id="manage_user_list" parameterType="HashMap" resultType="HashMap">
+		SELECT DATE_FORMAT(U_REGISTER_DATE, '%Y-%m-%d') AS REGISTER_DATE
+		     , FN_GET_CM_NAME('U_TYPE', U_TYPE) AS U_TYPE_NM
+		     , UI.*
+          FROM USER_INFO UI
+         WHERE 1=1
+           AND U_STATUS = 1
+		<if test="ALL          != null and ALL          != ''">AND U_STATUS=1</if>
+		<if test="WITHDRAW     != null and WITHDRAW     != ''">AND U_STATUS=0</if>
+		<if test="USER_TYPE    != null and USER_TYPE    != ''">AND U_TYPE=#{USER_TYPE}</if>
+		<if test="NAME         != null and NAME         != ''">AND U_NAME LIKE CONCAT('%', #{NAME}, '%')</if>
+		<if test="MOBILE       != null and MOBILE       != ''">AND U_MOBILE LIKE CONCAT('%',#{MOBILE},'%')</if>
+		<if test="EMAIL        != null and EMAIL        != ''">AND U_EMAIL LIKE CONCAT(#{EMAIL},'%')</if>
+		<if test="USERID       != null and USERID       != ''">AND U_ID LIKE CONCAT('%',#{USERID},'%')</if>
+		<if test="FROMDATE     != null and FROMDATE     != ''">AND DATE_FORMAT(U_REGISTER_DATE,'%Y-%m-%d') &gt;= #{FROMDATE}</if>
+		<if test="TODATE       != null and TODATE       != ''">AND DATE_FORMAT(U_REGISTER_DATE,'%Y-%m-%d') &lt;= #{TODATE}</if>
+		<if test="U_COMPANY    != null and U_COMPANY    != ''">AND U_COMPANY LIKE CONCAT('%',#{U_COMPANY},'%')</if>
+		<if test="ORDERING     != null">${ORDERING}</if>
+		<if test="PAGING       != null">limit ${PAGING}</if>
+	</select>
+	
+	<select id="agent_user_list" parameterType="HashMap" resultType="HashMap">
+		select * from USER_INFO where U_PK!=1292 AND U_PK!=1293 AND U_PK!=1713 AND U_STATUS=1 and U_TYPE=5 
+		order by 
+		<choose>
+			<when test="ORDER_OPTION.equals('user_id')">U_ID asc</when>
+			<when test="ORDER_OPTION.equals('user_name')">U_NAME asc</when>
+			<otherwise>U_ID asc</otherwise>
+		</choose>
+	</select>
+
+	<select id="user_tax_bank_list" parameterType="HashMap" resultType="HashMap">
+		SELECT * FROM BANK WHERE B_STATUS=1
+	</select>
+
+	<select id="user_tax_info" parameterType="HashMap" resultType="HashMap">
+		SELECT * FROM (SELECT * FROM TAX WHERE R_U_PK=#{pk}) t JOIN BANK ON BANK.B_PK=t.T_BANK
+	</select>
+	
+	<select id="user_info_mdeval" parameterType="HashMap" resultType="HashMap">
+		SELECT * FROM USER_MD_EVAL WHERE R_U_PK=#{pk}
+	</select>
+	
+	<update id="manage_user_info_update" parameterType="HashMap">
+	UPDATE USER_INFO SET U_NAME=#{user_name},U_TYPE=#{user_type},U_SEX=#{user_sex},U_BIRTHDAY=#{user_birthday}
+	,U_PHONE=#{user_phone},U_MOBILE=#{user_mobile},
+	U_SMS=#{user_sms}, U_EMAIL=#{user_email}, U_NEWSLETTER=#{user_newsletter}, U_ZONE1=#{user_zone1},U_ZONE2=#{user_zone2},
+	U_ZIPCODE=#{user_zipcode},U_ADDRESS=#{user_address},U_COMPANY=#{user_company},U_REGISTRATION_NUMBER=#{user_register_number}
+	,U_FOUNDER=#{user_founder},
+	U_DUTY=#{user_duty},U_DEPARTMENT=#{user_department},U_POSITION=#{user_position},AGENT_ID=#{user_agent_id}
+	,U_MODIFY_DATE=now()
+	WHERE U_PK=#{pk}
+	</update>
+	
+	<update id="manage_user_tax_info_update" parameterType="HashMap">
+	update TAX set T_BANK=#{user_tax_bank},T_NUMBER=#{number},T_HOLDER=#{user_tax_holder},T_PERSON=#{user_tax_person}
+	,T_PHONE=#{user_tax_phone},T_EMAIL=#{user_tax_email},T_MODIFY_DATE=NOW() WHERE R_U_PK=#{pk}
+	</update>
+	
+	<insert id="manage_user_tax_info_insert" parameterType="HashMap">
+	insert into TAX (T_BANK,T_NUMBER,T_HOLDER,T_PERSON,T_PHONE, T_EMAIL,R_U_PK,T_MODIFY_DATE
+	) values (
+	#{user_tax_bank},#{number},#{user_tax_holder},#{user_tax_person},#{user_tax_phone},#{user_tax_email},#{pk},now())
+	</insert>
+	
+	<insert id="manage_user_mdeval_info_insert" parameterType="HashMap">
+	insert into USER_MD_EVAL 
+	(
+		 R_U_PK,U_UPJONG,U_YYYY,U_SALE1,U_SALE2
+		,U_SALE3,U_UPDOWN,U_EMPCOUNT,U_MD_INTRO,INCODE
+		,U_SITE_URL,INDATE
+	) values (
+		  #{uPk},#{user_md_upjong},#{user_md_yyyymm},#{user_md_sale1},#{user_md_sale2}
+		, #{user_md_sale3},#{user_md_updown},#{user_md_empcount},#{user_md_intro},#{uId}
+		, #{U_SITE_URL}, now()
+	)
+	</insert>
+	
+	<update id="manage_user_mdeval_info_update" parameterType="HashMap">
+		UPDATE USER_MD_EVAL
+		   SET U_UPJONG   = #{user_md_upjong}
+			 , U_YYYY     = #{user_md_yyyymm}
+			 , U_SALE1    = #{user_md_sale1}
+			 , U_SALE2    = #{user_md_sale2}
+			 , U_SALE3    = #{user_md_sale3}
+			 , U_UPDOWN   = #{user_md_updown}
+			 , U_EMPCOUNT = #{user_md_empcount}
+			 , U_MD_INTRO = #{user_md_intro}
+			 , MOCODE     = #{uId}
+			 , U_SITE_URL = #{U_SITE_URL}
+			 , MODATE     = NOW()
+		 WHERE UM_PK      = #{umPk}
+	</update>
+	
+	<update id="manage_user_status_change_accept" parameterType="HashMap">
+	update USER_INFO set U_COMPANY_CERITIFY=3, U_CERTIFY_DATE=now() WHERE U_PK=#{uPk}
+	</update>
+	
+	<update id="manage_user_delete" parameterType="HashMap">
+		UPDATE USER_INFO set U_STATUS=#{U_STATUS}, U_MOCODE=#{mocode}, U_MODATE=NOW() WHERE U_PK=#{U_PK}
+	</update>
+	
+	<update id="manage_user_change_password" parameterType="HashMap">
+		update USER_INFO set U_PASSWD=#{password} WHERE U_PK=#{uPk}
+	</update>
+	
+	<update id="manage_user_status_change_reject" parameterType="HashMap">
+		update USER_INFO set U_COMPANY_CERITIFY=4 WHERE U_PK=#{uPk}
+	</update>
+	
+	<update id="manage_user_status_change_review" parameterType="HashMap">
+		update USER_INFO set U_COMPANY_CERITIFY=2 WHERE U_PK=#{uPk} AND U_COMPANY_CERITIFY=1
+	</update>
+	
+	<delete id="common_code_detail_delete" parameterType="HashMap">
+		DELETE FROM CODE_MST WHERE CM_CODE_GROUP = #{CM_CODE_GROUP}
+	</delete>
+	
+	<insert id="common_code_detail_insert" parameterType="HashMap">
+		INSERT INTO CODE_MST
+	    (
+	    	CM_CODE_GROUP, CM_CODE, CM_NAME, CM_MEMO, CM_SORT, CM_USEYN, INCODE, INDATE
+	    ) VALUES (
+	    	#{CM_CODE_GROUP}, UPPER(#{JI_PK}), #{JI_PK}, #{JI_PK}, #{CM_SORT}, #{CM_USEYN}, #{INCODE}, NOW()
+	    )
+	</insert>
+	
+	<select id="admin_coupon_count" parameterType="HashMap" resultType="int">
+	SELECT COUNT(CN_PK) as CNT 
+	  FROM COUPON_NUMBER_LIST A, USER_INFO B
+	 WHERE A.R_U_ID = B.U_ID
+	   	   <if test="SEARCH_WORD != null">
+	   	   ${SEARCH_WORD}
+	   	   </if>
+	   	   
+	   	   <if test="R_ADMIN_PK != null">
+	   	   AND IFNULL(B.U_NAME,'') like CONCAT('%',#{SEARCH_WORD},'%')
+	   	   </if>
+	   	   
+	   	   <if test="SEND_YN != null">
+	   	   AND IFNULL(A.SEND_YN,'') like CONCAT('%',#{SEND_YN},'%')
+	   	   </if>
+	</select>
+	
+	<select id="admin_coupon_list" parameterType="HashMap" resultType="HashMap">
+		SELECT A.CN_PK
+			,DATE_FORMAT(B.U_REGISTER_DATE,'%Y-%m-%d') U_REGISTER_DATE 
+	        ,DATE_FORMAT(B.U_CONFIRM_DATE,'%Y-%m-%d') U_CONFIRM_DATE 
+	        ,B.U_NAME
+	        ,B.U_ID
+	        ,B.U_EMAIL
+	        ,B.U_MOBILE
+	        ,B.U_COMPANY
+	        ,A.CN_NUMBER
+	        ,A.CN_TITLE
+	        ,A.SEND_YN
+	        ,DATE_FORMAT(A.SEND_DATE,'%Y-%m-%d') SEND_DATE
+	        ,A.R_ADMIN_PK
+	        ,( SELECT U_NAME FROM USER_INFO X WHERE X.U_PK = A.R_ADMIN_PK ) ADMIN_NAME
+	  FROM COUPON_NUMBER_LIST A, USER_INFO B
+	 WHERE A.R_U_ID = B.U_ID
+	       
+	   	   <if test="SEARCH_WORD != null">
+	   	   ${SEARCH_WORD}
+	   	   </if>
+	   	   
+	   	   <if test="R_ADMIN_PK != null">
+	   	   AND IFNULL(B.U_NAME,'') LIKE CONCAT('%',#{R_ADMIN_PK},'%')
+	   	   </if>
+	   	   
+	   	   <if test="SEND_YN != null">
+	   	   AND IFNULL(A.SEND_YN,'') LIKE CONCAT('%',#{SEND_YN},'%')
+	   	   </if>
+	   	   
+	 ORDER BY CN_PK DESC ${PAGING}
+	</select>
+	
+	<select id="manage_goal_year" parameterType="HashMap" resultType="HashMap">
+		SELECT YYYYMM
+			, CATEGORY
+			, GOAL_FLAG
+			, GOAL
+		  FROM PROJECT_MKT_GOAL
+		 WHERE YYYYMM LIKE 
+		  <if test="YEAR != null">
+		  CONCAT(#{YEAR}, '%')
+		  </if>
+		 ORDER BY YYYYMM ASC, GOAL_FLAG ASC
+	</select>
+	
+	<select id="manage_goal_exist" parameterType="HashMap" resultType="int">
+		SELECT COUNT(YYYYMM) G
+		  FROM PROJECT_MKT_GOAL
+		 WHERE YYYYMM = #{YEAR}
+		   AND GOAL_FLAG = #{GOAL_FLAG}
+	</select>
+	
+	<insert id="manage_goal_insert" parameterType="HashMap">
+		INSERT INTO PROJECT_MKT_GOAL(YYYYMM, CATEGORY, GOAL_FLAG, GOAL, PR_CNT, CONTACT_CNT, INCODE, INDATE)
+		VALUES(#{YEAR}, '0000', #{GOAL_FLAG}, #{GOAL}, 0, 0, #{INCODE}, now())
+	</insert>
+	
+	<update id="manage_goal_update" parameterType="HashMap">
+		UPDATE PROJECT_MKT_GOAL
+		   SET GOAL = #{GOAL}
+		 WHERE YYYYMM = #{YEAR}
+		   AND GOAL_FLAG = #{GOAL_FLAG}
+	</update>
+	
+	<select id="total_saleday_of_month" parameterType="HashMap" resultType="String">
+		SELECT SUM(SALEDAY) SD
+		  FROM YYYYMMDD
+		 WHERE YYYYMMDD
+		  LIKE CONCAT(#{YYYYMMDD}, '%')
+	</select>
+	
+	<select id="monthly_average_order" parameterType="HashMap" resultType="String">
+		SELECT ROUND(COUNT(DISTINCT PR_PK)/#{SALE_DAY},2) CUR_CNT
+		  FROM PROJECT PR
+		 WHERE 0=0 
+		   AND DATE_FORMAT(PR_REGISTER_DATE,#{DATE_FORMAT}) <![CDATA[>=]]> #{START_DATE}  
+		   AND DATE_FORMAT(PR_REGISTER_DATE,#{DATE_FORMAT}) <![CDATA[<=]]> #{END_DATE}
+	</select>
+	
+	<select id="monthly_average_contract" parameterType="HashMap" resultType="String">
+		SELECT ROUND(COUNT(1)/#{SALE_DAY},2)  CUR_CNT
+		  FROM PROJECT PR
+		  LEFT JOIN PROJECT_MD_INFO PMI ON PR.PR_PK   = PMI.R_PR_PK  AND PMI.DEL_YN = 'N' 
+		 WHERE  PR_STATUS NOT IN (0,2,3) 
+		   AND ( ( PR_STATUS IN (21,25) AND PMI.PMI_PROGRESS_STEP IN ('5005' ) ) -- 확정대기
+		         OR ( PR_STATUS IN (31,41,45))  -- 확정대기
+		         OR ( PR_STATUS IN (51) OR PMI.PMI_PROGRESS_STEP IN ('5006' ) )  -- 입금대기
+		         OR ( PR_STATUS IN (60) OR PMI.PMI_PROGRESS_STEP IN ('5300' ) )  -- 입금대기
+		         OR ( PR_STATUS IN (70) OR PMI.PMI_PROGRESS_STEP IN ('5400' ) )  -- 최종완료
+		       ) 
+		   AND PMI.PMI_CONTRACT_MONTH = #{CONTRACT_MONTH}    
+		   AND DATE_FORMAT(PR_REGISTER_DATE,#{DATE_FORMAT}) <![CDATA[>=]]> #{START_DATE}  
+		   AND DATE_FORMAT(PR_REGISTER_DATE,#{DATE_FORMAT}) <![CDATA[<=]]> #{END_DATE}
+	</select>
+	
+	<insert id="monthly_average_insert" parameterType="HashMap">
+		UPDATE PROJECT_MKT_GOAL
+		   SET PR_CNT = #{PR_CNT}
+		 WHERE YYYYMM = #{YEAR}
+		   AND GOAL_FLAG = #{GOAL_FLAG}
+		   AND CATEGORY = #{CATEGORY}
+	</insert>
+	
+	<select id="matching_data" parameterType="HashMap" resultType="HashMap">
+	SELECT DISTINCT C_PK
+		, C_NAME 
+		, CASE WHEN C_STATUS = '1' THEN '확인'
+		       WHEN C_STATUS = '2' AND C_CERTIFY = '4' THEN '반려됨'
+		       WHEN C_STATUS = '2' AND C_CERTIFY != '4' THEN '확인전'
+		       WHEN C_STATUS = '0' THEN '삭제'
+		       END AS STATUS
+		, IS_CONTRACT
+		, C_IS_COMMISSION
+		, DATE_FORMAT(C_REGISTER_DATE,'%Y%m%d') AS REGISTER_DATE
+ 		, DATE_FORMAT(C_CERTIFY_DATE,'%Y%m%d') AS CERTIFY_DATE
+		, (SELECT CM_NAME FROM CODE_MST WHERE CM_CODE_GROUP = 'MEMBERSHIP_GRADE' AND CM_CODE = M_GRADE AND CM_USEYN = 'Y') AS M_GRADE
+		, M_FROMDATE 
+		, M_TODATE
+		, HOMETAXCNT
+		, (SELECT CP_NAME FROM COMPANY_PERSON WHERE CP_PK = X.CP_PK) AS CP_NAME
+    	, (SELECT CP_PHONE FROM COMPANY_PERSON WHERE CP_PK = X.CP_PK) AS CP_PHONE
+    	, (SELECT CP_PHONE_JIK FROM COMPANY_PERSON WHERE CP_PK = X.CP_PK) AS CP_PHONE_JIK
+    	, (SELECT CP_EMAIL FROM COMPANY_PERSON WHERE CP_PK = X.CP_PK) AS CP_EMAIL
+		, (SELECT CONCAT('050-7335-',PHONE_NUM_050) FROM COMPANY_PERSON WHERE CP_PK = X.CP_PK AND PHONE_NUM_YN = '1') AS NUM_050
+		, CATENAME1
+		, CATENAME11 AS CATENAME1_ADVANTAGE
+		, CATENAME2
+		, CATENAME22 AS CATENAME2_ADVANTAGE
+		, CATENAME3
+		, CATENAME33 AS CATENAME3_ADVANTAGE
+		, CATENAME4
+		, CATENAME44 AS CATENAME4_ADVANTAGE
+		, CATENAME5
+		, CATENAME55 AS CATENAME5_ADVANTAGE
+		, CASE WHEN C_LOGO IS NOT NULL THEN '1' ELSE '0' END AS C_LOGO
+ 		, CASE WHEN (CATENAME1 != '' AND CATENAME111 IS NULL) OR (CATENAME2 != '' AND CATENAME222 IS NULL) OR 
+                	(CATENAME3 != '' AND CATENAME333 IS NULL) OR (CATENAME4 != '' AND CATENAME444 IS NULL) OR  (CATENAME5 != '' AND CATENAME555 IS NULL) THEN '0'
+               ELSE '1' END AS RFP
+ 		, CASE WHEN C_DESCRIPTION IS NULL THEN '0' ELSE '1' END AS C_DESCRIPTION
+   		, CASE WHEN C_FILENAME2 IS NULL THEN '0' ELSE '1' END AS C_FILENAME2               
+ 		, CASE WHEN (SELECT C_MAIN_UPJONG FROM COMPANY_MD_EVAL WHERE R_C_PK = C_PK limit 1) IS NOT NULL THEN '1'
+ 			   ELSE '0' END AS UPJONG
+ 		, CASE WHEN FN_GET_CM_NAME('COMPANY_SIZE', C_SIZE) != '' THEN '1' ELSE '0' END AS COMPANY_SIZE
+		, CASE WHEN (CATENAME1 != '' AND CATENAME1111 IS NULL) OR (CATENAME2 != '' AND CATENAME2222 IS NULL) OR 
+                	(CATENAME3 != '' AND CATENAME3333 IS NULL) OR (CATENAME4 != '' AND CATENAME4444 IS NULL) OR  (CATENAME5 != '' AND CATENAME5555 IS NULL) THEN '0'
+               ELSE '1' END AS PRICE 
+		, REF_CNT
+		, (SELECT COUNT(CE_PK) FROM COMPANY_EVALUATION WHERE CE_STATUS=1 AND R_C_PK = C_PK) AS PT_CNT
+		, (SELECT ROUND(AVG(ROUND( (CE_PT_SPECIAL+CE_PT_PRICE+CE_PT_SERVICE+CE_PT_ACTIVE+CE_PT_TIME+CE_PT_QUALITY)/6,1)),1) FROM COMPANY_EVALUATION WHERE CE_STATUS=1 AND R_C_PK = C_PK) AS PT_AVG
+		, C_ZIPCODE
+		, C_ADDRESS
+	FROM (
+		SELECT (MDEVAL1+COMEVAL1+SIMGRADE1) TOT, ROUND((MDEVAL1*100)/40,2) AS MDEVAL, ROUND((COMEVAL1*100)/40,2) AS COMEVAL, ROUND((SIMGRADE1*100)/20,2) AS SIMGRADE, M.*
+		FROM (
+			SELECT A.C_PK,A.C_NAME,C_ID,C_MAIN_UPJONG, C_LOGO, C_SIZE
+					,0 AS SIM
+					, (SELECT COUNT(1) FROM HOMETAX X WHERE X.R_C_PK = A.C_PK AND X.ERRORFLAG IS NULL ) HOMETAXCNT <!--  에러가 아닌경우 -->
+					,( SELECT COUNT(*) FROM COMPANY_REFERENCE X WHERE X.R_C_PK = A.C_PK AND X.CR_STATUS = '1' ) REF_CNT
+	<!-- 				,(IFNULL(E.SIMILARITY,0)*100) AS SIM -->
+					,ROUND(40/20*(IFNULL(C.C_ME_ACTIVE,0)+ IFNULL(C.C_ME_SPECIAL,0)+ IFNULL(C.C_ME_PRICE,0)+ IFNULL(C.C_FAVORITE,0) ),2) AS MDEVAL1
+					, ROUND(40/15*(FN_MATCHING_GRADE('SALES', A.C_SALES) 
+					+ FN_MATCHING_GRADE('MANCNT', A.C_NUMBER_PERSIONS) 
+					+ FN_MATCHING_GRADE('COMYEAR', FLOOR(DATEDIFF(NOW(), CONCAT(CASE WHEN A.C_FONDATION_DATE = '' THEN DATE_FORMAT(NOW(), '%Y%m') WHEN A.C_FONDATION_DATE IS NULL THEN DATE_FORMAT(NOW(), '%Y%m') ELSE REPLACE(A.C_FONDATION_DATE,'/','') END,'01'))/365))),2) AS COMEVAL1
+<!--                   , ROUND(60/100*(IFNULL(E.SIMILARITY,0)*1000),2) AS SIMGRADE1 -->
+					, 0 AS SIMGRADE1
+					, IFNULL(B.R_C_PK,0) BUDGET <!--  최소금액, 있으면 점수 1 -->
+					, IFNULL(C.R_C_PK,0) UPJONG <!--  메인업종, 있으면 점수 1 -->
+		<!-- 			, 0 REF_CNT  카테고리/업종 레퍼런스 등록수 , 숫자로 계산해서 있으면 점수 1 -->
+					, ROUND(A.C_SALES/100,2) BIL_SALES <!--  매출액 억원으로 환산 -->
+					, A.C_SALES <!--  매출액, 업체평가, GRADE --> 
+					, FN_MATCHING_GRADE('SALES', A.C_SALES) SALES
+					, A.C_NUMBER_PERSIONS AS NUMBER_PERSIONS <!--  직원수, GRADE -->
+					, FN_MATCHING_GRADE('MANCNT', A.C_NUMBER_PERSIONS) C_NUMBER_PERSIONS
+					, FLOOR(DATEDIFF(NOW(), CONCAT(
+            			CASE WHEN A.C_FONDATION_DATE = '' THEN DATE_FORMAT(NOW(), '%Y%m') WHEN A.C_FONDATION_DATE IS NULL THEN DATE_FORMAT(NOW(), '%Y%m') 
+            				 ELSE REPLACE(A.C_FONDATION_DATE,'/','') END,'01'))/365) COMYEAR
+					, FN_MATCHING_GRADE('COMYEAR', FLOOR(DATEDIFF(NOW(), CONCAT(CASE WHEN A.C_FONDATION_DATE = '' THEN DATE_FORMAT(NOW(), '%Y%m') WHEN A.C_FONDATION_DATE IS NULL THEN DATE_FORMAT(NOW(), '%Y%m') ELSE REPLACE(A.C_FONDATION_DATE,'/','') END,'01'))/365)) C_COMYEAR
+			 	 <!--  , A.C_FONDATION_DATE --> 
+			  <!--  업력, GRADE --> 
+					, ROUND((RES_CNT/(CASE WHEN REQ_CNT = 0 THEN 1 ELSE REQ_CNT END))*100,2) APPLY_RATIO <!--  참여율 -->
+				 <!--  , FN_MATCHING_GRADE('APPLY',ROUND((RES_CNT/(CASE WHEN REQ_CNT = 0 THEN 1 ELSE REQ_CNT END ))*100,2)) APPLY_GRADE 참여율 -->
+					, FN_MATCHING_GRADE('APPLY',REQ_CNT) APPLY_GRADE <!--  참여율 -->
+					, '' SATISFY <!--  상담만족도 -->
+					, '' REVIEW <!--  이용후기 -->
+					, A.C_PT_NUMBER <!--  평가받은 횟수 , MD 평가 -->
+					, C.C_ME_PRICE C_PT_PRICE <!--  가격경쟁력 -->
+					, C.C_ME_ACTIVE C_PT_ACTIVE <!--  적극성 -->
+					, C.C_FAVORITE C_PT_SERVICE <!--  서비스 -->
+					, C.C_ME_SPECIAL C_PT_SPECIAL <!--  전문성 -->
+					, A.C_PT_TIME <!--  시간엄수 -->
+					, A.C_PT_QUALITY <!--  퀄리티, 업체 수준 -->
+					, A.C_PT_TOTAL <!--  전체 점수 -->
+					, A.C_POINT <!--  평가 평균 -->
+					, A.C_APPLY_NUM <!--  등록건, 수주율 -->
+	<!-- 				, A.C_CONTRACT_NUM  수주건 -->
+             		, ( SELECT COUNT(*) FROM castingn.PROJECT WHERE PR_CONTRACT_PARTNER = A.C_PK AND PR_STATUS >= '11') C_CONTRACT_NUM
+ 		 	        <!-- , FN_MATCHING_GRADE('CONTRACT',A.C_CONTRACT_RATE) AS C_CONTRACT_GRADE 수주율 -->
+					, FN_MATCHING_GRADE('CONTRACT',A.C_CONTRACT_NUM) AS C_CONTRACT_GRADE <!--  수주율 -->
+					, A.C_REFERENCE_NUM <!--  레퍼런수 건 -->
+					, A.C_IS_COMMISSION
+					, A.IS_CONTRACT
+					, A.C_TYPE
+			        , A.C_CERTIFY
+			        , A.C_STATUS
+					, A.REQ_CNT
+					, A.RES_CNT
+			 	    <!-- , E.SIMILARITY -->
+					, IFNULL((
+						SELECT NAME
+						FROM CATEGORY B
+						WHERE B.CODE = SUBSTR(C_CATEGORY,2,7)
+						LIMIT 0,1), NULL) CATENAME1
+					, IFNULL((
+						SELECT B.CC_ADVANTAGE
+						FROM COMPANY_COMMISSION B
+						WHERE B.CODE = SUBSTR(C_CATEGORY,2,7) AND B.R_C_PK = A.C_PK AND CC_STATUS='Y'
+						LIMIT 0,1), NULL) CATENAME11
+					,IFNULL((
+						SELECT B.RT_CATEGORY
+						FROM ( SELECT DISTINCT A.R_C_PK, RT_CATEGORY FROM RFP_ANSWER_MANAGER A, castingn.RFP_TITLE B WHERE A.R_RT_PK = B.RT_PK AND B.RT_USEYN ='Y' ) B
+						WHERE B.RT_CATEGORY = SUBSTR(C_CATEGORY,2,7) AND B.R_C_PK = A.C_PK 
+						LIMIT 0,1), NULL) CATENAME111
+					, IFNULL((
+						SELECT projectPeriod('PRICE_PARTNER',B.MINAMOUNT,0,0,0,0) AS MINAMOUNT
+						FROM COMPANY_MINAMOUNT B
+						WHERE B.CATEGORY = SUBSTR(C_CATEGORY,2,7) AND B.R_C_PK = A.C_PK 
+						LIMIT 0,1), NULL) CATENAME1111	
+					, IFNULL((
+						SELECT NAME
+						FROM CATEGORY B
+						WHERE B.CODE = SUBSTR(C_CATEGORY,10,7)
+						LIMIT 0,1), NULL) CATENAME2
+					, IFNULL((
+						SELECT B.CC_ADVANTAGE
+						FROM COMPANY_COMMISSION B
+						WHERE B.CODE = SUBSTR(C_CATEGORY,10,7) AND B.R_C_PK = A.C_PK AND CC_STATUS='Y'
+						LIMIT 0,1), NULL) CATENAME22
+					, IFNULL((
+						SELECT projectPeriod('PRICE_PARTNER',B.MINAMOUNT,0,0,0,0) AS MINAMOUNT
+						FROM COMPANY_MINAMOUNT B
+						WHERE B.CATEGORY = SUBSTR(C_CATEGORY,10,7) AND B.R_C_PK = A.C_PK 
+						LIMIT 0,1), NULL) CATENAME2222
+					,IFNULL((
+						SELECT B.RT_CATEGORY
+						FROM ( SELECT DISTINCT A.R_C_PK, RT_CATEGORY FROM RFP_ANSWER_MANAGER A, castingn.RFP_TITLE B WHERE A.R_RT_PK = B.RT_PK AND B.RT_USEYN ='Y' ) B
+						WHERE B.RT_CATEGORY = SUBSTR(C_CATEGORY,10,7) AND B.R_C_PK = A.C_PK 
+						LIMIT 0,1), NULL) CATENAME222
+					, IFNULL((
+						SELECT NAME
+						FROM CATEGORY B
+						WHERE B.CODE = SUBSTR(C_CATEGORY,18,7)
+						LIMIT 0,1), NULL) CATENAME3
+					, IFNULL((
+						SELECT B.CC_ADVANTAGE
+						FROM COMPANY_COMMISSION B
+						WHERE B.CODE = SUBSTR(C_CATEGORY,18,7) AND B.R_C_PK = A.C_PK AND CC_STATUS='Y'
+						LIMIT 0,1), NULL) CATENAME33
+					, IFNULL((
+						SELECT projectPeriod('PRICE_PARTNER',B.MINAMOUNT,0,0,0,0) AS MINAMOUNT
+						FROM COMPANY_MINAMOUNT B
+						WHERE B.CATEGORY = SUBSTR(C_CATEGORY,18,7) AND B.R_C_PK = A.C_PK 
+						LIMIT 0,1), NULL) CATENAME3333
+					,IFNULL((
+						SELECT B.RT_CATEGORY
+						FROM ( SELECT DISTINCT A.R_C_PK, RT_CATEGORY FROM RFP_ANSWER_MANAGER A, castingn.RFP_TITLE B WHERE A.R_RT_PK = B.RT_PK AND B.RT_USEYN ='Y' ) B
+						WHERE B.RT_CATEGORY = SUBSTR(C_CATEGORY,18,7) AND B.R_C_PK = A.C_PK 
+						LIMIT 0,1), NULL) CATENAME333
+					, IFNULL((
+						SELECT NAME
+						FROM CATEGORY B
+						WHERE B.CODE = SUBSTR(C_CATEGORY,26,7)
+						LIMIT 0,1), NULL) CATENAME4
+					, IFNULL((
+						SELECT B.CC_ADVANTAGE
+						FROM COMPANY_COMMISSION B
+						WHERE B.CODE = SUBSTR(C_CATEGORY,26,7) AND B.R_C_PK = A.C_PK AND CC_STATUS='Y'
+						LIMIT 0,1), NULL) CATENAME44
+					, IFNULL((
+						SELECT projectPeriod('PRICE_PARTNER',B.MINAMOUNT,0,0,0,0) AS MINAMOUNT
+						FROM COMPANY_MINAMOUNT B
+						WHERE B.CATEGORY = SUBSTR(C_CATEGORY,26,7) AND B.R_C_PK = A.C_PK 
+						LIMIT 0,1), NULL) CATENAME4444
+					,IFNULL((
+						SELECT B.RT_CATEGORY
+						FROM ( SELECT DISTINCT A.R_C_PK, RT_CATEGORY FROM RFP_ANSWER_MANAGER A, RFP_TITLE B WHERE A.R_RT_PK = B.RT_PK AND B.RT_USEYN ='Y' ) B
+						WHERE B.RT_CATEGORY = SUBSTR(C_CATEGORY,26,7) AND B.R_C_PK = A.C_PK 
+						LIMIT 0,1), NULL) CATENAME444	
+					, IFNULL((
+						SELECT NAME
+						FROM CATEGORY B
+						WHERE B.CODE = SUBSTR(C_CATEGORY,34,7)
+						LIMIT 0,1), NULL) CATENAME5
+					, IFNULL((
+						SELECT B.CC_ADVANTAGE
+						FROM COMPANY_COMMISSION B
+						WHERE B.CODE = SUBSTR(C_CATEGORY,34,7) AND B.R_C_PK = A.C_PK AND CC_STATUS='Y'
+						LIMIT 0,1), NULL) CATENAME55
+					,IFNULL((
+						SELECT B.RT_CATEGORY
+						FROM ( SELECT DISTINCT A.R_C_PK, RT_CATEGORY FROM RFP_ANSWER_MANAGER A, RFP_TITLE B WHERE A.R_RT_PK = B.RT_PK AND B.RT_USEYN ='Y' ) B
+						WHERE B.RT_CATEGORY = SUBSTR(C_CATEGORY,34,7) AND B.R_C_PK = A.C_PK 
+						LIMIT 0,1), NULL) CATENAME555
+					, IFNULL((
+						SELECT projectPeriod('PRICE_PARTNER',B.MINAMOUNT,0,0,0,0) AS MINAMOUNT
+						FROM COMPANY_MINAMOUNT B
+						WHERE B.CATEGORY = SUBSTR(C_CATEGORY,34,7) AND B.R_C_PK = A.C_PK 
+						LIMIT 0,1), NULL) CATENAME5555
+					, FN_MAIN_UPJONG_NAME(A.C_PK) AS UPJONG_NAME
+        			, (SELECT CP_PK FROM COMPANY_PERSON WHERE R_C_PK = A.C_PK AND CP_STATUS = '1' AND CP_RECEIVER = '1' LIMIT 1) AS CP_PK
+					, (SELECT M_GRADE FROM COMPANY_MEMBERSHIP WHERE R_C_PK = A.C_PK AND DATE_FORMAT(M_FROMDATE,'%Y-%m-%d') &lt;= CURRENT_DATE()
+			   	     	AND DATE_FORMAT(M_TODATE,'%Y-%m-%d') >= CURRENT_DATE() ORDER BY INDATE DESC LIMIT 1) AS M_GRADE
+					, (SELECT M_FROMDATE FROM COMPANY_MEMBERSHIP WHERE R_C_PK = A.C_PK AND DATE_FORMAT(M_FROMDATE,'%Y-%m-%d') &lt;= CURRENT_DATE()
+						AND DATE_FORMAT(M_TODATE,'%Y-%m-%d') >= CURRENT_DATE() ORDER BY INDATE DESC LIMIT 1) AS M_FROMDATE
+					, (SELECT M_TODATE FROM COMPANY_MEMBERSHIP WHERE R_C_PK = A.C_PK AND DATE_FORMAT(M_FROMDATE,'%Y-%m-%d') &lt;= CURRENT_DATE()
+						AND DATE_FORMAT(M_TODATE,'%Y-%m-%d') >= CURRENT_DATE() ORDER BY INDATE DESC LIMIT 1) AS M_TODATE
+					, A.C_DESCRIPTION
+					, A.C_FILENAME2 
+					, A.C_REGISTER_DATE
+					, A.C_CERTIFY_DATE
+					, A.C_ZIPCODE
+					, A.C_ADDRESS
+				FROM COMPANY A
+				LEFT JOIN COMPANY_MINAMOUNT B ON (A.C_PK = B.R_C_PK AND B.CATEGORY LIKE '%%' ) <!-- AND B.MINAMOUNT >= '21' ) -->
+				LEFT JOIN COMPANY_MD_EVAL C ON (A.C_PK = C.R_C_PK ) <!-- AND C.C_MAIN_UPJONG LIKE '%%') -->
+				WHERE A.C_CATEGORY LIKE '%%' <!--  서비스분야 -->
+				AND IS_ETC = '0' <!-- 카테고리 분류 됨 -->
+				AND C_STATUS > 0
+				AND (SELECT U_STATUS FROM USER_INFO WHERE U_PK = A.R_U_PK) > 0 
+				AND C_TYPE != 7
+				) M
+ 			WHERE (SIMGRADE1+MDEVAL1+COMEVAL1) > 0   
+			ORDER BY (SIMGRADE1+MDEVAL1+COMEVAL1) DESC
+		) X
+		<if test="PAGING != null">
+		 LIMIT ${PAGING}
+		</if>
+	</select>
+	
+	<update id="update_company_contract_file_by_cid" parameterType="HashMap">
+		UPDATE COMPANY SET IS_CONTRACT_FILE=#{IS_CONTRACT_FILE} WHERE C_ID=#{C_ID}
+	</update>
+	
+	<select id="user_info_login" parameterType="HashMap" resultType="HashMap">
+		SELECT * FROM USER_INFO WHERE U_STATUS = 1 AND U_PK = #{U_PK} AND U_PASSWD = #{U_PASSWD}
+	</select>
+	
+	<update id="user_info_withdraw" parameterType="HashMap">
+		UPDATE USER_INFO SET U_STATUS=0, U_WITHDRAW_DATE=NOW() WHERE U_PK = #{U_PK}
+	</update>
+	
+	<update id="update_requesttype_manage" parameterType="HashMap">
+		UPDATE PROJECT_MD_INFO 
+		   SET PMI_GUBUN=#{PMI_GUBUN}
+		     , PMI_MEETING=#{PMI_MEETING}
+		     , PMI_MEETING_INFO=#{PMI_MEETING_INFO} 
+		     , MOCODE = #{U_ID}
+		     , MODATE = NOW()
+		 WHERE R_PR_PK=#{R_PR_PK}
+	</update>
+	
+	<update id="update_estimate_complete" parameterType="HashMap">
+		UPDATE PROJECT_MD_INFO 
+		   SET MOCODE = #{U_ID}
+		     , MODATE = NOW()
+		     
+		   	 <if test="pmi_is_before != null">, PMI_IS_BEFORE = #{pmi_is_before}</if>
+		   	 <if test="pmi_is_participate != null">, PMI_IS_PARTICIPATE    = #{pmi_is_participate}</if>
+		   	 <if test="pmi_is_after != null">, PMI_IS_AFTER  = #{pmi_is_after}</if>
+		   	 
+		 WHERE PMI_PK=#{PMI_PK}
+	</update>
+	
+	<update id="delete_project" parameterType="HashMap">
+		UPDATE PROJECT 
+		   SET PR_STATUS = #{PR_STATUS}
+		     , PR_STATUS_MEMO = #{PR_STATUS_MEMO}
+		 WHERE PR_PK = #{PR_PK}
+	</update>
+	
+	<insert id="insert_project_participate" parameterType="HashMap" useGeneratedKeys="true" keyProperty="PP_PK" keyColumn="PP_PK">
+		INSERT INTO PROJECT_PARTICIPATE
+		(
+			  PP_INCODE
+			, PP_INDATE
+			<if test="R_PR_PK != null">, R_PR_PK</if>
+			<if test="R_PMI_PK != null">, R_PMI_PK</if>
+			<if test="R_PR_AL_PK != null">, R_PR_AL_PK</if>
+			<if test="R_C_PK != null">, R_C_PK</if>
+			<if test="R_CP_PK != null">, R_CP_PK</if>
+			<if test="PP_AUTH != null">, PP_AUTH</if>
+			<if test="PP_AUTH_DATE != null">, PP_AUTH_DATE</if>
+			<if test="PP_AUTH_MEMO != null">, PP_AUTH_MEMO</if>
+			<if test="PP_GUBUN != null">, PP_GUBUN</if>
+			<if test="PP_PARTICIPATION != null">, PP_PARTICIPATION</if>
+		) VALUES (
+			  #{U_PK}
+			, NOW()
+			<if test="R_PR_PK != null">, #{R_PR_PK}</if>
+			<if test="R_PMI_PK != null">, #{R_PMI_PK}</if>
+			<if test="R_PR_AL_PK != null">, #{R_PR_AL_PK}</if>
+			<if test="R_C_PK != null">, #{R_C_PK}</if>
+			<if test="R_CP_PK != null">, #{R_CP_PK}</if>
+			<if test="PP_AUTH != null">, #{PP_AUTH}</if>
+			<if test="PP_AUTH_DATE != null">, NOW()</if>
+			<if test="PP_AUTH_MEMO != null">, #{PP_AUTH_MEMO}</if>
+			<if test="PP_GUBUN != null">, #{PP_GUBUN}</if>
+			<if test="PP_PARTICIPATION != null">, #{PP_PARTICIPATION}</if>
+		)
+	</insert>
+	
+	<!-- 
+	<update id="update_pmi_auth" parameterType="HashMap">
+		UPDATE PROJECT_MD_INFO
+		SET PMI_AUTH = #{PMI_AUTH}
+		, PMI_AUTH_MEMO = #{PMI_AUTH_MEMO}
+		, MOCODE = #{MOCODE}
+		, MODATE = NOW()
+		WHERE PMI_PK = #{PMI_PK}
+	</update>
+	-->
+	
+	<select id="manage_partner_list_alram" parameterType="HashMap" resultType="HashMap">
+		SELECT AA.* 
+		     , E.PA_PK
+		     , DATE_FORMAT(E.PA_REGISTER_DATE, '%Y-%m-%d') AS PA_REGISTER_DATE
+		     , E.PA_STATUS
+		     , CASE WHEN E.PA_STATUS = 1 THEN '대기' 
+                    WHEN E.PA_STATUS = 2 THEN '수정요청' 
+                    WHEN E.PA_STATUS = 3 THEN '반려' 
+                    WHEN E.PA_STATUS = 5 THEN '승인'
+                    ELSE '-' 
+                     END PA_AUTH_NM
+		     , E.PA_STATUS_TYPE
+		     , E.PA_STATUS_MEMO
+		     , E.PA_COMMENT
+             , CASE WHEN E.PA_PK IS NOT NULL THEN 'Y' ELSE 'N' END IS_PA_YN
+             , PA_PRICE
+             , PA_CONTENT
+		     , FN_GET_CM_NAME('PP_AUTH', AA.PP_AUTH)  AS PP_AUTH_NM
+		     , FN_GET_CM_NAME('PP_PARTICIPATION', AA.PP_PARTICIPATION)  AS PP_PARTICIPATION_NM
+		     , IFNULL(AA.PP_GUBUN, '1000') AS PP_GUBUN
+		     , FN_GET_CM_NAME('PP_GUBUN', IFNULL(AA.PP_GUBUN, '1000'))  AS PP_GUBUN_NM
+		     , E.PA_ID, E.PA_FILE, E.PA_FILE_RENAME, E.PA_FILE2, E.PA_FILE2_RENAME, E.PA_FILE3, E.PA_FILE3_RENAME
+		     <!-- 견적전 상담 PMI_GUBUN='2000' and 견적제출관리 탭에서만 -->
+		     <if test="PMI_GUBUN != null and (PMI_GUBUN eq '2000'.toString()) and TAB != null and TAB.equals('submit')">
+		     , PC.PC_PK
+		     , PC_GUBUN AS PC_GUBUN
+		     , FN_GET_CM_NAME('PC_GUBUN', PC_GUBUN) AS PC_GUBUN_NM
+		     , PC_TYPE, PC_DATE, PC_TIME
+		     , PC_IS_COMPLETE, DATE_FORMAT(PC_COMPLETE_DATE, '%Y-%m-%d') AS PC_COMPLETE_DATE, PC_IS_PROGRESS, PC_NEXT, PC_NEXT_DATE, PC_NEXT_TIME
+		     , PC_STATUS, PC_CS_DATE, PC_IS_ALRAM, PC_ALRAM_INCODE, PC_ALRAM_INDATE
+		     , PC_INCODE, PC_INDATE, PC_MOCODE, PC_MODATE
+		     , CASE WHEN PA_REGISTER_DATE IS NOT NULL THEN '완료'
+		            WHEN PC_NEXT_DATE &lt;= NOW() THEN '지연' 
+		            ELSE '대기' END PA_STATUS_NM
+		     </if>
+		  FROM ( 
+               SELECT A.PR_AL_PK
+				    , PP.R_PR_PK
+				    , PP.R_C_PK
+				    , C.C_NAME
+				    , C.C_REGISTRATION_NUMBER
+				    , D.U_ID
+				    , D.U_NAME
+				    , D.U_MOBILE
+				    , D.U_PHONE
+				    , A.INDATE
+				    , (SELECT CP_EMAIL FROM COMPANY_PERSON CP WHERE CP.R_C_PK = C.C_PK AND (CP.CP_PK = PP.R_CP_PK OR PP.R_CP_PK =0 ) ORDER BY CP_STATUS DESC,  CP_RECEIVER DESC LIMIT 0,1) AS CP_EMAIL
+					, (SELECT CP_NAME  FROM COMPANY_PERSON CP WHERE CP.R_C_PK = C.C_PK AND (CP.CP_PK = PP.R_CP_PK OR PP.R_CP_PK =0 ) ORDER BY CP_STATUS DESC,  CP_RECEIVER DESC LIMIT 0,1) AS CP_NAME
+					, (SELECT CP_PHONE FROM COMPANY_PERSON CP WHERE CP.R_C_PK = C.C_PK AND (CP.CP_PK = PP.R_CP_PK OR PP.R_CP_PK =0 ) ORDER BY CP_STATUS DESC,  CP_RECEIVER DESC LIMIT 0,1) AS CP_PHONE
+					, (SELECT CASE WHEN C.C_IS_EVIDENCE = 0 THEN 'Y'
+				                   WHEN C.C_IS_EVIDENCE = 1 THEN 'N'
+				                   WHEN COUNT(*) > 0 THEN 'Y' 
+				                   ELSE 'N' END FROM HOMETAX H WHERE H.R_C_PK = C.C_PK) AS HOMETAX_YN
+             , PP.PP_TITLE, PP.PP_PK, PP.PP_AUTH, PP.PP_AUTH_MEMO, PP.PP_PARTICIPATION
+		     , DATE_FORMAT(PP.PP_PARTICIPATION_DATE,'%Y-%m-%d') AS PP_PARTICIPATION_DATE
+		     , PP.PP_CONTENT, PP.PP_PRICE, PP.PP_PRICE_TYPE, PP.PP_FILE1, PP.PP_FILE2, PP.PP_INCODE, PP.PP_INDATE, PP.PP_MOCODE, PP.PP_MODATE
+             , PP.PP_GUBUN
+             , B.*
+		  FROM PROJECT_PARTICIPATE PP
+           
+              LEFT JOIN (SELECT * FROM PROJECT_PARTNER_ALRAM GROUP BY R_PR_PK, R_C_PK ORDER BY PR_AL_PK DESC)  A
+              ON A.R_PR_PK = PP.R_PR_PK
+		          AND A.R_C_PK = PP.R_C_PK
+              
+				     , PROJECT B
+				     , COMPANY C
+				     , USER_INFO D
+				 WHERE PP.R_PR_PK = B.PR_PK
+				   AND PP.R_C_PK  = C.C_PK
+				   AND C.R_U_PK  = D.U_PK
+				   AND PP.R_PR_PK = #{PR_PK}
+			   ) AA
+         
+		       LEFT JOIN PROJECT_APPLY E 
+		       ON ( E.R_PR_PK = AA.R_PR_PK 
+		            AND E.R_C_PK = AA.R_C_PK 
+		            AND E.PA_STATUS >= 1 )
+		             
+		       <!-- 견적전 상담 PMI_GUBUN='2000' and 견적제출관리 탭에서만 -->
+		       <if test="PMI_GUBUN != null and (PMI_GUBUN eq '2000'.toString()) and TAB != null and TAB.equals('submit')">
+		       LEFT JOIN PROJECT_CONTACT PC
+	           ON AA.R_PR_PK = PC.R_PR_PK
+	           AND AA.R_C_PK = PC.R_C_PK
+	           </if>
+	           
+	     WHERE 1=1
+		       <!-- 견적전 상담 PMI_GUBUN='2000' and 견적제출관리 탭에서만 -->
+		       <if test="PMI_GUBUN != null and (PMI_GUBUN eq '2000'.toString()) and TAB != null and TAB.equals('submit')">
+	           <!-- 견적제출예정 PC_NEXT='3000'일경우 -->
+	           AND PC.PC_NEXT = '3000'
+		       </if>
+		       
+      ORDER BY 1 DESC 
+	</select>
+	
+	<update id="update_project_participate" parameterType="HashMap">
+		UPDATE PROJECT_PARTICIPATE
+		SET PP_MOCODE = #{U_PK}
+		  , PP_MODATE = NOW()
+		  
+		  <if test="PP_AUTH != null">, PP_AUTH = #{PP_AUTH}</if>
+		  <if test="PP_AUTH_MEMO != null">, PP_AUTH_MEMO = #{PP_AUTH_MEMO}</if>
+		  
+      	WHERE PP_PK = #{PP_PK}
+		  
+	</update>
+	
+	<select id="project_contact_request" parameterType="HashMap" resultType="HashMap">
+		SELECT PCR_PK, PCR.R_PR_PK, PCR.R_C_PK, PCR.R_CP_PK, PCR_INCODE
+		     , DATE_FORMAT(PCR_INDATE, '%Y-%m-%d') AS PCR_INDATE
+		     , PCR_GUBUN
+		     , PCR_TYPE
+		     , FN_GET_CM_NAME('PCR_TYPE', PCR_TYPE) AS PCR_TYPE_NM
+		     , PCR_HOPE_DATE
+		     , PCR_HOPE_TIME
+		     , FN_GET_CM_NAME('PCR_TIME', PCR_HOPE_TIME) AS PCR_HOPE_TIME_NM
+		     , PCR_HOPE_PLACE
+		     , PCR_DECIDE_DATE
+		     , PCR_DECIDE_TIME
+		     , FN_GET_CM_NAME('PCR_TIME', PCR_DECIDE_TIME) AS PCR_DECIDE_TIME_NM
+		     , PCR_ZIPCODE, PCR_ADDR, PCR_IS_ALRAM
+		     , PCR_STATUS
+		     , FN_GET_CM_NAME('PCR_STATUS', PCR_STATUS) AS PCR_STATUS_NM 
+		     , PCR_MOCODE, PCR_MODATE , C.C_NAME, CP.CP_PHONE
+		     , CP.CP_NAME
+		     , (SELECT COUNT(*) FROM PROJECT_CONTACT WHERE R_PCR_PK = PCR.PCR_PK) AS CONTACT_CONFIRM_YN
+		  FROM PROJECT_CONTACT_REQUEST PCR 
+			   JOIN PROJECT PR ON PCR.R_PR_PK = PR.PR_PK 
+			   LEFT JOIN COMPANY C ON PCR.R_C_PK = C.C_PK 
+			   LEFT JOIN COMPANY_PERSON CP ON C.C_PK = CP.R_C_PK AND CP.CP_RECEIVER='1' AND CP.CP_STATUS=1
+		 WHERE R_PR_PK = #{PR_PK}
+		       <if test="PCR_GUBUN != null">AND PCR_GUBUN = #{PCR_GUBUN}</if>
+	</select>
+	
+	<update id="update_project_contact_request_save" parameterType="HashMap">
+		UPDATE PROJECT_CONTACT_REQUEST 
+		SET PCR_MODATE = NOW()
+	    <if test="R_CP_PK         != null and R_CP_PK         != ''">, R_CP_PK = #{R_CP_PK}</if>
+		<if test="PCR_TYPE        != null and PCR_TYPE        != ''">, PCR_TYPE = #{PCR_TYPE}</if>
+		<if test="PCR_STATUS      != null and PCR_STATUS      != ''">, PCR_STATUS = #{PCR_STATUS}</if>
+		<if test="PCR_HOPE_DATE   != null and PCR_HOPE_DATE   != ''">, PCR_HOPE_DATE = #{PCR_HOPE_DATE}</if>
+		<if test="PCR_HOPE_TIME   != null and PCR_HOPE_TIME   != ''">, PCR_HOPE_TIME = #{PCR_HOPE_TIME}</if>
+		<if test="PCR_HOPE_PLACE  != null and PCR_HOPE_PLACE  != ''">, PCR_HOPE_PLACE = #{PCR_HOPE_PLACE}</if>
+		<if test="PCR_DECIDE_DATE != null and PCR_DECIDE_DATE != ''">, PCR_DECIDE_DATE = #{PCR_DECIDE_DATE}</if>
+		<if test="PCR_DECIDE_TIME != null and PCR_DECIDE_TIME != ''">, PCR_DECIDE_TIME = #{PCR_DECIDE_TIME}</if>
+		<if test="PCR_ZIPCODE     != null and PCR_ZIPCODE     != ''">, PCR_ZIPCODE = #{PCR_ZIPCODE}</if>
+		<if test="PCR_ADDR        != null and PCR_ADDR        != ''">, PCR_ADDR = #{PCR_ADDR}</if>
+		<if test="PCR_IS_ALRAM    != null and PCR_IS_ALRAM    != ''">, PCR_IS_ALRAM = #{PCR_IS_ALRAM}</if>
+		<if test="PCR_MOCODE      != null and PCR_MOCODE      != ''">, PCR_MOCODE = #{PCR_MOCODE}</if>
+		WHERE PCR_PK  = #{PCR_PK} 
+		  AND R_PR_PK = #{R_PR_PK}
+		  AND R_C_PK  = #{R_C_PK}
+	</update>
+	
+	<select id="no_selection_partner_list" parameterType="HashMap" resultType="HashMap">
+		SELECT C.*
+		     , PP.*
+		     , PCR.*
+		     , (SELECT CP_PK FROM COMPANY_PERSON CP WHERE C.C_PK = CP.R_C_PK AND CP.CP_RECEIVER='1' AND CP.CP_STATUS=1 LIMIT 1) AS CP_PK
+		  FROM PROJECT_PARTICIPATE PP
+		       
+		       JOIN COMPANY C
+		       ON PP.R_C_PK = C.C_PK
+		       
+		       LEFT JOIN PROJECT_CONTACT_REQUEST PCR
+		       ON PP.R_PR_PK = PCR.R_PR_PK
+		       AND PP.R_C_PK = PCR.R_C_PK  
+		       
+		       <if test="PCR_GUBUN != null">
+		       AND PCR.PCR_GUBUN = #{PCR_GUBUN}
+		       </if>
+		       
+		 WHERE PP.R_PR_PK = #{PR_PK}
+		   AND PP.PP_AUTH = '1000' 
+		   AND PCR.PCR_PK IS NULL 
+	</select>
+	
+	<select id="no_selection_estimate_partner_list" parameterType="HashMap" resultType="HashMap">
+		    SELECT C.*
+		     , PP.*
+		     , PA.*
+		     , (SELECT CP_PK FROM COMPANY_PERSON CP WHERE C.C_PK = CP.R_C_PK AND CP.CP_RECEIVER='1' AND CP.CP_STATUS=1 LIMIT 1) AS CP_PK
+		  FROM PROJECT_PARTICIPATE PP
+		       
+		       JOIN COMPANY C
+		       ON PP.R_C_PK = C.C_PK
+		       
+		       LEFT JOIN PROJECT_APPLY PA
+		       ON PP.R_PR_PK = PA.R_PR_PK
+		       AND PP.R_C_PK = PA.R_C_PK  
+		       
+		 WHERE PP.R_PR_PK = #{PR_PK}
+		   AND PP.PP_AUTH = '1000'
+		   <!-- AND (PA.PA_PK IS NULL OR PA.PA_STATUS=1) --> 
+	</select>
+	
+	<update id="update_project_apply_noselection" parameterType="HashMap">
+		UPDATE PROJECT_PARTICIPATE
+		   SET PP_AUTH      = #{PP_AUTH}
+		     , PP_AUTH_MEMO = #{PP_AUTH_MEMO}
+		     , PP_AUTH_DATE = NOW()
+		     , PP_MOCODE    = #{U_PK}
+		 WHERE PP_PK IN ( 
+	                      SELECT PP_PK 
+	                        FROM (
+	                             SELECT PP_PK                        
+	                               FROM PROJECT_PARTICIPATE PP                                    
+	                                    LEFT JOIN PROJECT_APPLY PA
+	                                    ON PP.R_PR_PK = PA.R_PR_PK 
+	                                    AND PP.R_C_PK = PA.R_C_PK                             
+	                              WHERE PP.R_PR_PK = #{R_PR_PK}   
+	                                AND PP.PP_AUTH = '1000'                    
+	                                AND PA.PA_PK IS NULL
+	                           ) A              
+	                      )
+	</update>
+	
+	<update id="update_project_participate_noselection" parameterType="HashMap">
+		UPDATE PROJECT_PARTICIPATE
+		   SET PP_AUTH      = #{PP_AUTH}
+		     , PP_AUTH_MEMO = #{PP_AUTH_MEMO}
+		     , PP_AUTH_DATE = NOW()
+		     , PP_MOCODE    = #{U_PK}
+		 WHERE PP_PK IN ( 
+                        SELECT PP_PK 
+                          FROM (
+                               SELECT PP_PK                        
+                                 FROM PROJECT_PARTICIPATE PP                                    
+                                      LEFT JOIN PROJECT_CONTACT_REQUEST PCR                          
+                                      ON PP.R_PR_PK = PCR.R_PR_PK 
+                                      AND PP.R_C_PK = PCR.R_C_PK  
+                                      
+                                      <if test="PCR_GUBUN != null">AND PCR_GUBUN = #{PCR_GUBUN}</if>
+                                                                 
+                                WHERE PP.R_PR_PK = #{R_PR_PK}    
+                                  AND PP.PP_AUTH = '1000'                   
+                                  AND PCR.PCR_PK IS NULL
+                             ) A              
+                        )
+	</update>
+	
+	<select id="contract_no_selection_partner_list" parameterType="HashMap" resultType="HashMap">
+        SELECT C.*
+		     , PP.*
+		     , PCR.*
+		     , (SELECT CP_PK FROM COMPANY_PERSON CP WHERE C.C_PK = CP.R_C_PK AND CP.CP_RECEIVER='1' AND CP.CP_STATUS=1 LIMIT 1) AS CP_PK
+		  FROM PROJECT_PARTICIPATE PP
+		       
+		       JOIN COMPANY C
+		       ON PP.R_C_PK = C.C_PK
+		       
+		       JOIN PROJECT_CONTACT_REQUEST PCR
+		       ON PP.R_PR_PK = PCR.R_PR_PK
+		       AND PP.R_C_PK = PCR.R_C_PK  
+		       AND PCR.PCR_GUBUN = 3000
+		       
+               JOIN PROJECT_APPLY PA
+               ON PCR.R_PR_PK   = PA.R_PR_PK
+               AND PCR.R_C_PK   = PA.R_C_PK
+               AND PA.PA_STATUS = 5
+		 WHERE PP.R_PR_PK = #{PR_PK}
+		   AND PP.PP_AUTH = '1000'
+	</select>
+	
+	<update id="update_contract_noselection" parameterType="HashMap">
+		UPDATE PROJECT_PARTICIPATE
+		   SET PP_AUTH      = #{PP_AUTH}
+		     , PP_AUTH_MEMO = #{PP_AUTH_MEMO}
+		     , PP_AUTH_DATE = NOW()
+		     , PP_MOCODE    = #{U_PK}
+		 WHERE PP_PK IN ( 
+	                      SELECT PP_PK 
+	                        FROM (
+	                             SELECT PP_PK                        
+	                               FROM PROJECT_PARTICIPATE PP                                    
+	                                    JOIN PROJECT_APPLY PA
+	                                    ON PP.R_PR_PK = PA.R_PR_PK 
+	                                    AND PP.R_C_PK = PA.R_C_PK                             
+	                              WHERE PP.R_PR_PK = #{R_PR_PK}
+	                                AND PP.PP_AUTH = '1000'
+	                                AND PA.PA_STATUS = 5
+	                           ) A              
+	                      )
+	</update>
+	
+	<insert id="insert_project_contact_request_admin" parameterType="HashMap" useGeneratedKeys="true" keyProperty="PC_PK" keyColumn="PC_PK">
+		INSERT INTO PROJECT_CONTACT_REQUEST
+		(
+		      PCR_INDATE
+		    <if test="PCR_INCODE != null">, PCR_INCODE</if>
+			<if test="R_PR_PK != null">, R_PR_PK</if>
+			<if test="R_C_PK != null">, R_C_PK</if>
+			<if test="R_CP_PK != null">, R_CP_PK</if>
+			<if test="PCR_TYPE != null">, PCR_TYPE</if>
+			<if test="PCR_STATUS != null">, PCR_STATUS</if>
+			<if test="PCR_HOPE_DATE != null">, PCR_HOPE_DATE</if>
+			<if test="PCR_HOPE_TIME != null">, PCR_HOPE_TIME</if>
+			<if test="PCR_HOPE_PLACE != null">, PCR_HOPE_PLACE</if>
+			<if test="PCR_DECIDE_DATE != null">, PCR_DECIDE_DATE</if>
+			<if test="PCR_DECIDE_TIME != null">, PCR_DECIDE_TIME</if>
+			<if test="PCR_ZIPCODE != null">, PCR_ZIPCODE</if>
+			<if test="PCR_ADDR != null">, PCR_ADDR</if>
+			<if test="PCR_IS_ALRAM != null">, PCR_IS_ALRAM</if>
+			<if test="PCR_GUBUN != null">, PCR_GUBUN</if>
+			
+		) VALUES (
+		    NOW()
+		    <if test="PCR_INCODE != null">, #{PCR_INCODE}</if> 
+			<if test="R_PR_PK != null">, #{R_PR_PK}</if>
+			<if test="R_C_PK != null">, #{R_C_PK}</if>
+			<if test="R_CP_PK != null">, #{R_CP_PK}</if>
+			<if test="PCR_TYPE != null">, #{PCR_TYPE}</if>
+			<if test="PCR_STATUS != null">, #{PCR_STATUS}</if>
+			<if test="PCR_HOPE_DATE != null">, #{PCR_HOPE_DATE}</if>
+			<if test="PCR_HOPE_TIME != null">, #{PCR_HOPE_TIME}</if>
+			<if test="PCR_HOPE_PLACE != null">, #{PCR_HOPE_PLACE}</if>
+			<if test="PCR_DECIDE_DATE != null">, #{PCR_DECIDE_DATE}</if>
+			<if test="PCR_DECIDE_TIME != null">, #{PCR_DECIDE_TIME}</if>
+			<if test="PCR_ZIPCODE != null">, #{PCR_ZIPCODE}</if>
+			<if test="PCR_ADDR != null">, #{PCR_ADDR}</if>
+			<if test="PCR_IS_ALRAM != null">, #{PCR_IS_ALRAM}</if>
+			<if test="PCR_GUBUN != null">, #{PCR_GUBUN}</if>
+		)
+	</insert>
+	
+	<select id="project_contact_list" parameterType="HashMap" resultType="HashMap">
+	      SET @currcount = NULL, @currvalue = NULL;
+	      
+	      SELECT FN_GET_CM_NAME('PC_TYPE', (SELECT PC_TYPE FROM PROJECT_CONTACT B WHERE B.R_PR_PK = A.R_PR_PK AND B.R_C_PK = A.R_C_PK AND B.PC_IS_COMPLETE=1 AND B.PC_GUBUN=#{PC_GUBUN} ORDER BY PC_INDATE ASC LIMIT 0,1)) AS FIRST_PC_TYPE_NM
+               , CASE WHEN (SELECT PC_IS_COMPLETE FROM PROJECT_CONTACT B WHERE B.R_PR_PK = A.R_PR_PK AND B.R_C_PK = A.R_C_PK AND B.PC_IS_COMPLETE=1 ORDER BY PC_INDATE ASC LIMIT 0,1) = 0 THEN '미완료' 
+			  	            WHEN (SELECT PC_IS_COMPLETE FROM PROJECT_CONTACT B WHERE B.R_PR_PK = A.R_PR_PK AND B.R_C_PK = A.R_C_PK AND B.PC_IS_COMPLETE=1 ORDER BY PC_INDATE ASC LIMIT 0,1) = 1 THEN '완료' 
+			  	            ELSE '-' END AS FIRST_PC_IS_COMPLETE_NM
+               , (SELECT PC_DATE FROM PROJECT_CONTACT B WHERE B.R_PR_PK = A.R_PR_PK AND B.R_C_PK = A.R_C_PK AND B.PC_IS_COMPLETE=1 ORDER BY PC_INDATE ASC LIMIT 0,1) AS FIRST_PC_DATE
+               , FN_GET_CM_NAME('PC_TIME', (SELECT PC_TIME FROM PROJECT_CONTACT B WHERE B.R_PR_PK = A.R_PR_PK AND B.R_C_PK = A.R_C_PK AND B.PC_IS_COMPLETE=1 ORDER BY PC_INDATE ASC LIMIT 0,1)) AS FIRST_PC_TIME
+               , A.*
+	        FROM (
+		          SELECT @currcount:=IF(@currvalue=PC.R_C_PK, @currcount+1, 1) AS NUM
+		               , @currvalue:=PC.R_C_PK AS TMP
+				       , PC_PK, PC.R_PR_PK, PC.R_C_PK, PC.R_CP_PK
+				       , PC.R_PCR_PK
+				       , PC_GUBUN AS PC_GUBUN
+				       , FN_GET_CM_NAME('PC_GUBUN', PC.PC_GUBUN) AS PC_GUBUN_NM
+				       , PC.PC_TYPE
+				       , CASE WHEN PC_GUBUN = '2000' THEN FN_GET_CM_NAME('PC_NEXT_2000', PC.PC_TYPE)
+                              WHEN PC_GUBUN = '3000' THEN FN_GET_CM_NAME('PC_NEXT_3000', PC.PC_TYPE) 
+                               END AS PC_TYPE_NM
+				       , PC_DATE
+				       , PC_TIME
+				       , FN_GET_CM_NAME('PC_TIME', PC.PC_TIME) AS PC_TIME_NM
+				       , PC_IS_COMPLETE
+				       , CASE WHEN PC_IS_COMPLETE = 0 THEN '미완료' 
+				              WHEN PC_IS_COMPLETE = 1 THEN '완료' 
+				              ELSE '-' END AS PC_IS_COMPLETE_NM
+				       , PC_IS_PROGRESS
+				       , CASE WHEN PC_IS_PROGRESS = 0 THEN '불가능' 
+				              WHEN PC_IS_PROGRESS = 1 THEN '가능' 
+				              ELSE '-' END AS PC_IS_PROGRESS_NM
+				       , PC_NEXT
+				       , CASE WHEN PC_GUBUN = '2000' THEN FN_GET_CM_NAME('PC_NEXT_2000', PC.PC_NEXT)
+                              WHEN PC_GUBUN = '3000' THEN FN_GET_CM_NAME('PC_NEXT_3000', PC.PC_NEXT) 
+                               END AS PC_NEXT_NM
+				       , PC_NEXT_DATE
+				       , PC_NEXT_TIME
+				       , FN_GET_CM_NAME('PC_NEXT_TIME', PC.PC_NEXT_TIME) AS PC_NEXT_TIME_NM
+				       , PC_STATUS
+				       , FN_GET_CM_NAME('PC_STATUS', PC.PC_STATUS) AS PC_STATUS_NM
+				       , DATE_FORMAT(PC_CS_DATE, '%Y-%m-%d') AS PC_CS_DATE 
+				       , PC_IS_ALRAM
+				       , PC_ALRAM_INCODE, PC_ALRAM_INDATE
+				       , PC_INCODE
+				       , DATE_FORMAT(PC_INDATE, '%Y-%m-%d') AS PC_INDATE
+				       , PC_MOCODE
+				       , DATE_FORMAT(PC_MODATE, '%Y-%m-%d') AS PC_MODATE 
+				       , C.C_PK, C.C_NAME
+				       , UI.U_NAME
+                       , UI.U_COMPANY
+                       , UI.U_PHONE
+                       , UI.U_MOBILE
+                       , CP.CP_NAME
+                       , CP.CP_PHONE  
+                       , PR.PR_FLAG                     
+				    FROM PROJECT_CONTACT PC
+				         JOIN COMPANY C
+				         ON PC.R_C_PK = C.C_PK
+				         
+				         JOIN COMPANY_PERSON CP
+		                 ON C.C_PK = CP.R_C_PK
+		                 AND CP.CP_RECEIVER='1'
+		                 AND CP.CP_STATUS=1
+				         
+				         JOIN PROJECT PR
+			             ON PC.R_PR_PK = PR.PR_PK
+			                 
+			             JOIN USER_INFO UI
+			             ON PR.R_U_PK = UI.U_PK
+				   WHERE R_PR_PK = #{PR_PK}
+				         <if test="PC_GUBUN != null">AND PC.PC_GUBUN = #{PC_GUBUN}</if>
+				         <if test="R_C_PK   != null">AND PC.R_C_PK   = #{R_C_PK}</if>
+				ORDER BY R_C_PK, PC_PK DESC
+				) A
+		  <if test="NUM != null">${NUM}</if>
+	</select>
+	
+	<select id="project_contact_detail" parameterType="HashMap" resultType="HashMap">
+	      SELECT FN_GET_CM_NAME('PC_TYPE', (SELECT PC_TYPE FROM PROJECT_CONTACT B WHERE B.R_PR_PK = A.R_PR_PK AND B.R_C_PK = A.R_C_PK AND B.PC_IS_COMPLETE=1 ORDER BY PC_INDATE ASC LIMIT 0,1)) AS FIRST_PC_TYPE_NM
+               , CASE WHEN (SELECT PC_IS_COMPLETE FROM PROJECT_CONTACT B WHERE B.R_PR_PK = A.R_PR_PK AND B.R_C_PK = A.R_C_PK AND B.PC_IS_COMPLETE=1 ORDER BY PC_INDATE ASC LIMIT 0,1) = 0 THEN '미완료' 
+			  	            WHEN (SELECT PC_IS_COMPLETE FROM PROJECT_CONTACT B WHERE B.R_PR_PK = A.R_PR_PK AND B.R_C_PK = A.R_C_PK AND B.PC_IS_COMPLETE=1 ORDER BY PC_INDATE ASC LIMIT 0,1) = 1 THEN '완료' 
+			  	            ELSE '-' END AS FIRST_PC_IS_COMPLETE_NM
+               , (SELECT PC_DATE FROM PROJECT_CONTACT B WHERE B.R_PR_PK = A.R_PR_PK AND B.R_C_PK = A.R_C_PK AND B.PC_IS_COMPLETE=1 ORDER BY PC_INDATE ASC LIMIT 0,1) AS FIRST_PC_DATE
+               , FN_GET_CM_NAME('PC_TIME', (SELECT PC_TIME FROM PROJECT_CONTACT B WHERE B.R_PR_PK = A.R_PR_PK AND B.R_C_PK = A.R_C_PK AND B.PC_IS_COMPLETE=1 ORDER BY PC_INDATE ASC LIMIT 0,1)) AS FIRST_PC_TIME
+               , A.*
+	        FROM (
+		          SELECT PC_PK, PC.R_PR_PK, PC.R_C_PK, PC.R_CP_PK
+				       , PC.R_PCR_PK
+				       , PC_GUBUN AS PC_GUBUN
+				       , FN_GET_CM_NAME('PC_GUBUN', PC.PC_GUBUN) AS PC_GUBUN_NM
+				       , PC_TYPE
+				       , FN_GET_CM_NAME('PC_TYPE', PC.PC_TYPE) AS PC_TYPE_NM
+				       , PC_DATE
+				       , DATE_FORMAT(PC_DATE, '%Y-%m-%d') AS PC_DATE_NM
+				       , PC_TIME
+				       , PC_PLACE
+				       , FN_GET_CM_NAME('PC_TIME', PC.PC_TIME) AS PC_TIME_NM
+				       , PC_IS_COMPLETE
+				       , CASE WHEN PC_IS_COMPLETE = 0 THEN '미완료' 
+				              WHEN PC_IS_COMPLETE = 1 THEN '완료' 
+				              ELSE '-' END AS PC_IS_COMPLETE_NM
+				       , PC_IS_PROGRESS
+				       , CASE WHEN PC_IS_PROGRESS = 0 THEN '불가능' 
+				              WHEN PC_IS_PROGRESS = 1 THEN '가능' 
+				              ELSE '-' END AS PC_IS_PROGRESS_NM
+				       , PC_NEXT
+				       , FN_GET_CM_NAME('PC_NEXT', PC.PC_NEXT) AS PC_NEXT_NM
+				       , PC_NEXT_DATE
+				       , PC_NEXT_TIME
+				       , FN_GET_CM_NAME('PC_NEXT_TIME', PC.PC_NEXT_TIME) AS PC_NEXT_TIME_NM
+				       , PC_STATUS
+				       , FN_GET_CM_NAME('PC_STATUS', PC.PC_STATUS) AS PC_STATUS_NM
+				       , DATE_FORMAT(PC_CS_DATE, '%Y-%m-%d') AS PC_CS_DATE 
+				       , PC_IS_ALRAM
+				       , PC_ALRAM_INCODE, PC_ALRAM_INDATE
+				       , PC_INCODE
+				       , DATE_FORMAT(PC_INDATE, '%Y-%m-%d') AS PC_INDATE
+				       , PC_MOCODE
+				       , DATE_FORMAT(PC_MODATE, '%Y-%m-%d') AS PC_MODATE 
+				       , C.C_PK, C.C_NAME
+				       , UI.U_NAME
+                       , UI.U_COMPANY
+                       , UI.U_PHONE
+                       , UI.U_MOBILE
+                       , CP.CP_NAME
+                       , CP.CP_PHONE  
+                       , PR.*
+                       , PCR_PK, PCR_GUBUN, PCR_TYPE, PCR_STATUS, PCR_HOPE_DATE, PCR_HOPE_TIME, PCR_HOPE_PLACE
+                       , PCR_DECIDE_DATE, PCR_DECIDE_TIME, PCR_DECIDE_PLACE, PCR_ZIPCODE, PCR_ADDR, PCR_IS_ALRAM
+                       , PCR_INCODE, PCR_INDATE, PCR_MOCODE, PCR_MODATE 
+                       , FN_GET_CM_NAME('PCR_TIME', PCR_DECIDE_TIME) AS PCR_DECIDE_TIME_NM    
+                       , FN_GET_CM_NAME('PCR_TYPE', PCR_TYPE) AS PCR_TYPE_NM    
+                       , DATE_FORMAT(PCR_DECIDE_DATE,'%Y-%m-%d') AS PCR_DECIDE_DATE_NM            
+				    FROM PROJECT_CONTACT PC
+				         JOIN COMPANY C
+				         ON PC.R_C_PK = C.C_PK
+				         
+				         JOIN PROJECT_CONTACT_REQUEST PCR
+                         ON PC.R_PCR_PK = PCR.PCR_PK
+				         
+				         JOIN COMPANY_PERSON CP
+		                 ON C.C_PK = CP.R_C_PK
+		                 AND CP.CP_RECEIVER='1'
+		                 AND CP.CP_STATUS=1
+				         
+				         JOIN PROJECT PR
+			             ON PC.R_PR_PK = PR.PR_PK
+			                 
+			             JOIN USER_INFO UI
+			             ON PR.R_U_PK = UI.U_PK
+				   WHERE PC.PC_PK = #{PC_PK}
+				) A
+	</select>
+	
+	<insert id="insert_project_contract_admin" parameterType="HashMap" useGeneratedKeys="true" keyProperty="PC_PK" keyColumn="PC_PK">
+		INSERT INTO PROJECT_CONTACT
+		(
+			  PC_INDATE 
+			<if test="PC_INCODE       != null and PC_INCODE       != ''">, PC_INCODE      </if>
+			<if test="R_PR_PK         != null and R_PR_PK         != ''">, R_PR_PK        </if>
+			<if test="R_C_PK          != null and R_C_PK          != ''">, R_C_PK         </if>
+			<if test="R_PCR_PK        != null and R_PCR_PK        != ''">, R_PCR_PK       </if>
+			<if test="R_CP_PK         != null and R_CP_PK         != ''">, R_CP_PK        </if>
+			<if test="PC_GUBUN        != null and PC_GUBUN        != ''">, PC_GUBUN       </if>
+			<if test="PC_TYPE         != null and PC_TYPE         != ''">, PC_TYPE        </if>
+			<if test="PC_DATE         != null and PC_DATE         != ''">, PC_DATE        </if>
+			<if test="PC_TIME         != null and PC_TIME         != ''">, PC_TIME        </if>
+			<if test="PC_IS_COMPLETE  != null and PC_IS_COMPLETE  != ''">, PC_IS_COMPLETE </if>
+			<if test="PC_IS_COMPLETE  != null and PC_IS_COMPLETE  != ''">, PC_COMPLETE_DATE </if>
+			<if test="PC_IS_PROGRESS  != null and PC_IS_PROGRESS  != ''">, PC_IS_PROGRESS </if>
+			<if test="PC_NEXT         != null and PC_NEXT         != ''">, PC_NEXT        </if>
+			<if test="PC_NEXT_PLACE   != null and PC_NEXT_PLACE   != ''">, PC_NEXT_PLACE  </if>
+			<if test="PC_NEXT_DATE    != null and PC_NEXT_DATE    != ''">, PC_NEXT_DATE   </if>
+			<if test="PC_NEXT_TIME    != null and PC_NEXT_TIME    != ''">, PC_NEXT_TIME   </if>
+			<if test="PC_STATUS       != null and PC_STATUS       != ''">, PC_STATUS      </if>
+			<if test="PC_CS_DATE      != null and PC_CS_DATE      != ''">, PC_CS_DATE     </if>
+			<if test="PC_IS_ALRAM     != null and PC_IS_ALRAM     != ''">, PC_IS_ALRAM    </if>
+			<if test="PC_ALRAM_INCODE != null and PC_ALRAM_INCODE != ''">, PC_ALRAM_INCODE</if>
+			<if test="PC_ALRAM_INDATE != null and PC_ALRAM_INDATE != ''">, PC_ALRAM_INDATE</if>
+			<if test="PC_PLACE        != null and PC_PLACE        != ''">, PC_PLACE</if>
+			
+		) VALUES (
+		    NOW()
+		    <if test="PC_INCODE       != null and PC_INCODE       != ''">, #{PC_INCODE}      </if>
+			<if test="R_PR_PK         != null and R_PR_PK         != ''">, #{R_PR_PK}        </if>
+			<if test="R_C_PK          != null and R_C_PK          != ''">, #{R_C_PK}         </if>
+			<if test="R_PCR_PK        != null and R_PCR_PK        != ''">, #{R_PCR_PK}       </if>
+			<if test="R_CP_PK         != null and R_CP_PK         != ''">, #{R_CP_PK}        </if>
+			<if test="PC_GUBUN        != null and PC_GUBUN        != ''">, #{PC_GUBUN}       </if>
+			<if test="PC_TYPE         != null and PC_TYPE         != ''">, #{PC_TYPE}        </if>
+			<if test="PC_DATE         != null and PC_DATE         != ''">, #{PC_DATE}        </if>
+			<if test="PC_TIME         != null and PC_TIME         != ''">, #{PC_TIME}        </if>
+			<if test="PC_IS_COMPLETE  != null and PC_IS_COMPLETE  != ''">, #{PC_IS_COMPLETE} </if>
+			<if test="PC_IS_COMPLETE  != null and PC_IS_COMPLETE  != ''">, NOW() </if>
+			<if test="PC_IS_PROGRESS  != null and PC_IS_PROGRESS  != ''">, #{PC_IS_PROGRESS} </if>
+			<if test="PC_NEXT         != null and PC_NEXT         != ''">, #{PC_NEXT}        </if>
+			<if test="PC_NEXT_PLACE   != null and PC_NEXT_PLACE   != ''">, #{PC_NEXT_PLACE}  </if>
+			<if test="PC_NEXT_DATE    != null and PC_NEXT_DATE    != ''">, #{PC_NEXT_DATE}   </if>
+			<if test="PC_NEXT_TIME    != null and PC_NEXT_TIME    != ''">, #{PC_NEXT_TIME}   </if>
+			<if test="PC_STATUS       != null and PC_STATUS       != ''">, #{PC_STATUS}      </if>
+			<if test="PC_CS_DATE      != null and PC_CS_DATE      != ''">, #{PC_CS_DATE}     </if>
+			<if test="PC_IS_ALRAM     != null and PC_IS_ALRAM     != ''">, #{PC_IS_ALRAM}    </if>
+			<if test="PC_ALRAM_INCODE != null and PC_ALRAM_INCODE != ''">, #{PC_ALRAM_INCODE}</if>
+			<if test="PC_ALRAM_INDATE != null and PC_ALRAM_INDATE != ''">, #{PC_ALRAM_INDATE}</if>
+			<if test="PC_PLACE        != null and PC_PLACE        != ''">, #{PC_PLACE}</if>
+		)
+	</insert>
+	
+	<update id="update_project_contract_admin" parameterType="HashMap">
+		 UPDATE PROJECT_CONTACT 
+			SET PC_MODATE = NOW()
+			<!-- <if test="R_PR_PK != null">, R_PR_PK = #{R_PR_PK}</if> 
+			<if test="R_C_PK != null">, R_C_PK = #{R_C_PK}</if>
+			<if test="R_CP_PK != null">, R_CP_PK = #{R_CP_PK}</if> -->
+			<if test="PC_GUBUN != null and PC_GUBUN != ''">, PC_GUBUN = #{PC_GUBUN}</if>
+			<if test="PC_TYPE != null and PC_TYPE != ''">, PC_TYPE = #{PC_TYPE}</if>
+			<if test="PC_DATE != null and PC_DATE != ''">, PC_DATE = #{PC_DATE}</if>
+			<if test="PC_TIME != null and PC_TIME != ''">, PC_TIME = #{PC_TIME}</if>
+			<if test="PC_IS_COMPLETE != null and PC_IS_COMPLETE != ''">, PC_IS_COMPLETE = #{PC_IS_COMPLETE}</if>
+			<if test="PC_IS_COMPLETE != null and PC_IS_COMPLETE != ''">, PC_COMPLETE_DATE = NOW()</if>
+			<if test="PC_IS_PROGRESS != null and PC_IS_PROGRESS != ''">, PC_IS_PROGRESS = #{PC_IS_PROGRESS}</if>
+			<if test="PC_NEXT != null and PC_NEXT != ''">, PC_NEXT = #{PC_NEXT}</if>
+			<if test="PC_NEXT_PLACE != null and PC_NEXT_PLACE != ''">, PC_NEXT_PLACE = #{PC_NEXT_PLACE}</if>
+			<if test="PC_NEXT_DATE != null and PC_NEXT_DATE != ''">, PC_NEXT_DATE = #{PC_NEXT_DATE}</if>
+			<if test="PC_NEXT_TIME != null and PC_NEXT_TIME != ''">, PC_NEXT_TIME = #{PC_NEXT_TIME}</if>
+			<if test="PC_STATUS != null and PC_STATUS != ''">, PC_STATUS = #{PC_STATUS}</if>
+			<if test="PC_CS_DATE != null and PC_CS_DATE != ''">, PC_CS_DATE = #{PC_CS_DATE}</if>
+			<if test="PC_IS_ALRAM != null and PC_IS_ALRAM != ''">, PC_IS_ALRAM = #{PC_IS_ALRAM}</if>
+			<if test="PC_ALRAM_INCODE != null and PC_ALRAM_INCODE != ''">, PC_ALRAM_INCODE = #{PC_ALRAM_INCODE}</if>
+			<if test="PC_ALRAM_INDATE != null and PC_ALRAM_INDATE != ''">, PC_ALRAM_INCODE = #{PC_ALRAM_INDATE}</if>
+			<if test="PC_ZIPCODE != null and PC_ZIPCODE != ''">, PC_ZIPCODE = #{PC_ZIPCODE}</if>
+			<if test="PC_ADDR != null and PC_ADDR != ''">, PC_ADDR = #{PC_ADDR}</if>
+	    WHERE R_PR_PK = #{R_PR_PK}
+		  AND R_C_PK  = #{R_C_PK}
+		  AND PC_PK   = #{PC_PK}
+	</update>
+	
+	<select id="manage_project_service_info_list_new" parameterType="HashMap" resultType="HashMap">
+		SELECT A.PR_PK
+		     , A.PR_ID
+		     , A.C_NAME
+		     , A.CS_DATE
+		     , A.CS_INCODE_FLAG
+		     , FN_GET_CM_NAME('CS_INCODE_FLAG', A.CS_INCODE_FLAG) AS CS_INCODE_FLAG_NM
+		     , A.CS_FLAG
+		     , FN_GET_CM_NAME('CS_FLAG', A.CS_FLAG) AS CS_FLAG_NM
+		     , A.CS_TYPE
+		     , FN_GET_CM_NAME('CS_TYPE', A.CS_TYPE) AS CS_TYPE_NM
+		     , IFNULL(A.CP_NAME,'-') AS CP_NAME
+		     , CONCAT(A.CP_PHONE, ' / ', A.CP_EMAIL) AS CP_PHONE_EMAIL
+		     , A.CP_PHONE
+		     , A.CP_EMAIL
+		     , A.CS_PK 
+		     , A.CS_TITLE
+		     , CASE WHEN DATEDIFF(A.CS_PRE_DATE, NOW()) >= 0 THEN 'Y' 
+		            ELSE 'N'
+		             END AS CS_FINALSANGDAM_YN
+		     , CASE WHEN A.CS_FLAG = '1000' THEN FN_GET_CM_NAME('CS_TITLE_PARTNER', A.CS_TITLE)
+			            WHEN A.CS_FLAG = '1001' THEN FN_GET_CM_NAME('CS_TITLE_USER',    A.CS_TITLE)  
+			            END AS CS_TITLE_NM
+		     , A.CS_EXEC
+		     , A.CS_EXEC_ETC
+		     , A.CS_CONTENT
+		     , A.CS_NEXT_TYPE
+		     , FN_GET_CM_NAME('CS_TYPE', A.CS_NEXT_TYPE) AS CS_NEXT_TYPE_NM
+		     , IFNULL(A.CS_NEXT_DATE, '-') AS CS_NEXT_DATE
+		     , A.R_C_PK
+		     , A.CS_SANGDAM_STATUS
+		     , IFNULL(FN_GET_CM_NAME('CS_SANGDAM_STATUS', A.CS_SANGDAM_STATUS), '-') AS CS_SANGDAM_STATUS_NM
+		     , A.CS_VOC
+		     , A.CS_GUBUN
+		     , FN_GET_CM_NAME('CS_GUBUN', A.CS_GUBUN) AS CS_GUBUN_NM
+		     , A.INCODE 
+		     , ( SELECT B.U_NAME FROM USER_INFO B WHERE B.U_PK = A.INCODE LIMIT 0,1 ) AS INCODE_NM
+		  FROM (
+		       SELECT CS.R_PR_PK AS PR_PK
+	                , (SELECT PR_ID FROM PROJECT WHERE PR_PK = CS.R_PR_PK) AS PR_ID
+	                , (SELECT C_NAME FROM COMPANY WHERE C_PK = CS.R_C_PK) AS C_NAME
+	                , CS.CS_DATE, CS.CS_INCODE_FLAG
+		            , CS.CS_FLAG, CS.CS_TYPE
+	                , CP.CP_NAME AS CP_NAME
+	                , CP.CP_PHONE AS CP_PHONE
+		            , CP.CP_EMAIL AS CP_EMAIL
+	                , CS.CS_PK, CS_PRE_DATE, CS.CS_TITLE, CS.CS_EXEC
+		            , CS.CS_EXEC_ETC, CS.CS_CONTENT, CS.CS_NEXT_TYPE, CS.CS_NEXT_DATE, CS.R_C_PK
+		            , CS_SANGDAM_STATUS, CS_VOC
+		            , CS.CS_GUBUN, CS.INCODE
+		         FROM COMPANY_SERVICE CS 
+	                  JOIN PROJECT_PARTICIPATE PP
+	                  ON PP.R_PR_PK  = CS.R_PR_PK 
+	                  AND PP.R_C_PK  = CS.R_C_PK
+	                  AND CS.R_C_PK  != 0
+		              AND CS_USEYN   = 'Y'
+		              AND CS.R_PR_PK = #{PR_PK}
+	                  <if test="R_C_PK != null">AND CS.R_C_PK=#{R_C_PK}</if>
+	                  
+	                  JOIN COMPANY_PERSON CP
+                      ON PP.R_CP_PK = CP.CP_PK
+	          WHERE 1=1 
+		      UNION ALL
+		     SELECT PR.PR_PK, PR.PR_ID, '-' AS C_NAME, CS.CS_DATE, CS.CS_INCODE_FLAG
+		          , CS.CS_FLAG, CS.CS_TYPE, '-' AS CP_NAME, '-' AS CP_PHONE
+		          , '-' AS CP_EMAIL, CS.CS_PK, CS_PRE_DATE, CS.CS_TITLE, CS.CS_EXEC
+		          , CS.CS_EXEC_ETC, CS.CS_CONTENT, CS.CS_NEXT_TYPE, CS.CS_NEXT_DATE, CS.R_C_PK
+		          , CS.CS_SANGDAM_STATUS, CS_VOC
+		          , CS.CS_GUBUN, CS.INCODE
+		       FROM COMPANY_SERVICE CS
+		            JOIN PROJECT PR
+		            ON CS.R_PR_PK = PR.PR_PK
+		      WHERE R_PR_PK   = #{PR_PK}
+		        AND CS.R_C_PK = 0
+		        AND CS_USEYN = 'Y'
+	            <if test="R_C_PK != null">AND CS.R_C_PK=#{R_C_PK}</if>
+		  ) A
+	  WHERE 0=0
+	  		<if test="ORDERING != null">${ORDERING}</if>
+	  		<if test="PAGING != null">${PAGING}</if>
+	</select>
+	
+	<select id="participation_company_list" parameterType="HashMap" resultType="HashMap">
+		SELECT PP_PK, R_PR_PK, R_PMI_PK, R_C_PK, R_CP_PK, PP_GUBUN, PP_PARTICIPATION, PP_PARTICIPATION_DATE, PP_AUTH, PP_AUTH_MEMO, PP_AUTH_DATE, PP_TITLE, PP_CONTENT, PP_PRICE, PP_PRICE_TYPE, PP_FILE1, PP_FILE2, PP_INCODE, PP_INDATE, PP_MOCODE, PP_MODATE, C.C_NAME 
+		  FROM PROJECT_PARTICIPATE PP
+		       JOIN COMPANY C
+		       ON PP.R_C_PK = C.C_PK
+		 WHERE R_PR_PK = #{PR_PK}
+		   <!-- AND PP_PARTICIPATION = '1000' -->
+		   AND PP_AUTH = '1000'
+	</select>
+	
+	<select id="manage_project_service_info_pop" parameterType="HashMap" resultType="HashMap">
+		SELECT CS.CS_PK, CS.CS_SEQ, CS.CS_DATE
+		     , CS.CS_TYPE, CS.CS_TYPE AS CS_TYPE1, CS.CS_TYPE AS CS_TYPE2, CS.CS_TYPE AS CS_TYPE3, CS.CS_TYPE AS CS_TYPE4, CS.CS_TYPE AS CS_TYPE5
+		     , CS.CS_TITLE, CS.CS_TITLE_ETC
+		     , CS.CS_DATA
+		     , FN_GET_CM_NAME('CS_DATA', CS.CS_DATA) AS CS_DATA_NM
+		     , CS.CS_DATA_ETC, CS.CS_EXEC, CS.CS_EXEC_ETC
+		     , CS.CS_CONTENT
+		     , CS.CS_NEXT_TYPE
+		     , FN_GET_CM_NAME('CS_NEXT_TYPE', CS.CS_NEXT_TYPE) AS CS_NEXT_TYPE_NM
+		     , CS.CS_NEXT_DATE
+		     , CS.CS_PRE_DATE
+		     , CS.CS_USEYN
+		     , CS.INCODE 
+		     , ( SELECT A.U_NAME FROM USER_INFO A WHERE A.U_PK = CS.INCODE LIMIT 0,1 ) AS INCODE_NM
+		     , CS.INDATE, CS.MOCODE, CS.MODATE, CS.R_C_PK
+		     , CS.R_PR_PK, CS.CS_FLAG
+		     , CS.CS_CONTRACT_POSSIBLE AS CS_CONTRACT_POSSIBLE
+		     , FN_GET_CM_NAME('CONTRACT_POSSIBLE', CS.CS_CONTRACT_POSSIBLE) AS CS_CONTRACT_POSSIBLE_NM
+		     , CS.CS_INCODE_FLAG
+	         , CS.CS_SANGDAM_STATUS
+	         , CS.CS_VOC
+	         , CS.CS_GUBUN
+	         , FN_GET_CM_NAME('CS_GUBUN', CS.CS_GUBUN) AS CS_GUBUN_NM
+		  FROM COMPANY_SERVICE CS
+	   WHERE R_PR_PK = #{PR_PK}
+	     <if test="R_C_PK != null">AND R_C_PK = #{R_C_PK}</if>
+	     <if test="CS_PK != null">AND CS_PK = #{CS_PK}</if>
+	     AND CS_USEYN = 'Y'
+	      
+	     <if test="SEARCH_COMPANY != null">AND PJ.C_NAME LIKE CONCAT('%', #{SEARCH_COMPANY}, '%')</if>
+	     <if test="SEARCH_NAME    != null">AND PJ.U_NAME LIKE CONCAT('%', #{SEARCH_NAME}, '%')</if>
+	     <if test="SEARCH_TITLE   != null">AND PJ.TITLE LIKE CONCAT('%', #{SEARCH_TITLE}, '%')</if>
+	     <if test="MD_NAME        != null">AND PJ.PR_MANAGER_NAME LIKE CONCAT(#{MD_NAME}, '%')</if>
+	     <if test="CATEGORY       != null">AND PR_CATEGORY like CONCAT(#{CATEGORY}, '%')</if>
+	     <if test="NEXT_DATE      != null">AND CS.CS_NEXT_DATE >= CURDATE()</if>
+	     <if test="PRE_DATE       != null">CS.CS_PRE_DATE IS NOT NULL</if>
+	     <if test="INTODAYORDER   != null">AND DATEDIFF(IFNULL(CS.CS_NEXT_DATE,'9999-12-31'), NOW()) &lt; 0</if>
+	     <if test="FROMDATE       != null">AND DATE_FORMAT(PR_REGISTER_DATE,'%Y-%m-%d') &gt;= #{FROMDATE}</if>
+	     <if test="TODATE         != null">AND DATE_FORMAT(PR_REGISTER_DATE,'%Y-%m-%d') &lt;= #{TODATE}</if>
+	     <if test="ORDERING       != null">${ORDERING}</if>
+	     <if test="PAGING         != null">limit ${PAGING}</if>
+	</select>
+	
+	<insert id="insert_company_service" parameterType="HashMap">
+		INSERT INTO COMPANY_SERVICE
+		(
+		 	  INDATE
+			<if test="INCODE != null">, INCODE</if> 
+			<if test="CS_SEQ != null">, CS_SEQ</if>
+			<if test="CS_DATE != null">, CS_DATE</if>
+			<if test="CS_TYPE != null">, CS_TYPE</if>
+			<if test="CS_TITLE != null">, CS_TITLE</if>
+			<if test="CS_TITLE_ETC != null">, CS_TITLE_ETC</if>
+			<if test="CS_DATA != null">, CS_DATA</if>
+			<if test="CS_DATA_ETC != null">, CS_DATA_ETC</if>
+			<if test="CS_EXEC != null">, CS_EXEC</if>
+			<if test="CS_EXEC_ETC != null">, CS_EXEC_ETC</if>
+			<if test="CS_CONTENT != null">, CS_CONTENT</if>
+			<if test="CS_NEXT_TYPE != null">, CS_NEXT_TYPE</if>
+			<if test="CS_NEXT_DATE != null">, CS_NEXT_DATE</if>
+			<if test="CS_PRE_DATE != null">, CS_PRE_DATE</if>
+			<if test="CS_USEYN != null">, CS_USEYN</if>
+			<if test="R_C_PK != null">, R_C_PK</if>
+			<if test="R_PR_PK != null">, R_PR_PK</if>
+			<if test="CS_FLAG != null">, CS_FLAG</if>
+			<if test="CS_CONTRACT_POSSIBLE != null">, CS_CONTRACT_POSSIBLE</if>
+			<if test="CS_INCODE_FLAG != null">, CS_INCODE_FLAG</if>
+			<if test="CS_SANGDAM_STATUS != null">, CS_SANGDAM_STATUS</if>
+			<if test="CS_VOC != null">, CS_VOC</if>
+			<if test="CS_GUBUN != null">, CS_GUBUN</if>
+			<if test="CS_TAB != null">, CS_TAB</if>
+		) VALUES (
+			  NOW()
+			<if test="INCODE != null">, #{INCODE}</if>
+			<if test="CS_SEQ != null">, #{CS_SEQ}</if>
+			<if test="CS_DATE != null">, #{CS_DATE}</if>
+			<if test="CS_TYPE != null">, #{CS_TYPE}</if>
+			<if test="CS_TITLE != null">, #{CS_TITLE}</if>
+			<if test="CS_TITLE_ETC != null">, #{CS_TITLE_ETC}</if>
+			<if test="CS_DATA != null">, #{CS_DATA}</if>
+			<if test="CS_DATA_ETC != null">, #{CS_DATA_ETC}</if>
+			<if test="CS_EXEC != null">, #{CS_EXEC}</if>
+			<if test="CS_EXEC_ETC != null">, #{CS_EXEC_ETC}</if>
+			<if test="CS_CONTENT != null">, #{CS_CONTENT}</if>
+			<if test="CS_NEXT_TYPE != null">, #{CS_NEXT_TYPE}</if>
+			<if test="CS_NEXT_DATE != null">, #{CS_NEXT_DATE}</if>
+			<if test="CS_PRE_DATE != null">, #{CS_PRE_DATE}</if>
+			<if test="CS_USEYN != null">, #{CS_USEYN}</if>
+			<if test="R_C_PK != null">, #{R_C_PK}</if>
+			<if test="R_PR_PK != null">, #{R_PR_PK}</if>
+			<if test="CS_FLAG != null">, #{CS_FLAG}</if>
+			<if test="CS_CONTRACT_POSSIBLE != null">, #{CS_CONTRACT_POSSIBLE}</if>
+			<if test="CS_INCODE_FLAG != null">, #{CS_INCODE_FLAG}</if>
+			<if test="CS_SANGDAM_STATUS != null">, #{CS_SANGDAM_STATUS}</if>
+			<if test="CS_VOC != null">, #{CS_VOC}</if>
+			<if test="CS_GUBUN != null">, #{CS_GUBUN}</if>
+			<if test="CS_TAB != null">, #{CS_TAB}</if>
+		)
+	</insert>
+	
+	<update id="update_company_service" parameterType="HashMap">
+		UPDATE COMPANY_SERVICE 
+		SET MODATE = NOW()
+		<if test="MOCODE != null">, MOCODE = #{MOCODE}</if>
+		<if test="CS_SEQ != null">, CS_SEQ = #{CS_SEQ}</if>
+		<if test="CS_DATE != null">, CS_DATE = #{CS_DATE}</if>
+		<if test="CS_TYPE != null">, CS_TYPE = #{CS_TYPE}</if>
+		<if test="CS_TITLE != null">, CS_TITLE = #{CS_TITLE}</if>
+		<if test="CS_TITLE_ETC != null">, CS_TITLE_ETC = #{CS_TITLE_ETC}</if>
+		<if test="CS_DATA != null">, CS_DATA = #{CS_DATA}</if>
+		<if test="CS_DATA_ETC != null">, CS_DATA_ETC = #{CS_DATA_ETC}</if>
+		<if test="CS_EXEC != null">, CS_EXEC = #{CS_EXEC}</if>
+		<if test="CS_EXEC_ETC != null">, CS_EXEC_ETC = #{CS_EXEC_ETC}</if>
+		<if test="CS_CONTENT != null">, CS_CONTENT = #{CS_CONTENT}</if>
+		<if test="CS_NEXT_TYPE != null">, CS_NEXT_TYPE = #{CS_NEXT_TYPE}</if>
+		<if test="CS_NEXT_DATE != null">, CS_NEXT_DATE = #{CS_NEXT_DATE}</if>
+		<if test="CS_PRE_DATE != null">, CS_PRE_DATE = #{CS_PRE_DATE}</if>
+		<if test="CS_USEYN != null">, CS_USEYN = #{CS_USEYN}</if>
+		<if test="R_C_PK != null">, R_C_PK = #{R_C_PK}</if>
+		<if test="R_PR_PK != null">, R_PR_PK = #{R_PR_PK}</if>
+		<if test="CS_FLAG != null">, CS_FLAG = #{CS_FLAG}</if>
+		<if test="CS_CONTRACT_POSSIBLE != null">, CS_CONTRACT_POSSIBLE = #{CS_CONTRACT_POSSIBLE}</if>
+		<if test="CS_INCODE_FLAG != null">, CS_INCODE_FLAG = #{CS_INCODE_FLAG}</if>
+		<if test="CS_SANGDAM_STATUS != null">, CS_SANGDAM_STATUS = #{CS_SANGDAM_STATUS}</if>
+		<if test="CS_VOC != null">, CS_VOC = #{CS_VOC}</if>
+		<if test="CS_GUBUN != null">, CS_GUBUN = #{CS_GUBUN}</if>
+		WHERE CS_PK = #{CS_PK}
+		  AND R_PR_PK = #{R_PR_PK}
+	</update>
+	
+	<update id="delete_company_service" parameterType="HashMap">
+		 UPDATE COMPANY_SERVICE
+			SET CS_USEYN = #{CS_USEYN}
+			  , MOCODE   = #{MOCODE}
+			  , MODATE   = NOW()
+		  WHERE CS_PK = #{CS_PK}
+	</update>
+	
+	<select id="estimate_complete_company_list" parameterType="HashMap" resultType="HashMap">
+		SELECT PA.* 
+		     , DATE_FORMAT(PA.PA_COMPLETE_DATE, '%Y-%m-%d') AS PA_COMPLETE_DATE_NM
+		     , C.C_PK
+		     , C.C_NAME
+		     , CP.CP_NAME
+		     , CP.CP_PHONE
+		     , CASE WHEN PCR.PCR_PK IS NOT NULL THEN '완료'
+		            WHEN PP.PP_AUTH = '4000' THEN '미선정'
+                    ELSE '대기'
+		            END CHOICE_NM
+		  FROM PROJECT PR
+		       JOIN PROJECT_APPLY PA
+		       ON PR.PR_PK = PA.R_PR_PK
+		       AND PA.PA_STATUS >= 5
+		       
+		       JOIN PROJECT_PARTICIPATE PP
+		       ON PA.R_PR_PK = PP.R_PR_PK
+		       AND PA.R_C_PK = PP.R_C_PK
+		       
+		       LEFT JOIN PROJECT_CONTACT_REQUEST PCR
+	           ON PA.R_PR_PK = PCR.R_PR_PK
+	           AND PA.R_C_PK = PCR.R_C_PK
+		       AND PCR_GUBUN = '3000' <!--  견적 후 상담만 해당 -->
+		       
+		       JOIN COMPANY C
+		       ON PA.R_C_PK = C.C_PK
+		       
+		       JOIN COMPANY_PERSON CP
+		       ON C.C_PK = CP.R_C_PK
+		       AND CP.CP_RECEIVER = '1'
+		       AND CP.CP_STATUS = 1
+		 WHERE PA.R_PR_PK = #{PR_PK}
+	</select>
+	
+	<select id="project_comment_list" parameterType="HashMap" resultType="HashMap">
+        SET @n := 0;
+        
+        SELECT * 
+          FROM (
+	    	    SELECT @n := @n+1 AS ROWNUM
+	    	         , PA_PK
+			         , DATE_FORMAT(PA_REGISTER_DATE, '%Y-%m-%d') AS PA_REGISTER_DATE
+			         , PR.PR_TITLE
+			         , CategoryName(PR.PR_CATEGORY) AS CATEGORY_NM
+			         , PA_MEMO
+			      FROM PROJECT_APPLY PA
+			           JOIN PROJECT PR
+			           ON PA.R_PR_PK = PR.PR_PK
+			           
+			     WHERE R_C_PK = #{C_PK}
+			       AND PA_MEMO IS NOT NULL 
+			       AND PA_MEMO != ''
+	              <if test="PR_PK != null">AND R_PR_PK = #{PR_PK}</if>
+                ) A
+         ORDER BY ROWNUM DESC
+	</select>
+	
+	<select id="project_contact_request_partner" parameterType="HashMap" resultType="HashMap">
+		SELECT DATE_FORMAT(PA.PA_DUE_DATE,'%Y-%m-%d') AS PA_DUE_DATE
+		     , PA.*
+		     , C.*
+		     , U.*
+		     , CP.*
+		  FROM PROJECT_APPLY PA
+	           LEFT JOIN COMPANY C         ON PA.R_C_PK = C.C_PK
+	           LEFT JOIN USER_INFO U       ON C.R_U_PK  = U.U_PK 
+	           LEFT JOIN COMPANY_PERSON CP ON PA.R_P_PK = CP.CP_PK
+	     WHERE 1=1
+           AND PA.PA_STATUS >= 7
+           AND PA.R_PR_PK = #{PR_PK}
+	</select>
+	
+	<select id="contract_wait_company" parameterType="HashMap" resultType="HashMap">
+		    SELECT DATE_FORMAT(PA_DUE_DATE, '%Y-%m-%d') AS PA_DUE_DATE
+		         , PA.*
+		         , PR.*
+			     , C.*
+			     , U.*
+			     , CP.*
+			     , PMI.*
+			  FROM PROJECT_APPLY PA
+			       LEFT JOIN PROJECT PR          ON PA.R_PR_PK = PR.PR_PK
+		           LEFT JOIN COMPANY C           ON PA.R_C_PK = C.C_PK
+		           LEFT JOIN USER_INFO U         ON C.R_U_PK  = U.U_PK 
+		           LEFT JOIN COMPANY_PERSON CP   ON PA.R_P_PK = CP.CP_PK
+		           LEFT JOIN PROJECT_MD_INFO PMI ON PA.R_PR_PK  = PMI.R_PR_PK AND PMI.DEL_YN='N'
+		     WHERE 1=1
+	           AND PA.PA_STATUS >= 7
+	           AND PA.R_PR_PK = #{PR_PK}
+	</select>
+	
+	<!-- TEST임시 -->
+	<insert id="insert_project_participate_test" parameterType="HashMap" useGeneratedKeys="true" keyProperty="PP_PK" keyColumn="PP_PK">
+		INSERT INTO castingn.PROJECT_PARTICIPATE
+		(
+			R_PR_PK, R_PMI_PK, R_C_PK, R_CP_PK, PP_GUBUN
+			, PP_PARTICIPATION, PP_PARTICIPATION_DATE, PP_AUTH, PP_AUTH_MEMO, PP_AUTH_DATE
+			, PP_TITLE, PP_CONTENT, PP_PRICE, PP_PRICE_TYPE, PP_FILE1
+			, PP_FILE2, PP_INCODE, PP_INDATE
+		) VALUES (
+			  #{R_PR_PK} , #{R_PMI_PK} , #{R_C_PK} , #{R_CP_PK} , #{PP_GUBUN}
+			, #{PP_PARTICIPATION} , #{PP_PARTICIPATION_DATE} , #{PP_AUTH} , #{PP_AUTH_MEMO} , #{PP_AUTH_DATE}
+			, #{PP_TITLE}, #{PP_CONTENT}, #{PP_PRICE}, #{PP_PRICE_TYPE}, #{PP_FILE1}
+			, #{PP_FILE2}, #{PP_INCODE}, NOW()
+		)
+	</insert>
+	
+	<!-- TEST임시 -->
+	<insert id="insert_project_contactrequest_test" parameterType="HashMap" useGeneratedKeys="true" keyProperty="PCR_PK" keyColumn="PCR_PK">
+		INSERT INTO castingn.PROJECT_CONTACT_REQUEST
+		(
+			  R_PR_PK, R_C_PK, R_CP_PK, PCR_GUBUN, PCR_TYPE
+			, PCR_STATUS, PCR_HOPE_DATE, PCR_HOPE_TIME, PCR_HOPE_PLACE, PCR_DECIDE_DATE
+			, PCR_DECIDE_TIME, PCR_ZIPCODE, PCR_ADDR, PCR_IS_ALRAM, PCR_INCODE
+			, PCR_INDATE
+		) VALUES (
+			  #{R_PR_PK}, #{R_C_PK}, #{R_CP_PK}, #{PCR_GUBUN}, #{PCR_TYPE}
+			, #{PCR_STATUS}, #{PCR_HOPE_DATE}, #{PCR_HOPE_TIME}, #{PCR_HOPE_PLACE}, #{PCR_DECIDE_DATE}
+			, #{PCR_DECIDE_TIME}, #{PCR_ZIPCODE}, #{PCR_ADDR}, #{PCR_IS_ALRAM}, #{PCR_INCODE}
+			, NOW()
+		)
+	</insert>
+	
+	<insert id="insert_project_apply_test" parameterType="HashMap" useGeneratedKeys="true" keyProperty="PA_PK" keyColumn="PA_PK">
+		INSERT INTO castingn.PROJECT_APPLY
+		(
+			  PA_ID, R_PR_PK, R_C_PK, R_P_PK, PA_PRICE
+			, PA_PERIOD, PA_CONTENT, PA_MEETING_REQ_DATE, PA_MEETING_OK_DATE, PA_MEETING_ZONE1
+			, PA_MEETING_ZONE2, PA_MEETING_STATUS, PA_STATUS, PA_STATUS_TYPE, PA_STATUS_MEMO
+			, PA_REGISTER_DATE, PA_MEETING_REQ_REGISTER_DATE, PA_MEETING_OK_REGISTER_DATE, PA_TITLE
+			, PA_MEMO, PA_ADMIN_MEMO, PA_REQ_MEMO, PA_ORDER_PRICE, PA_PAYMEMO
+			, PA_PAYFLAG, PA_PER, PA_REASON, PA_START_DATE, PA_APPLY_END_DATE
+			, SMS_SEND, SMS_SEND_DATE, PA_FILE, PA_FILE_RENAME, PA_FILE2
+			, PA_FILE2_RENAME, PA_COMPLETE_DATE, PA_DUE_PRICE, PA_DUE_DATE
+		) VALUES (
+			  #{PA_ID}, #{R_PR_PK}, #{R_C_PK}, #{R_P_PK}, #{PA_PRICE} 
+			, #{PA_PERIOD}, #{PA_CONTENT}, #{PA_MEETING_REQ_DATE}, #{PA_MEETING_OK_DATE}, #{PA_MEETING_ZONE1}
+			, #{PA_MEETING_ZONE2}, #{PA_MEETING_STATUS}, #{PA_STATUS}, #{PA_STATUS_TYPE}, #{PA_STATUS_MEMO}
+			, NOW(), #{PA_MEETING_REQ_REGISTER_DATE}, #{PA_MEETING_OK_REGISTER_DATE}, #{PA_TITLE}
+			, #{PA_MEMO}, #{PA_ADMIN_MEMO}, #{PA_REQ_MEMO}, #{PA_ORDER_PRICE}, #{PA_PAYMEMO}
+			, #{PA_PAYFLAG}, #{PA_PER}, #{PA_REASON}, #{PA_START_DATE}, #{PA_APPLY_END_DATE}
+			, #{SMS_SEND}, #{SMS_SEND_DATE}, #{PA_FILE}, #{PA_FILE_RENAME}, #{PA_FILE2}
+			, #{PA_FILE2_RENAME}, #{PA_COMPLETE_DATE}, #{PA_DUE_PRICE}, #{PA_DUE_DATE}
+		)
+	</insert>
+	
+	<select id="mm_goal_report" parameterType="HashMap" resultType="HashMap">
+		SELECT '의뢰건' AS TITLE 
+       ,GOAL
+       ,CUR_CNT
+       ,ROUND(CUR_CNT*100/GOAL,2) CURPER
+       ,FLOOR((CUR_CNT/DD_SALEDAYS)*MM_SALEDAYS) PRE_GOAL 
+       ,ROUND( (FLOOR((CUR_CNT/DD_SALEDAYS)*MM_SALEDAYS)*100)/GOAL ,2) PRE_CNT
+  FROM (       
+SELECT ( SELECT PMG.GOAL FROM PROJECT_MKT_GOAL PMG WHERE PMG.YYYYMM = DATE_FORMAT(NOW(),'%Y%m') AND GOAL_FLAG = '1000' ) AS GOAL
+		,COUNT(DISTINCT PR_PK) CUR_CNT
+		,( SELECT SUM( SALEDAY ) FROM YYYYMMDD WHERE YYYYMMDD LIKE CONCAT(DATE_FORMAT(NOW(),'%Y%m'),'%') ) MM_SALEDAYS
+		,( SELECT SUM( SALEDAY ) FROM YYYYMMDD WHERE YYYYMMDD BETWEEN CONCAT(DATE_FORMAT(NOW(),'%Y%m'),'01')  AND DATE_FORMAT(NOW(),'%Y%m%d') ) DD_SALEDAYS
+  FROM PROJECT PR
+ WHERE DATE_FORMAT(PR.PR_REGISTER_DATE,'%Y%m%d') BETWEEN CONCAT(DATE_FORMAT(NOW(),'%Y%m'),'01')  AND DATE_FORMAT(NOW(),'%Y%m%d')
+	AND PR_STATUS NOT IN (0,2,3) -- 승인전, 취소 제외
+      ) A
+UNION ALL    
+	SELECT '수주건' AS TITLE 
+	    ,GOAL
+       ,CUR_CNT
+       ,ROUND(CUR_CNT*100/GOAL,2) CURPER
+              ,FLOOR((CUR_CNT/DD_SALEDAYS)*MM_SALEDAYS) PRE_CNT
+       ,ROUND( (FLOOR((CUR_CNT/DD_SALEDAYS)*MM_SALEDAYS)*100)/GOAL ,2) PRE_GOAL
+  FROM (  
+	  SELECT (SELECT GOAL FROM PROJECT_MKT_GOAL PMG WHERE PMG.YYYYMM = DATE_FORMAT(NOW(),'%Y%m') AND GOAL_FLAG = '2000') AS GOAL
+	  			,COUNT(1) CUR_CNT 
+	  			,( SELECT SUM( SALEDAY ) FROM YYYYMMDD WHERE YYYYMMDD LIKE CONCAT(DATE_FORMAT(NOW(),'%Y%m'),'%') ) MM_SALEDAYS
+				,( SELECT SUM( SALEDAY ) FROM YYYYMMDD WHERE YYYYMMDD BETWEEN CONCAT(DATE_FORMAT(NOW(),'%Y%m'),'01')  AND DATE_FORMAT(NOW(),'%Y%m%d') ) DD_SALEDAYS
+ 	    FROM PROJECT PR
+	    LEFT JOIN PROJECT_MD_INFO PMI ON PR.PR_PK   = PMI.R_PR_PK  AND PMI.DEL_YN = 'N' 
+	    -- LEFT JOIN PROJECT_MKT_GOAL PMG ON PMG.YYYYMM = DATE_FORMAT(NOW(),'%Y%m') AND GOAL_FLAG = '2000'
+      WHERE  PR_STATUS NOT IN (0,2,3) 
+	     AND PR_FK IS NULL -- 복사된 프로젝트는 제외
+		  AND ( ( PR_STATUS IN (21,25) AND PMI.PMI_PROGRESS_STEP IN ('5005' ) ) -- 확정대기
+		       OR ( PR_STATUS IN (31,41,45))  -- 확정대기
+		       OR ( PR_STATUS IN (51) OR PMI.PMI_PROGRESS_STEP IN ('5006' ) )  -- 입금대기
+		       OR ( PR_STATUS IN (60) OR PMI.PMI_PROGRESS_STEP IN ('5300' ) )  -- 입금대기
+		       OR ( PR_STATUS IN (70) OR PMI.PMI_PROGRESS_STEP IN ('5400' ) )  -- 최종완료
+		      ) 
+		  AND PMI.PMI_CONTRACT_MONTH = DATE_FORMAT(NOW(),'%Y-%m')  
+		  AND DATE_FORMAT(PR.PR_REGISTER_DATE,'%Y%m%d') BETWEEN DATE_FORMAT(DATE_ADD(NOW(), INTERVAL -180 DAY),'%Y%m%d')  AND DATE_FORMAT(NOW(),'%Y%m%d')
+		) A
+UNION ALL    
+	SELECT '수주금액( 천원 )' AS TITLE 
+	    ,GOAL
+       ,CUR_CNT
+       ,ROUND(CUR_CNT*100/GOAL,2) CURPER
+       ,FLOOR((CUR_CNT/DD_SALEDAYS)*MM_SALEDAYS) PRE_CNT
+       ,ROUND( (FLOOR((CUR_CNT/DD_SALEDAYS)*MM_SALEDAYS)*100)/GOAL ,2) PRE_GOAL
+  FROM (  
+	  SELECT (SELECT GOAL FROM PROJECT_MKT_GOAL PMG WHERE PMG.YYYYMM = DATE_FORMAT(NOW(),'%Y%m') AND GOAL_FLAG = '3000') AS GOAL
+	  			,ROUND(SUM(PMI_DECIDE_SALES)/1000) CUR_CNT 
+	  			,( SELECT SUM( SALEDAY ) FROM YYYYMMDD WHERE YYYYMMDD LIKE CONCAT(DATE_FORMAT(NOW(),'%Y%m'),'%') ) MM_SALEDAYS
+				,( SELECT SUM( SALEDAY ) FROM YYYYMMDD WHERE YYYYMMDD BETWEEN CONCAT(DATE_FORMAT(NOW(),'%Y%m'),'01')  AND DATE_FORMAT(NOW(),'%Y%m%d') ) DD_SALEDAYS
+ 	    FROM PROJECT PR
+	    LEFT JOIN PROJECT_MD_INFO PMI ON PR.PR_PK   = PMI.R_PR_PK  AND PMI.DEL_YN = 'N' 
+	    -- LEFT JOIN PROJECT_MKT_GOAL PMG ON PMG.YYYYMM = DATE_FORMAT(NOW(),'%Y%m') AND GOAL_FLAG = '3000'
+      WHERE  PR_STATUS NOT IN (0,2,3) 
+	     AND PR_FK IS NULL -- 복사된 프로젝트는 제외
+		  AND ( ( PR_STATUS IN (21,25) AND PMI.PMI_PROGRESS_STEP IN ('5005' ) ) -- 확정대기
+		       OR ( PR_STATUS IN (31,41,45))  -- 확정대기
+		       OR ( PR_STATUS IN (51) OR PMI.PMI_PROGRESS_STEP IN ('5006' ) )  -- 입금대기
+		       OR ( PR_STATUS IN (60) OR PMI.PMI_PROGRESS_STEP IN ('5300' ) )  -- 입금대기
+		       OR ( PR_STATUS IN (70) OR PMI.PMI_PROGRESS_STEP IN ('5400' ) )  -- 최종완료
+		      ) 
+		  AND PMI.PMI_CONTRACT_MONTH = DATE_FORMAT(NOW(),'%Y-%m')  
+		  AND DATE_FORMAT(PR.PR_REGISTER_DATE,'%Y%m%d') BETWEEN DATE_FORMAT(DATE_ADD(NOW(), INTERVAL -180 DAY),'%Y%m%d')  AND DATE_FORMAT(NOW(),'%Y%m%d')
+		) A
+	</select>
+	
+	<select id="dd_goal_report" parameterType="HashMap" resultType="HashMap">
+		SELECT '의뢰건' AS TITLE, MAX(C1) AS TODAY, MAX(C2) AS YESTERDAY, MAX(C3) AS CUR_GAIN, MAX(C4) AS PRE_GAIN, MAX(C5) AS PRE_PER
+  FROM (
+SELECT '1000' AS FLAG, COUNT(*)  AS C1, NULL C2,NULL C3,NULL C4,NULL C5
+  FROM PROJECT PR
+ WHERE DATE_FORMAT(PR.PR_REGISTER_DATE,'%Y%m%d') = DATE_FORMAT(NOW(),'%Y%m%d')
+	AND PR_STATUS NOT IN (0,2,3) -- 승인전, 취소 제외
+UNION ALL
+SELECT '1000' AS FLAG, NULL, COUNT(*) TODAY_CNT,NULL,NULL,NULL
+  FROM PROJECT PR
+ WHERE DATE_FORMAT(PR.PR_REGISTER_DATE,'%Y%m%d') = DATE_FORMAT(DATE_ADD(NOW(), INTERVAL -1 DAY),'%Y%m%d')
+	AND PR_STATUS NOT IN (0,2,3) -- 승인전, 취소 제외
+UNION ALL
+SELECT '1000' AS FLAG, NULL,NULL, ROUND(COUNT(*)/DATE_FORMAT(NOW(),'%d'),2) TODAY_CNT,NULL,NULL
+  FROM PROJECT PR
+ WHERE DATE_FORMAT(PR.PR_REGISTER_DATE,'%Y%m') = DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 0 DAY),'%Y%m')
+	AND PR_STATUS NOT IN (0,2,3) -- 승인전, 취소 제외
+UNION ALL
+SELECT '1000' AS GOAL_FLAG,NULL,NULL,NULL,PR_CNT,NULL
+  FROM PROJECT_MKT_GOAL
+ WHERE YYYYMM = DATE_FORMAT(DATE_SUB(  curdate(),  INTERVAL 1 month  ),'%Y%m') 
+   AND GOAL_FLAG IN  ('1000')
+UNION ALL   
+ SELECT '1000' AS GOAL_FLAG, NULL,NULL,NULL,NULL,ROUND(SUM(PR_CNT)/3,2)
+   FROM PROJECT_MKT_GOAL
+  WHERE YYYYMM BETWEEN DATE_FORMAT(DATE_SUB( curdate(), INTERVAL 3 month ),'%Y%m')  AND DATE_FORMAT(DATE_SUB( curdate(), INTERVAL 1 month ),'%Y%m') 
+    AND GOAL_FLAG IN  ('1000')
+   ) A
+   GROUP BY FLAG      
+UNION ALL
+-- 수주건
+SELECT '수주건' AS TITLE, MAX(C1) AS TODAY, MAX(C2) AS YESTERDAY, MAX(C3) AS CUR_GAIN, MAX(C4) AS PRE_GAIN, MAX(C5) AS PRE_PER
+  FROM (
+-- 오늘
+SELECT '2000' AS FLAG, COUNT(DISTINCT PR_PK) AS C1,NULL AS C2,NULL AS C3,NULL AS C4,NULL AS C5
+  FROM PROJECT PR
+  JOIN PROJECT_MD_INFO PMI ON ( PR.PR_PK   = PMI.R_PR_PK  AND PMI.DEL_YN = 'N' 
+											    AND PMI_PK IN ( SELECT PMI_PK
+																		 FROM PROJECT_MD_INFO_LOG
+																	   WHERE DATE_FORMAT(INDATE,'%Y%m%d') = DATE_FORMAT(NOW(),'%Y%m%d')
+																	     AND NEW_VALUE IN ('5005','5006','5007','5300','5400') ) )
+    AND PMI.PMI_CONTRACT_MONTH = DATE_FORMAT(NOW(),'%Y-%m')  
+		  AND DATE_FORMAT(PR.PR_REGISTER_DATE,'%Y%m%d') BETWEEN DATE_FORMAT(DATE_ADD(NOW(), INTERVAL -180 DAY),'%Y%m%d')  AND DATE_FORMAT(NOW(),'%Y%m%d')
+UNION ALL
+-- 어제		  
+SELECT '2000', NULL,COUNT(DISTINCT PR_PK),NULL,NULL,NULL
+  FROM PROJECT PR
+  JOIN PROJECT_MD_INFO PMI ON ( PR.PR_PK   = PMI.R_PR_PK  AND PMI.DEL_YN = 'N' 
+											    AND PMI_PK IN ( SELECT PMI_PK
+																		 FROM PROJECT_MD_INFO_LOG
+																	   WHERE DATE_FORMAT(INDATE,'%Y%m%d') = DATE_FORMAT(DATE_ADD(NOW(), INTERVAL -1 DAY),'%Y%m%d')
+																	     AND NEW_VALUE IN ('5005','5006','5007','5300','5400') ) )
+    AND PMI.PMI_CONTRACT_MONTH = DATE_FORMAT(NOW(),'%Y-%m')  
+		  AND DATE_FORMAT(PR.PR_REGISTER_DATE,'%Y%m%d') BETWEEN DATE_FORMAT(DATE_ADD(NOW(), INTERVAL -180 DAY),'%Y%m%d')  AND DATE_FORMAT(NOW(),'%Y%m%d')		  
+UNION ALL
+-- 당월 일평균
+SELECT '2000',NULL,NULL,ROUND(COUNT(DISTINCT PR_PK)/DATE_FORMAT(NOW(),'%d'),2),NULL,NULL
+  FROM PROJECT PR
+  JOIN PROJECT_MD_INFO PMI ON ( PR.PR_PK   = PMI.R_PR_PK  AND PMI.DEL_YN = 'N' )
+    AND PMI.PMI_CONTRACT_MONTH = DATE_FORMAT(NOW(),'%Y-%m')  
+		  AND DATE_FORMAT(PR.PR_REGISTER_DATE,'%Y%m%d') BETWEEN DATE_FORMAT(DATE_ADD(NOW(), INTERVAL -180 DAY),'%Y%m%d')  AND DATE_FORMAT(NOW(),'%Y%m%d')		
+UNION ALL
+SELECT '2000' AS GOAL_FLAG,NULL,NULL,NULL,PR_CNT,NULL
+  FROM PROJECT_MKT_GOAL
+ WHERE YYYYMM = DATE_FORMAT(DATE_SUB(  curdate(),  INTERVAL 1 month  ),'%Y%m') 
+   AND GOAL_FLAG IN  ('2000')
+UNION ALL   
+ SELECT '2000' AS GOAL_FLAG, NULL,NULL,NULL,NULL,ROUND(SUM(PR_CNT)/3,2)
+   FROM PROJECT_MKT_GOAL
+  WHERE YYYYMM BETWEEN DATE_FORMAT(DATE_SUB( curdate(), INTERVAL 3 month ),'%Y%m')  AND DATE_FORMAT(DATE_SUB( curdate(), INTERVAL 1 month ),'%Y%m') 
+    AND GOAL_FLAG IN  ('2000')	
+) A
+GROUP BY FLAG
+	</select>
+	
+	<select id="get_project_participate" parameterType="HashMap" resultType="HashMap">
+	    SELECT PAP.*
+	    , (SELECT PR.PR_TITLE FROM PROJECT PR WHERE PR.PR_PK = PAP.R_PR_PK) AS PR_TITLE
+	    , (SELECT C.C_NAME FROM COMPANY C WHERE C.C_PK = PAP.R_C_PK) AS C_NAME
+	    , (SELECT CP.CP_EMAIL FROM COMPANY_PERSON CP WHERE CP.R_C_PK = PAP.R_C_PK AND CP.CP_RECEIVER = '1' AND CP.CP_STATUS='1' LIMIT 1) AS CP_EMAIL
+	    , (SELECT CP.CP_PHONE FROM COMPANY_PERSON CP WHERE CP.R_C_PK = PAP.R_C_PK AND CP.CP_RECEIVER = '1' AND CP.CP_STATUS='1' LIMIT 1) AS CP_PHONE
+	  FROM PROJECT_PARTICIPATE PAP
+	       JOIN PROJECT PR ON PAP.R_PR_PK = PR.PR_PK
+     WHERE PAP.R_PR_PK = #{PR_PK}
+       AND PAP.PP_AUTH = #{PP_AUTH}
+       AND PAP.PP_PARTICIPATION = #{PP_PARTICIPATION}
+	</select>
+	
+	<select id="get_lately_project_contract_request" parameterType="HashMap" resultType="HashMap">
+	    SELECT PCR.*, PR.*
+	     , projectPeriod('PRICE',PR_PRICE,0,0,0,0) AS PR_PRICE_TXT
+	     , FN_GET_CM_NAME('PCR_TIME', PCR_HOPE_TIME) AS PCR_HOPE_TIME_NM
+	     , FN_GET_CM_NAME('PCR_TYPE', PCR_TYPE) AS PCR_TYPE_NM
+	     , UI.* 
+	     , CP.*
+	     , C.*
+	     , projectPeriod('PERIOD',PR_PERIOD,0,0,0,0) AS PR_PERIOD_TXT
+		 , CategoryName(PR_CATEGORY) CATE_NAME
+		 , CategoryNameLvl(PR_CATEGORY,'2') CATE_NAME1
+	  FROM PROJECT_CONTACT_REQUEST PCR
+	       JOIN PROJECT PR
+	       ON PCR.R_PR_PK = PR.PR_PK
+	       
+	       JOIN USER_INFO UI
+	       ON PR.R_U_PK = UI.U_PK
+	       
+	       JOIN COMPANY_PERSON CP
+	       ON CP.CP_PK = PCR.R_CP_PK
+	       
+	       JOIN COMPANY C
+           ON PCR.R_C_PK = C.C_PK
+	       
+	 WHERE PCR.R_PR_PK = #{R_PR_PK}
+	       <if test="R_C_PK != null">AND PCR.R_C_PK = #{R_C_PK}</if>
+ORDER BY PCR_PK DESC
+LIMIT 0,1
+	</select>
+	
+	<select id='project_apply_complete' parameterType="HashMap" resultType="HashMap">
+	SELECT ( SELECT C_NAME FROM COMPANY WHERE C_PK = A.R_C_PK ) C_NAME
+	     , ( SELECT CP_PHONE FROM COMPANY_PERSON WHERE CP_PK = A.R_P_PK ) CP_PHONE
+	     , ( SELECT CP_NAME FROM COMPANY_PERSON WHERE CP_PK = A.R_P_PK ) CP_NAME
+	     , A.*
+	     , PR.*
+	     , UI.*
+	     , CP.*
+	     , C.*
+	  FROM PROJECT_APPLY A
+	       JOIN PROJECT PR
+	       ON A.R_PR_PK = PR.PR_PK
+	       
+	       JOIN COMPANY C
+	       ON A.R_C_PK = C.C_PK
+	       
+	       JOIN USER_INFO UI
+	       ON PR.R_U_PK = UI.U_PK
+	       
+	       JOIN COMPANY_PERSON CP
+	       ON CP.CP_PK = A.R_P_PK
+	 WHERE PR.PR_PK = #{PR_PK}
+	   <if test="PA_STATUS != null">AND A.PA_STATUS = #{PA_STATUS}</if>
+	GROUP BY A.R_PR_PK
+	</select>
+	
+	<update id="point_update" parameterType="HashMap">
+		UPDATE USER_INFO 
+		SET U_POINT  = #{U_POINT}
+		  , U_MOCODE = #{U_MOCODE}
+		  , U_MODATE = NOW()
+		WHERE U_PK = #{U_PK}
+	</update>
+	
+	
+</mapper>

@@ -1,0 +1,16 @@
+@charset "utf-8";
+/* CSS Document */
+
+@import url("common.css");
+
+#loginArea{width:100%;margin-top:15%}
+#loginArea h1,#loginArea #login fieldset{width:440px;margin:0 auto;position:relative}
+#loginArea #login{background:#3366cc;margin:20px 0 100px;padding:50px 0;}
+
+#loginArea #login fieldset .btn_login{position:absolute;top:0;right:0}
+#loginArea #login fieldset ul {margin-left:95px}
+#loginArea #login fieldset ul li{margin-bottom:5px;color:#fff}
+#loginArea #login fieldset ul li input{border:none;height:30px;width:210px}
+#loginArea #login fieldset ul li .check{width:auto;height:auto}
+#loginArea #login fieldset ul li input,#loginArea #login fieldset ul li label,,#loginArea #login fieldset ul li a{vertical-align:middle;}
+#loginArea #login fieldset ul li label,#loginArea #login fieldset ul li a{color:#fff;text-decoration:none}

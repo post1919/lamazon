@@ -1,0 +1,108 @@
+
+
+
+
+
+ 
+
+
+<!doctype html>
+<html lang="ko">
+	<head>
+		<title>캐스팅엔-파트너 상담 내용 추가</title>
+		<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+		<meta charset="utf-8">
+		<meta name="viewport" content="user-scalable=no,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,width=device-width">
+		<link type="text/css" rel="stylesheet" charset="utf-8" href="../css/mobile/question/question.css" />
+		<link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" />
+		<script type="text/javascript" src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.7.1.min.js"></script>
+		<script type="text/javascript" src="https://ajax.aspnetcdn.com/ajax/jquery.ui/1.8.16/jquery-ui.min.js"></script>
+		
+		
+		<!--원형단계바-->
+		 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+		 <script src="https://rawgit.com/kottenator/jquery-circle-progress/1.2.1/dist/circle-progress.js"></script>
+
+		
+		<!-- 
+		
+		<script type="text/javascript" src="/common/js/jquery-1.7.min.js"></script>
+      	<script src="/js/grid/grid-jquery-ui.min.js"></script>
+		 -->
+		
+		<script src="https://www.castingn.com/js/common.js"></script>
+		<script src="https://www.castingn.com/js/common_js.jsp"></script>
+		
+		
+	</head>
+	
+	<body>
+		<div id ="qwrapw">
+
+			<div class ="qclose"><a href="javascript:window.close();"><img src="../images/q_close.png" alt="닫기"></a></div>
+	<div id="qstep">
+		<div class="circle" data-value="0.5" data-size="80" data-thickness="25"
+		      data-animation-start-value="1.5"
+				data-fill="{
+        &quot;color&quot;: &quot;rgba(0, 0, 0, .3)&quot;,
+        &quot;image&quot;: &quot;../images/step_bg.png&quot;
+      }"
+      data-reverse="true"
+    >
+     
+    </div>
+	<script>
+		(function($) {
+        $('.circle').circleProgress({
+        value: 0.3
+        });
+        })(jQuery);
+		
+   </script>
+   <script type="text/javascript">
+       $(function(){$("#t").hide();
+			$("[name=qselect]").change(function(){
+                if( $(this).val() == "7" ){
+					$("#t").show().focus(); 
+                } else {
+                    $("#t").hide();
+                }
+			});
+       }); //$(function(){})   
+    </script>
+			<div class ="qtxt">상담 주제 및 내용은 무엇인가요?   <span>(필수)</span></div>
+			<div class ="qinput">
+			<select id="qselect" name="qselect" class="inputbox">
+								<option value="0" checked="checked">항목을 선택하세요.</option>
+								<option value="1">RFP 상세 내용 및 추가 확인</option>
+								<option value="2">방문일정 논의 및 확정</option>
+								<option value="3">견적서/제안서 제출</option>
+								<option value="4">진행상태 확인 및 점검</option>
+								<option value="5">계약진행 관련</option>
+								<option value="6">비용정산 관련</option>
+								<option value="7">기타</option>
+						</select>
+			</div>
+
+			<div class ="qinput">
+			<!--선택값이 기타일때 노출-->
+			<textarea id="t" class="hiddenbox" placeholder="기타사항을 입력해주세요."></textarea>
+
+
+			</div>
+			
+			
+			
+			<div id="qbtn">
+			<ul>
+			<li> <div class="qprev_btn"><a href="partner_q01.html">이전</a></div></li>
+			<li><div class="qnext_btn2"><a href="partner_q04.html">다음</a></div></li>
+			
+			</ul>
+			
+			</div>
+		
+		</div>
+	
+	</body>
+</html>

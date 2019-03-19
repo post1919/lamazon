@@ -1,0 +1,81 @@
+/*------partner_rating------*/
+.raing_h h2{font-size: 40px; margin-top: 20px; text-align: center;}
+.raing_h p {font-size: 15px;margin-top:5px;text-align: center;}
+.sub_inner_rating{width:1000px;margin:0 auto;}
+.sub_inner_rating .search_area{width:100%;height:128px;background-color:#ededed;margin-top:77px;}
+.sub_inner_rating .search_area .input_a{width:598px;margin:auto;padding-top:40px;}
+.sub_inner_rating .search_area input{width:490px;height:38px;border:1px solid #ddd;line-height:38px;padding-left:10px;}
+.sub_inner_rating .search_area a.btn_search{width:89px;height:40px;line-height:40px;display:inline-block;text-align:center;background-color:#01bbd6;color:#fff;border-radius:2px;}
+.sub_inner_rating .h3_a{margin-top:62px;height:30px;border-bottom:2px solid #818793;padding-bottom:10px;}
+.sub_inner_rating .h3_a h3{font-size:20px;font-weight:bold;color:#333;}
+.sub_inner_rating ul{margin-top:30px;height:auto;border-bottom:1px solid #ddd;overflow:hidden;padding-bottom:30px;}
+.sub_inner_rating li{width:240px;height:240px;border:1px solid #ddd;float:left;margin-right:10px;}
+.sub_inner_rating li.last{margin-right:0;}
+.sub_inner_rating li .part01{width:220px;height:63px;border-bottom:1px solid #ddd;padding:10px;position:relative;}
+.sub_inner_rating li .part01 .id_view{width:63px;height:63px;background:url('../images/partner/defult_img01.png') no-repeat;border:1px solid #ddd;}
+.sub_inner_rating li .part01 .name{position:absolute;top:8px;left:87px;font-size:16px;color:#333;font-weight:bold;}
+.sub_inner_rating li .part01 .name span.sector{font-size:13px;color:#666;font-weight:normal;}
+.sub_inner_rating li .part02{width:240px;height:146px;background-color:#f7f7f7;padding-top:10px;}
+.sub_inner_rating li .part02 table{width:205px;margin:auto;}
+.sub_inner_rating li .part02 th{height:30px;font-size:13px;font-weight:bold;color:#333;text-align:left;}
+.sub_inner_rating li .part02 td{height:30px;font-size:12px;color:#666;}
+.sub_inner_rating li.search{width:240px;height:240px;border:1px solid #ddd;background:url('../images/partner/search_bg.png') no-repeat;}
+.sub_inner_rating li.search p{font-size:12px;color:#999;text-align:center;margin-top:118px;}
+.sub_inner_rating li.search input{width:192px;height:30px;border:1px solid #ddd;margin-left:18px;margin-top:10px;padding-left:10px;line-height:30px;}
+.sub_inner_rating2 .indicate02{width:100%;height:79px;background-color:#4a4a4a;margin-top:77px;}
+.sub_inner_rating2 .indicate02 p.text01{font-size:16px;font-weight:bold;color:#fff;padding-top:23px;margin-left:20px;}
+.sub_inner_rating2 .indicate02 p.text02{font-size:13px;color:#b4b4b4;margin-left:20px;}
+.sub_inner_rating2 .left_company_info{float:left;margin-top:25px;}
+.sub_inner_rating2 .left_company_info{width:240px;height:240px;border:1px solid #ddd;float:left;margin-right:10px;}
+.sub_inner_rating2 .left_company_info .last{margin-right:0;}
+.sub_inner_rating2 .left_company_info .part01{width:220px;height:63px;border-bottom:1px solid #ddd;padding:10px;position:relative;}
+.sub_inner_rating2 .left_company_info .part01 .id_view{width:63px;height:63px;background:url('../images/partner/defult_img01.png') no-repeat;border:1px solid #ddd;}
+.sub_inner_rating2 .left_company_info .part01 .name{position:absolute;top:8px;left:87px;font-size:16px;color:#333;font-weight:bold;}
+.sub_inner_rating2 .left_company_info .part01 .name span.sector{font-size:13px;color:#666;font-weight:normal;}
+.sub_inner_rating2 .left_company_info .part02{width:240px;height:146px;background-color:#f7f7f7;padding-top:10px;}
+.sub_inner_rating2 .left_company_info .part02 table{width:205px;margin:auto;}
+.sub_inner_rating2 .left_company_info .part02 th{height:30px;font-size:13px;font-weight:bold;color:#333;text-align:left;}
+.sub_inner_rating2 .left_company_info .part02 td{height:30px;font-size:12px;color:#666;}
+.sub_inner_rating2 .right_rating_form{float:right;margin-top:5px;width:1000px;height:auto; }
+.sub_inner_rating2 .right_rating_form li p.ask{display:inline-block;width:100%;height:31px;line-height:31px;font-size:14px;color:#333;font-weight:bold;margin-top:30px;}
+.sub_inner_rating2 .right_rating_form li p.first{margin-top:0;}
+.sub_inner_rating2 .right_rating_form li p img{float:left;margin-right:10px;}
+.sub_inner_rating2 .right_rating_form .input_a{margin-left:30px;padding-top:0px;padding-bottom:30px;overflow:hidden; margin:0 auto;}
+.sub_inner_rating2 .right_rating_form .input_a select{width:155px;height:35px;border:1px solid #ddd;}
+.sub_inner_rating2 .right_rating_form .input_a input.etc_text{width:528px;height:33px;border:1px solid #ddd;padding-left:10px;}
+.sub_inner_rating2 .right_rating_form .input_a input.write{width:687px;height:35px;border:1px solid #ddd;padding-left:10px;}
+.sub_inner_rating2 .right_rating_form .input_a p.ex{font-size:12px;color:#999;margin-top:10px;}
+.sub_inner_rating2 .right_rating_form .input_a .star_rating{width:278px;height:204px;border:1px solid #ddd;background-color:#fff;float:left;margin-left:0px;}
+.sub_inner_rating2 .right_rating_form .input_a .star_rating table{width:229px;margin:auto;margin-top:10px;}
+.sub_inner_rating2 .right_rating_form .input_a .star_rating th{font-size:13px;font-weight:bold;color:#333;height:30px;text-align:left;}
+.sub_inner_rating2 .right_rating_form .input_a .star_rating td{padding-top:10px;}
+.sub_inner_rating2 .right_rating_form .input_a .star_rating td a.rating_star{color:#1183db;}
+.sub_inner_rating2 .right_rating_form .input_a .star_rating td a.rating_star:hover{text-decoration:underline;}
+
+
+.sub_inner_rating2 .right_rating_form .input_a .star_rating td ul.star { background: url('../images/partner/rating_s_g.png') repeat-x; margin: 0;padding: 0;width:75px;height:15px;left: 10px;top: -5px;position: relative;float: left;cursor: pointer;}
+.sub_inner_rating2 .right_rating_form .input_a .star_rating td li {padding: 0;margin: 0;float: left;display: block;height: 20px;text-decoration: none;text-indent: -9000px;z-index: 20;position: absolute;}
+.sub_inner_rating2 .right_rating_form .input_a .star_rating td li.curr {background:url('../images/partner/rating_s_b.png') repeat-x;font-size: 1px; }
+.sub_inner_rating2 .right_rating_form .input_a .star_rating td div.user {left: 15px;position: relative;float: left;font-size: 13px;font-family: arial;}
+
+
+
+.sub_inner_rating2 .right_rating_form .input_a .score_box{width:278px;height:204px;border:1px solid #ddd;background-color:#fff;float:left;margin-left:10px;}
+.sub_inner_rating2 .right_rating_form .input_a .score_box p.title{font-size:18px;font-weight:bold;color:#333;margin-top:30px;text-align:center;}
+.sub_inner_rating2 .right_rating_form .input_a .score_box p.rating_score{font-size:30px;font-weight:bold;color:#01bbd6;margin-top:25px;text-align:center;}
+.sub_inner_rating2 .right_rating_form .input_a .score_box div.star_wrap{width:105px;margin:0 auto;}
+.sub_inner_rating2 .right_rating_form .btn_area{width:100%;text-align:center;margin-top:0px;}
+.sub_inner_rating2 .right_rating_form .btn_area a.done{width:169px;height:50px;background-color:#01bbd6;color:#fff;line-height:50px;text-align:center;display:inline-block;font-size:15px;font-weight:bold;border-radius:2px;}
+.sub_inner_rating2 .right_rating_form .btn_area a.prev{width:169px;height:50px;background-color:#666;color:#fff;line-height:50px;text-align:center;display:inline-block;font-size:15px;font-weight:bold;border-radius:2px;}
+/*------rating_success-------*/
+.rating_h h2{font-size:40px;text-align:center;margin-top:20px;}
+.rating_h p{font-size:15px;font-weight:bold;text-align:center;line-height:23px;margin-top:20px;}
+.rating_success{padding-top:50px;text-align:center;border-bottom:1px solid #ddd;border-top:2px solid #666;}
+.rating_success > p{width:570px;font-size:20px;color:#333;font-weight:bold;margin:0 auto;border-bottom:1px solid #4a4a4a;padding-bottom:20px;}
+.rating_success .rating_success_txt{width:630px;height:50px;padding-bottom:50px;margin:0 auto;}
+.rating_success .rating_success_txt p{font-size:13px;color:#666;}
+.rating_success .rating_success_txt p span{color:#1ea6ed;}
+.rating_btn_wrap{width:350px;margin:0 auto;}
+.rating_btn_wrap a{display:inline-block;width:170px;height:50px;line-height:50px;text-align:center;font-size:15px;font-weight:bold;color:#fff;}
+.rating_btn_wrap .btn_main{background:#34c9de;}
+.rating_btn_wrap .btn_check{background:#666;}

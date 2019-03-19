@@ -1,0 +1,152 @@
+@charset "utf-8";
+/* CSS Document */
+
+@import url("common.css");
+@import url("menu.css");
+
+#wrapper{width:1160px;margin:115px auto 100px;overflow:hidden}
+#tabArea{width:910px;float:left}
+#actualArea{width:230px;float:right;border:1px solid #adadad;border-radius:8px;height:305px;behavior: url( "/common/css/PIE.htc" );background:#eefeff;}
+#noticeArea{width:670px;float:left;margin-top:70px;position:relative}
+#bnArea{width:425px;float:right;margin-top:70px}
+
+ul.main_tab01 { background: url("/image/main/bg_tab.png") repeat-x left top transparent;height: 305px; position: relative;width:910px;overflow:hidden;}
+
+
+ul.main_tab01 li h3 a {display: block;height:50px;vertical-align:middle;line-height:50px;text-align:center;overflow: hidden;position: absolute;border:1px solid #adadad;border-radius:8px 8px 0 0 ;behavior: url( "/common/css/PIE.htc" );}
+ul.main_tab01 li.news01 h3 a {left: 0;top: 0;width:200px;z-index: 3;}
+ul.main_tab01 li.news01 ul {visibility: visible;}
+ul.main_tab01 li.news02 h3 a {left:201px;top: 0;width: 200px;z-index: 2;}
+ul.main_tab01 li.news03 h3 a {left:402px;top: 0;width: 200px;z-index: 1;}
+
+ul.main_tab01 li.news01 h3 a:hover, 
+ul.main_tab01 li.news01 h3 a:focus, 
+ul.main_tab01 li.news01 h3 a:active, 
+ul.main_tab01 li.news01 h3 .onhover {border-bottom: 1px solid #eefeff;left: 0;top: 0;z-index: 3;background:#eefeff}
+
+ul.main_tab01 li.news02 h3 a:hover, 
+ul.main_tab01 li.news02 h3 a:focus, 
+ul.main_tab01 li.news02 h3 a:active, 
+ul.main_tab01 li.news02 h3 .onhover {border-bottom: 1px solid #eefeff;left: 201px;top: 0;z-index: 3;background:#eefeff}
+
+ul.main_tab01 li.news03 h3 a:hover, 
+ul.main_tab01 li.news03 h3 a:focus, 
+ul.main_tab01 li.news03 h3 a:active, 
+ul.main_tab01 li.news03 h3 .onhover {border-bottom: 1px solid #eefeff;left: 402px;top: 0;z-index: 3;background:#eefeff}
+
+ul.main_tab01 li  #tabscon1,ul.main_tab01 li  #tabscon2,ul.main_tab01 li  #tabscon3 {width: 908px;height:250px;overflow:hidden;overflow-x:hidden;margin-top:1px;border:1px solid #adadad;left:0;position: absolute;top:50px;border-bottom:2px solid #02216d;border-radius:0 8px 0 0;behavior: url( "/common/css/PIE.htc" );}
+ul.main_tab01 li div table{border-collapse:collapse;}
+ul.main_tab01 li div th{border-bottom:2px solid #02216d;background:#eefeff;height:30px;}
+ul.main_tab01 li div td{border:1px solid #cccccc;text-align:center;padding:10px 0;font-size:13px}
+ul.main_tab01 li div table tbody tr.odd td {background-color: #f7fafc;}
+ul.main_tab01 li ul li {line-height: 170%;padding: 0 0 5px 0;vertical-align: middle;	overflow:hidden}
+
+ul.main_tab01 #tabscon1 li a ,ul.main_tab01 #tabscon2 li a ,ul.main_tab01 #tabscon3 li a{width:80%;float:left;color: #292929;text-decoration: none;display:block;overflow:hidden;}
+
+
+
+#tabscon1 {visibility: visible;}
+#tabscon2, #tabscon3 {visibility: hidden;}
+/* @group Reset */
+
+.fht-table,
+.fht-table thead,
+.fht-table tfoot,
+.fht-table tbody,
+.fht-table tr,
+.fht-table th,
+.fht-table td {
+	/* position */
+    margin: 0;
+    
+    /* size */
+	padding: 0;
+
+	/* text */
+	font-size: 100%;
+	font: inherit;
+	vertical-align: middle;
+	}
+
+.fht-table {
+	/* appearance */
+    border-collapse: collapse;
+    border-spacing: 0;
+	}
+
+/* @end */
+
+/* @group Content */
+
+.fht-table-wrapper,
+.fht-table-wrapper .fht-thead,
+.fht-table-wrapper .fht-tfoot,
+.fht-table-wrapper .fht-fixed-column .fht-tbody,
+.fht-table-wrapper .fht-fixed-body .fht-tbody,
+.fht-table-wrapper .fht-tbody {
+	/* appearance */
+	overflow: hidden;
+	
+	/* position */
+	position: relative;
+	}
+
+	.fht-table-wrapper .fht-fixed-body .fht-tbody,
+	.fht-table-wrapper .fht-tbody {
+		/* appearance */
+	    overflow: auto;
+		}
+
+		.fht-table-wrapper .fht-table .fht-cell {
+			/* appearance */
+			overflow: hidden;
+			
+			/* size */
+		    height: 1px;
+			}
+	
+	.fht-table-wrapper .fht-fixed-column,
+	.fht-table-wrapper .fht-fixed-body {
+	    /* position */
+	    top: 0;
+	    left: 0;
+	    position: absolute;
+	    }
+	    
+	.fht-table-wrapper .fht-fixed-column {
+	    /* position */
+	    z-index: 1;
+	    }
+
+/* @end */
+
+/*실적보기*/
+#actualArea .header{background:url(/image/main/pic_graph.png) 20px 15px no-repeat ;height:76px;line-height:47px;vertical-align:middle;border-bottom:2px solid #02216d;}
+#actualArea .header h3{height:47px;padding-left:60px}
+#actualArea .date{background:url(/image/main/ic_arr.png) 20px center no-repeat;height:30px;line-height:30px;vertical-align:middle;font-size:12px;color:#3366cc;padding-left:30px}
+#actualArea ul{background:#fff;height:192px;border-radius:8px;padding:35px 0 0 20px;}
+#actualArea ul li{padding-bottom:20px}
+#actualArea ul li strong{color:#3366cc}
+
+
+/*공지사항*/
+#noticeArea dl{overflow:hidden;height:163px}
+#noticeArea dt{width:126px;float:left;background:url(/image/main/pic_notice.png) no-repeat center center #f7fafc;height:160px;position:relative;text-align:center;border:1px solid #e1e6ed;border-radius:8px;box-shadow:0 2px 0 0 #7f84b6;behavior: url( "/common/css/PIE.htc" ) }
+#noticeArea dt h3{position:absolute;top:30px;left:30px}
+#noticeArea dd{width:512px;float:left;border-top:1px solid #e5eaf0;border-bottom:1px solid #e5eaf0;height:140px;padding:10px 0 10px 30px}
+#noticeArea dd ul li{margin-bottom:10px;overflow:hidden}
+
+#noticeArea dd ul li img{padding-right:10px;display:block;float:left;width:47px;vertical-align:middle}
+#noticeArea dd ul li a{display:block;float:left;width:350px;height:20px;overflow:hidden;line-height:20px;vertical-align:middle;color:#747474}
+#noticeArea dd ul li .date{display:block;float:right;color:#747474;width:77px;letter-spacing:-0.05em;margin-right:5px}
+
+/*배너영역*/
+#bnArea ul{overflow:hidden}
+#bnArea ul li{float:left;margin-left:20px;height:163px}
+#bnArea ul li:first-child{margin-left:0}
+#bnArea ul li a{display:block;width:126px;border:1px solid #e1e6ed;box-shadow:0 2px 0 0 #7f84b6 ;height:160px;border-radius:8px;behavior: url( "/common/css/PIE.htc" ) }
+#bnArea ul li .product{background:url(/image/main/pic_product.png) no-repeat center 60px #f7fafc}
+#bnArea ul li .customer{background:url(/image/main/pic_customer.png) no-repeat center 60px #f7fafc}
+#bnArea ul li .staff{background:url(/image/main/pic_staff.png) no-repeat center 65px #f7fafc}
+
+#bnArea ul li .product h3,#bnArea ul li .customer h3,#bnArea ul li .staff h3{padding:30px 0 0 30px;}

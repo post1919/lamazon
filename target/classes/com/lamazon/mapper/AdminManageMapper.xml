@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.lamazon.mapper.AdminManageMapper">
+
+	<select id="business_date_find" parameterType="HashMap" resultType="int">
+		SELECT COUNT(YYYYMMDD) DC 
+		FROM YYYYMMDD
+		WHERE YYYYMMDD = #{DATE}
+	</select>
+	
+	<insert id="business_date_insert" parameterType="HashMap">
+		INSERT INTO YYYYMMDD(YYYYMMDD, SALEDAY)
+		VALUES(#{DATE}, #{STATE})
+	</insert>
+	
+	<update id="business_date_update" parameterType="HashMap">
+		UPDATE YYYYMMDD
+		SET SALEDAY = #{STATE}
+		WHERE YYYYMMDD = #{DATE}
+	</update>
+
+	<select id="common_code_master_detail" parameterType="HashMap" resultType="HashMap">
+	SELECT CMM_CODE_GROUP 
+         , CMM_CODE_GROUP_NM
+         , CMM_USEYN
+         , CMM_INCODE
+         , CMM_INDATE
+         , CMM_MOCODE
+         , CMM_MODATE 
+      FROM CODE_MST_M
+     WHERE CMM_CODE_GROUP = #{CMM_CODE_GROUP}
+	</select>
+
+	<select id="common_code_detail_list" parameterType="HashMap" resultType="HashMap">
+	SELECT CMM.CMM_CODE_GROUP, CM.* 
+      FROM CODE_MST_M CMM 
+           JOIN CODE_MST CM 
+     WHERE CMM.CMM_CODE_GROUP = CM.CM_CODE_GROUP 
+       AND CMM.CMM_CODE_GROUP = #{CMM_CODE_GROUP}
+       <if test="CM_CODE != null">AND CM_CODE = #{CM_CODE}</if>
+       <if test="CM_CODE_LIKE != null">AND CM_CODE LIKE #{CM_CODE_LIKE}</if>
+       <if test="UP_CM_CODE != null">AND UP_CM_CODE LIKE CONCAT('%', #{UP_CM_CODE}, '%')</if>
+           
+  ORDER BY CM_SORT ASC
+	</select>
+
+	<select id="kakao_detail" parameterType="HashMap" resultType="HashMap">
+	SELECT KM_PK, TMPL_CODE, TMPL_NAME, TMPL_MSG
+        , KM_STATUS
+        , CASE WHEN KM_STATUS=1  THEN '사용' WHEN KM_STATUS=2  THEN '미사용' END AS KM_STATUS_NM
+        , CASE WHEN KM_FLAG=1000 THEN '고객' WHEN KM_FLAG=2000 THEN '파트너' WHEN KM_FLAG=3000 THEN '관리자' END AS KM_FLAG_NM
+        , KM_FLAG
+        , INCODE, INDATE, MOCODE, MODATE 
+        , KM_SITUATION
+     FROM KAKAO_MSG_MST
+    WHERE 1=1
+      AND KM_PK = #{KM_PK}
+	</select>
+
+	<select id="mail_info_template_list" parameterType="HashMap" resultType="HashMap">
+	SELECT MIT_PK, MIT_MEMO, MIT_CONTENT, MIT_STATUS, MIT_INCODE, MIT_INDATE, MIT_MOCODE, MIT_MODATE 
+     FROM MAIL_INFO_TEMPLATE
+	WHERE 1=1
+	  AND MIT_DELFLAG = 1
+	  <if test="MIT_STATUS != null">AND MIT_STATUS=#{MIT_STATUS}</if>
+	</select>
+	
+	<select id="mail_info_detail" parameterType="HashMap" resultType="HashMap">
+	SELECT MI_PK
+        , MI_GUBUN
+        , CASE WHEN MI_GUBUN = 'user'    THEN '고객'
+               WHEN MI_GUBUN = 'partner' THEN '파트너' 
+               WHEN MI_GUBUN = 'admin'   THEN '관리자' 
+               END AS MI_GUBUN_NM 
+        , MI_MEMO, MI_TITLE, MI_CONTENT
+        , MI_STATUS
+        , CASE WHEN MI_STATUS = 1 THEN '정상'
+               ELSE '삭제'
+               END AS MI_STATUS_NM
+        , MI_INCODE, MI_INDATE, MI_MOCODE, MI_MODATE  
+        , (SELECT U_NAME FROM USER_INFO UI WHERE U_PK = MI.MI_INCODE ) AS MI_INCODE_NM
+        , (SELECT U_NAME FROM USER_INFO UI WHERE U_PK = MI.MI_MODATE ) AS MI_MOCODE_NM
+        , MI.R_MIT_PK
+     FROM MAIL_INFO MI
+    WHERE 1=1
+      AND MI_DELFLAG = 1
+      AND MI_PK = #{MI_PK}
+          <if test="mi_gubun != null">AND MI_GUBUN = #{mi_gubun}</if>
+          <if test="mi_title != null">AND MI_TITLE LIKE CONCAT('%', #{mi_title}, '%')</if>
+	</select>
+	
+	<select id="mail_info_template_detail" parameterType="HashMap" resultType="HashMap">
+		SELECT MIT_PK, MIT_MEMO, MIT_CONTENT
+		     , MIT_STATUS
+		     , CASE WHEN MIT_STATUS = 1 THEN '사용'
+		               ELSE '미사용'
+		               END AS MIT_STATUS_NM
+		     , MIT_INCODE, MIT_INDATE, MIT_MOCODE, MIT_MODATE 
+		  FROM MAIL_INFO_TEMPLATE
+		 WHERE 1=1
+		   AND MIT_DELFLAG = 1
+           AND MIT_PK = #{MIT_PK}
+           <if test="mi_status != null">AND MIT_STATUS = #{mi_status}</if>
+           <if test="mi_memo != null">AND MIT_MEMO LIKE CONCAT('%', #{mi_memo}, '%')</if>
+	</select>
+	
+	<insert id="common_code_detail_insert" parameterType="HashMap">
+		INSERT INTO CODE_MST
+	    (
+	    	CM_CODE_GROUP, CM_CODE, CM_NAME, CM_MEMO, CM_SORT, CM_USEYN, INCODE, INDATE
+	    ) VALUES (
+	    	#{CCM_CODE_GROUP}, UPPER(#{CM_CODE}), #{CM_NAME}, #{CM_MEMO}, #{sortNum}, #{CM_USEYN}, #{U_PK}, now()
+	    )
+	</insert>
+
+	<update id="common_code_detail_update" parameterType="HashMap">
+		UPDATE CODE_MST
+	       SET CM_NAME  = #{CM_NAME}
+	         , CM_MEMO  = #{CM_MEMO}
+	         , CM_SORT  = #{sortNum}
+	         , CM_USEYN = #{CM_USEYN}
+	         , MOCODE   = #{U_PK}
+	         , MODATE   = NOW()
+	     WHERE CM_CODE_GROUP = #{CCM_CODE_GROUP} 
+	       AND CM_CODE  = #{CM_CODE}
+	</update>
+
+	<insert id="common_code_master_insert" parameterType="HashMap">
+		INSERT INTO CODE_MST_M
+		(
+			CMM_CODE_GROUP, CMM_CODE_GROUP_NM, CMM_USEYN, CMM_INCODE, CMM_INDATE
+		) VALUES (
+			#{CCM_CODE_GROUP} ,#{CM_NAME} ,#{CM_USEYN} ,#{U_PK} ,NOW()
+		)
+	</insert>
+	
+	<update id="common_code_master_update" parameterType="HashMap">
+		UPDATE CODE_MST_M
+	       SET CMM_CODE_GROUP_NM = #{CM_NAME}
+	         , CMM_USEYN         = #{CM_USEYN}
+	         , CMM_MOCODE        = #{U_PK}
+	         , CMM_MODATE        = NOW()
+	     WHERE CMM_CODE_GROUP    = #{CCM_CODE_GROUP}
+	</update>
+	
+	<update id="update_kakao_msg_mst" parameterType="HashMap">
+		UPDATE KAKAO_MSG_MST 
+		   SET KM_SITUATION = #{KM_SITUATION}
+			 , TMPL_NAME    = #{TMPL_NAME}
+			 , TMPL_MSG     = #{TMPL_MSG}
+			 , KM_STATUS    = #{KM_STATUS}
+			 , KM_FLAG      = #{KM_FLAG}
+			 , MOCODE       = #{MOCODE}
+			 , MODATE       = NOW()
+		 WHERE KM_PK = #{KM_PK}
+	</update>
+	
+	<update id="mail_info_update" parameterType="HashMap">
+		UPDATE MAIL_INFO 
+			SET MI_GUBUN    = #{MI_GUBUN}
+			  , MI_MEMO     = #{MI_MEMO}
+			  , MI_TITLE    = #{MI_TITLE}
+			  , MI_CONTENT  = #{MI_CONTENT}
+			  , MI_STATUS   = #{MI_STATUS}
+			  
+			  <if test="MOCODE != null">, MI_MOCODE = #{MOCODE}</if>
+			  <if test="MODATE != null">, MI_MODATE = NOW()</if>
+			  <if test="MIT_PK != null">, R_MIT_PK  = #{MIT_PK}</if>
+	      WHERE MI_PK = #{MI_PK}
+	</update>
+	
+	<update id="mail_info_template_update" parameterType="HashMap">
+		UPDATE MAIL_INFO_TEMPLATE 
+		     SET MIT_MEMO    = #{MIT_MEMO}
+		       , MIT_CONTENT = #{MIT_CONTENT}
+		       , MIT_STATUS  = #{MIT_STATUS} 
+			  <if test="MOCODE != null">, MI_MOCODE = #{MI_MOCODE}</if>
+			  <if test="MODATE != null">, MI_MODATE = NOW()</if>
+		   WHERE MIT_PK = #{MIT_PK}
+	</update>
+	
+	
+	
+</mapper>

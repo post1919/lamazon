@@ -1,0 +1,64 @@
+Searching 9331 files for "components"
+
+C:\dev\workspace\castingnNew\WebContent\admin\.npmignore:
+    1: components/
+    2  documentation/
+    3  composer.json
+
+C:\dev\workspace\castingnNew\WebContent\admin\bower.json:
+   27      "/.*",
+   28      "node_modules",
+   29:     "components",
+   30      "composer.json",
+   31      "documentation"
+
+C:\dev\workspace\castingnNew\WebContent\admin\components\bootstrap-datepicker\.gitignore:
+    7  
+    8  # Folders to ignore
+    9: components
+   10  node_modules
+   11  
+
+C:\dev\workspace\castingnNew\WebContent\admin\components\bootstrap-daterangepicker\.bower.json:
+    8      "**/.*",
+    9      "node_modules",
+   10:     "components",
+   11      "test",
+   12      "tests",
+
+C:\dev\workspace\castingnNew\WebContent\admin\components\bootstrap-daterangepicker\bower.json:
+    8      "**/.*",
+    9      "node_modules",
+   10:     "components",
+   11      "test",
+   12      "tests",
+
+C:\dev\workspace\castingnNew\WebContent\admin\components\bootstrap-slider\.bower.json:
+   18      "**/.*",
+   19      "node_modules",
+   20:     "components",
+   21      "test",
+   22      "tests"
+
+C:\dev\workspace\castingnNew\WebContent\admin\components\bootstrap-slider\bower.json:
+   16      "**/.*",
+   17      "node_modules",
+   18:     "components",
+   19      "test",
+   20      "tests"
+
+C:\dev\workspace\castingnNew\WebContent\admin\components\eve-raphael\.bower.json:
+   11      "**/.*",
+   12      "node_modules",
+   13:     "components",
+   14      "test",
+   15      "tests"
+
+C:\dev\workspace\castingnNew\WebContent\admin\components\eve-raphael\bower.json:
+   11      "**/.*",
+   12      "node_modules",
+   13:     "components",
+   14      "test",
+   15      "tests"
+
+9 matches across 9 files
